@@ -1,0 +1,163 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_triple/flutter_triple.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:mybabernew/components/alert.component.dart';
+import 'package:mybabernew/components/carregando.component.dart';
+import 'package:mybabernew/components/input_decorator.dart';
+import 'package:mybabernew/entity/user.dart';
+import 'package:mybabernew/modules/home/home.module.dart';
+import 'package:mybabernew/modules/login/login.controller.dart';
+
+class LoginPage extends StatefulWidget {
+
+  final LoginController controller;
+
+
+  const LoginPage({required this.controller});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool showPassword = false;
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  LoginController get controller => widget.controller;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Login')),
+      body: TripleBuilder(
+          store: controller,
+          builder: (ctx, triple) {
+            return triple.isLoading
+                ? const Center(child: Carregando(inverterCor: true))
+                : SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            SizedBox(
+                              height: 100,
+                            ),
+                            TextFormField(
+                                validator: (_value) {
+                                  final valueString = _value ?? '';
+                                  if (valueString.trim().isEmpty) {
+                                    return 'O campo deve ser informado';
+                                  }
+                                  return null;
+                                },
+                                controller: controller.loginController,
+                                keyboardType: TextInputType.text,
+                                decoration: InputDecoratorComponent(
+                                  label: "Login",
+                                ).decorator()),
+                            const SizedBox(height: 10),
+                            TextFormField(
+                              validator: (_value) {
+                                final valueString = _value ?? '';
+                                if (valueString.trim().isEmpty) {
+                                  return 'O campo deve ser informado';
+                                }
+                                return null;
+                              },
+                              controller: controller.passwordController,
+                              keyboardType: TextInputType.text,
+                              obscureText: !showPassword,
+                              decoration: InputDecoratorComponent(
+                                label: "Senha",
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    showPassword
+                                        ? Icons.remove_red_eye_outlined
+                                        : Icons.remove_red_eye,
+                                    color: Colors.black,
+                                  ),
+                                  onPressed: () {
+                                    showPassword = !showPassword;
+                                    controller.atualizarPagina();
+                                  },
+                                ),
+                              ).decorator(),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              height: 60,
+                              alignment: Alignment.centerLeft,
+                              decoration: const BoxDecoration(
+                                color: Colors.blueAccent,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                              ),
+                              child: SizedBox.expand(
+                                child: TextButton(
+                                  onPressed: () => _submit(context),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        "Acessar",
+                                        style: GoogleFonts.raleway(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            fontSize: MediaQuery.of(context).textScaler.scale(14)),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      const SizedBox(
+                                        child: Icon(
+                                          Icons.lock_open,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+          }),
+      extendBody: true,
+    );
+  }
+
+  Future<void> _submit(BuildContext context) async {
+    final isValid = _formKey.currentState?.validate() ?? false;
+    if (!isValid) {
+      return;
+    }
+    User? user = await controller.getUser();
+    if (user != null) {
+      AlertComponent.show(context,
+          title: "Olá ${user.username}",
+          subTitle: "Seja bem vindo", onConfirm: () {
+        Modular.to.pushReplacementNamed(HomeModule.ROUTE);
+      });
+    } else {
+      AlertComponent.show(context,
+          title: "Ops!",
+          subTitle: "Usuário ou senha inválido",
+          style: AlertStyle.error);
+    }
+  }
+}

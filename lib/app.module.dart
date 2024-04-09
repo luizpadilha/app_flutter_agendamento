@@ -1,0 +1,30 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:mybabernew/core/dio/custom.dio.dart';
+import 'package:mybabernew/modules/agenda/agenda.module.dart';
+import 'package:mybabernew/modules/config/config.module.dart';
+import 'package:mybabernew/modules/home/home.module.dart';
+import 'package:mybabernew/modules/login/login.module.dart';
+import 'package:mybabernew/modules/pessoa/pessoa.module.dart';
+import 'package:mybabernew/modules/servico/servico.module.dart';
+
+class AppModule extends Module {
+
+  @override
+  void binds(i) {
+  }
+
+  @override
+  List<Module> get imports => [
+  ];
+
+  @override
+  void routes(r) {
+    r.module(LoginModule.ROUTE, module: LoginModule());
+    r.module(HomeModule.ROUTE, module: HomeModule());
+    r.module(ConfigModule.ROUTE, module: ConfigModule());
+    r.module(ServicoModule.ROUTE, module: ServicoModule());
+    r.module(PessoaModule.ROUTE, module: PessoaModule());
+    r.module(AgendaModule.ROUTE, module: AgendaModule());
+  }
+}
