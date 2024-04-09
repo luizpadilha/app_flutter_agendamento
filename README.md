@@ -12,4 +12,6 @@ Este é um aplicativo Flutter simples para agendamento de serviços, onde os usu
 
 - Configuraração intellij ou outro editor: Android Manager -> SDK tools: Android SDK Build 35.0, Android SDK Command-line, Android Emulatrio 34.1, Android SDK Platform-tools 35.0
 - Flutter SDK instalado: [Flutter Install Instructions](https://flutter.dev/docs/get-started/install)
+- java SDK: 8
 - Dispositivo ou emulador Android/iOS para execução do aplicativo.
+- instalar plugins no intellij/androidStudio: flutter e dart
