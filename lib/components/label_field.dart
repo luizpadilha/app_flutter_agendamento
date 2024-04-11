@@ -29,23 +29,20 @@ class LabelAndField extends StatelessWidget {
       ),
     );
 
-    return Padding(
-      padding: const EdgeInsetsDirectional.only(bottom: 10),
-      child: inline
-          ? Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                labelWidget,
-                const SizedBox(
-                  width: 5,
-                ),
-                fieldWidget
-              ],
-            )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [labelWidget, fieldWidget],
-            ),
-    );
+    return inline
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              labelWidget,
+              const SizedBox(
+                width: 5,
+              ),
+              fieldWidget
+            ],
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [labelWidget, fieldWidget],
+          );
   }
 }
