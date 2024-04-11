@@ -17,7 +17,7 @@ class Agenda {
   Agenda.fromJson(Map<String, dynamic> json)
       : id = json['id'] ?? '', 
         pessoa = Pessoa.fromJson(json['pessoa']),
-        horario = json['horario'],
+        horario = DateTime.parse(json['horario']),
         servico = Servico.fromJson(json['servico']);
 
   Map<String, dynamic> toJson() => {

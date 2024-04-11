@@ -31,10 +31,10 @@ class AgendaRepository {
       "/api/agenda/salvar-agenda",
       data: jsonEncode({
         'id': id,
-        'horario': horario.toIso8601String(),
-        'pessoa': pessoa.toJson(),
+        'horarioToIso8601': horario.toIso8601String(),
         'servico': servico.toJson(),
-        'user': user.userId,
+        'pessoa': pessoa.toJson(),
+        'userId': user.userId,
       }),
     );
   }

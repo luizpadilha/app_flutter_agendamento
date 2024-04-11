@@ -107,7 +107,7 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
           return Scaffold(
               bottomNavigationBar: const BottomBarComponent(),
               extendBody: true,
-              appBar: AppBar(title: Text('Formulário de Agenda')),
+              appBar: AppBar(title: const Text('Formulário de Agenda')),
               body: TripleBuilder(
                 store: agendaController,
                 builder: (ctx, triple) {

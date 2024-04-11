@@ -12,9 +12,7 @@ import 'package:mybabernew/modules/agenda/agenda.controller.dart';
 import 'package:mybabernew/modules/agenda/agenda.module.dart';
 
 class AgendaPage extends StatefulWidget {
-
   final AgendaController agendaController;
-
 
   const AgendaPage({required this.agendaController});
 
@@ -23,7 +21,6 @@ class AgendaPage extends StatefulWidget {
 }
 
 class _AgendaPageState extends State<AgendaPage> {
-
   @override
   void initState() {
     super.initState();
@@ -65,119 +62,85 @@ class _AgendaPageState extends State<AgendaPage> {
                             child: ListView(
                               physics: const AlwaysScrollableScrollPhysics(),
                               children: triple.state.map((agend) {
-                                return Card(
-                                  color: Colors.white,
-                                  margin: const EdgeInsets.only(top: 10),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.70,
-                                          child: Column(
-                                            children: [
-                                              LabelAndField(
-                                                label: "Pessoa",
-                                                field: "${agend.pessoa!.nome}",
-                                                inline: true,
-                                              ),
-                                              LabelAndField(
-                                                label: "Serviço",
-                                                field:
-                                                    "${agend.servico!.descricao}",
-                                                inline: true,
-                                              ),
-                                              LabelAndField(
-                                                label: "Horário",
-                                                field: DateFormat(
-                                                        'dd/MM/yyyy hh:mm')
-                                                    .format(agend.horario!),
-                                                inline: true,
-                                              ),
-                                            ],
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      leading: CircleAvatar(
+                                        backgroundColor: Theme.of(context).colorScheme.primary,
+                                        radius: 30,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(6),
+                                          child: FittedBox(
+                                            child: Text(DateFormat('HH:mm').format(agend.horario!)),
                                           ),
                                         ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.20,
-                                          child: Column(
-                                            children: [
-                                              IconButton(
-                                                onPressed: () {
-                                                  Modular.to.pushNamed(
-                                                      AgendaModule
-                                                          .ROUTE_AGENDA_FORM,
-                                                      arguments: agend);
-                                                },
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                                icon: Icon(Icons.edit),
-                                              ),
-                                              IconButton(
-                                                onPressed: () {
-                                                  showDialog<bool>(
-                                                    context: context,
-                                                    builder: (ctx) =>
-                                                        AlertDialog(
-                                                      title: const Text(
-                                                          'Tem Certeza?'),
-                                                      content: const Text(
-                                                          'Quer remover o item da Agenda?'),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.of(ctx)
-                                                                  .pop(false),
-                                                          child:
-                                                              const Text('Não'),
-                                                        ),
-                                                        TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.of(ctx)
-                                                                  .pop(true),
-                                                          child:
-                                                              const Text('Sim'),
-                                                        ),
-                                                      ],
+                                      ),
+                                      title: LabelAndField(
+                                        label: "Pessoa",
+                                        field: "${agend.pessoa!.nome}",
+                                        inline: true,
+                                      ),
+                                      subtitle: LabelAndField(
+                                        label: "Serviço",
+                                        field: "${agend.servico!.descricao}",
+                                        inline: true,
+                                      ),
+                                      trailing: Column(
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {
+                                              showDialog<bool>(
+                                                context: context,
+                                                builder: (ctx) => AlertDialog(
+                                                  title: const Text(
+                                                      'Tem Certeza?'),
+                                                  content: const Text(
+                                                      'Quer remover o item da Agenda?'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.of(ctx)
+                                                              .pop(false),
+                                                      child: const Text('Não'),
                                                     ),
-                                                  ).then((value) async {
-                                                    if (value ?? false) {
-                                                      try {
-                                                        await agendaController
-                                                            .removerAgenda(
-                                                                agend.id!);
-                                                      } catch (error) {
-                                                        msg.showSnackBar(
-                                                          SnackBar(
-                                                            content: Text(error
-                                                                .toString()),
-                                                          ),
-                                                        );
-                                                      }
-                                                    }
-                                                  });
-                                                },
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .error,
-                                                icon: Icon(Icons.delete),
-                                              ),
-                                            ],
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.of(ctx)
+                                                              .pop(true),
+                                                      child: const Text('Sim'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ).then((value) async {
+                                                if (value ?? false) {
+                                                  try {
+                                                    await agendaController
+                                                        .removerAgenda(
+                                                            agend.id!);
+                                                  } catch (error) {
+                                                    msg.showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                            error.toString()),
+                                                      ),
+                                                    );
+                                                  }
+                                                }
+                                              });
+                                            },
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .error,
+                                            icon: const Icon(Icons.delete),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
+                                    const Divider(),
+                                  ],
                                 );
                               }).toList(),
-                            ),
-                          )
+                            ))
                         : const EmptyList();
               }),
         ),
