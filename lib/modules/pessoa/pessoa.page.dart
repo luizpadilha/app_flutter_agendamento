@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
-import 'package:mybabernew/components/label_field.dart';
+import 'package:mybabernew/components/label_field.component.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/entity/servico.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.controller.dart';
@@ -84,12 +84,12 @@ class _PessoaPageState extends State<PessoaPage> {
                                               0.70,
                                           child: Column(
                                             children: [
-                                              LabelAndField(
+                                              LabelAndFieldComponent(
                                                 label: "Nome",
                                                 field: "${pess.nome}",
                                                 inline: true,
                                               ),
-                                              LabelAndField(
+                                              LabelAndFieldComponent(
                                                 label: "Número",
                                                 field:
                                                     pess.numero!,
