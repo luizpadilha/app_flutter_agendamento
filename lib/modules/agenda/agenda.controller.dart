@@ -16,6 +16,8 @@ class AgendaController extends Store<List<Agenda>> {
   Pessoa? pessoa;
   DateTime horario = DateTime.now();
   String id = '';
+  DateTime dataInicial = DateTime.now();
+  DateTime dataFinal = DateTime.now();
 
   AgendaController() : super([]);
 

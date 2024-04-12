@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
-import 'package:mybabernew/components/label_field.dart';
+import 'package:mybabernew/components/label_field.component.dart';
 import 'package:mybabernew/entity/servico.dart';
 import 'package:mybabernew/modules/servico/servico.controller.dart';
 import 'package:mybabernew/modules/servico/servico.module.dart';
@@ -81,12 +81,12 @@ class _ServicoPageState extends State<ServicoPage> {
                                               0.70,
                                           child: Column(
                                             children: [
-                                              LabelAndField(
+                                              LabelAndFieldComponent(
                                                 label: "Descrição",
                                                 field: "${serv.descricao}",
                                                 inline: true,
                                               ),
-                                              LabelAndField(
+                                              LabelAndFieldComponent(
                                                 label: "Preço",
                                                 field:
                                                     UtilBrasilFields.obterReal(
