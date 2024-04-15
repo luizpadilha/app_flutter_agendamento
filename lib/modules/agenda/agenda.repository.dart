@@ -7,16 +7,15 @@ import 'package:mybabernew/entity/agenda.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/entity/servico.dart';
 import 'package:mybabernew/entity/user.dart';
-import 'package:mybabernew/exceptions/http_exception.dart';
 
 class AgendaRepository {
 
   final Dio _client = Modular.get();
 
-  Future<List<Agenda>> getAgendas() async {
+  Future<List<Agenda>> getAgendas(DateTime data) async {
     User user = GetIt.instance.get<User>();
     var response = await _client
-        .get("/api/agenda/agendas?userId=${user.userId}");
+        .get("/api/agenda/agendas?userId=${user.userId}&data=${data.toIso8601String()}");
     if (response.statusCode == 200 && response.data != null) {
       return List<Agenda>.from(
           response.data.map((itemsJson) => Agenda.fromJson(itemsJson)));
