@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/auto_complete.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
@@ -123,12 +124,29 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   const SizedBox(height: 10),
-                                  DatePickerComponent(
-                                    onDateChanged: (newDate) {
-                                      agendaController.horario = newDate;
-                                      agendaController.atualizarPagina();
-                                    },
-                                    selectedDate: agendaController.horario,
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: mediaQuery.size.width * 0.8,
+                                        child: TextFormField(
+                                            readOnly: true,
+                                            controller: TextEditingController(
+                                                text:
+                                                DateFormat('dd/MM/yyyy HH:mm').format(agendaController.horario)),
+                                            keyboardType: TextInputType.datetime,
+                                            decoration: InputDecoratorComponent(
+                                              label: "Horário",
+                                            ).decorator()),
+                                      ),
+                                      DatePickerComponent(
+                                        isForm: true,
+                                        hasTime: true,
+                                        onDateChanged: (newDate) {
+                                          agendaController.horario = newDate;
+                                          agendaController.atualizarPagina();
+                                        },
+                                      ),
+                                    ],
                                   ),
                                   const SizedBox(height: 10),
                                   AutoCompleteComponent(
@@ -155,7 +173,6 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                     hintText: 'Selecione a pessoa...',
                                     term: _thermPessoa,
                                     onSelected: (Object pessoa) {
-                                      print('selecionei');
                                       agendaController.pessoa =
                                           (pessoa as Pessoa);
                                       agendaController.atualizarPagina();

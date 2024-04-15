@@ -17,14 +17,13 @@ class AgendaController extends Store<List<Agenda>> {
   DateTime horario = DateTime.now();
   String id = '';
   DateTime dataInicial = DateTime.now();
-  DateTime dataFinal = DateTime.now();
 
   AgendaController() : super([]);
 
   Future<void> buscarAgendas() async {
     try {
       setLoading(true);
-      List<Agenda> agendas = await repo.getAgendas();
+      List<Agenda> agendas = await repo.getAgendas(dataInicial);
       update(agendas);
     } on DioException catch (e, s) {
       log('Erro ao buscar agenda', error: e, stackTrace: s);

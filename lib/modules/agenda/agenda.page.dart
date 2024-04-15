@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
+import 'package:mybabernew/components/date_picker.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
 import 'package:mybabernew/entity/agenda.dart';
@@ -30,13 +31,14 @@ class _AgendaPageState extends State<AgendaPage> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
     _buscarAgendas(context);
     final msg = ScaffoldMessenger.of(context);
     return Scaffold(
       bottomNavigationBar: const BottomBarComponent(),
       extendBody: true,
       appBar: AppBar(
-        title: Text('Gerenciar Agenda'),
+        title: const Text('Gerenciar Agenda'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_circle_outline),
@@ -59,33 +61,31 @@ class _AgendaPageState extends State<AgendaPage> {
                 padding: const EdgeInsets.all(8),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        const Text('Data Inicial: '),
-                        Text(
-                          DateFormat('dd/MM/yyyy')
-                              .format(agendaController.dataInicial),
-                          style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text('Data Final: '),
-                        Text(
-                          DateFormat('dd/MM/yyyy')
-                              .format(agendaController.dataInicial),
-                          style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87),
-                        ),
-                      ],
+                    SizedBox(
+                      width: deviceSize.width * 0.4,
+                      child: Row(
+                        children: [
+                          Text(
+                            'Data: ${DateFormat('dd/MM/yyyy').format(agendaController.dataInicial)}',
+                            style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87),
+                          ),
+                          const SizedBox(height: 2),
+                            DatePickerComponent(
+                              isForm: false,
+                              hasTime: false,
+                              onDateChanged: (newDate) {
+                                setState(() {
+                                  agendaController.dataInicial = newDate;
+                                });
+                              },
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -174,8 +174,7 @@ class _AgendaPageState extends State<AgendaPage> {
                                                       } catch (error) {
                                                         msg.showSnackBar(
                                                           SnackBar(
-                                                            content: Text(error
-                                                                .toString()),
+                                                            content: Text(error.toString()),
                                                           ),
                                                         );
                                                       }

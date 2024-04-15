@@ -6,12 +6,14 @@ import 'package:mybabernew/components/input_decorator.dart';
 import 'package:mybabernew/constants.dart';
 
 class DatePickerComponent extends StatelessWidget {
-  final DateTime? selectedDate;
-  final Function(DateTime)? onDateChanged;
+  final Function(DateTime) onDateChanged;
+  final bool isForm;
+  final bool hasTime;
 
   DatePickerComponent({
-    this.selectedDate,
-    this.onDateChanged,
+    required this.onDateChanged,
+    required this.isForm,
+    required this.hasTime,
   });
 
   _showDatePicker(BuildContext context) {
@@ -27,30 +29,35 @@ class DatePickerComponent extends StatelessWidget {
       if (pickedDate == null) {
         return;
       }
-      showTimePicker(
-        helpText: 'Selecione o Horário',
-        cancelText: 'Cancelar',
-        context: context,
-        initialTime: TimeOfDay.now(),
-        builder: (BuildContext context, Widget? child) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-            child: child ?? Container(),
+      if (hasTime) {
+        showTimePicker(
+          helpText: 'Selecione o Horário',
+          cancelText: 'Cancelar',
+          context: context,
+          initialTime: TimeOfDay.now(),
+          builder: (BuildContext context, Widget? child) {
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                  alwaysUse24HourFormat: true),
+              child: child ?? Container(),
+            );
+          },
+        ).then((pickedTime) {
+          if (pickedTime == null) {
+            return;
+          }
+          DateTime pickedDateTime = DateTime(
+            pickedDate.year,
+            pickedDate.month,
+            pickedDate.day,
+            pickedTime.hour,
+            pickedTime.minute,
           );
-        },
-      ).then((pickedTime) {
-        if (pickedTime == null) {
-          return;
-        }
-        DateTime selectedDate = DateTime(
-          pickedDate.year,
-          pickedDate.month,
-          pickedDate.day,
-          pickedTime.hour,
-          pickedTime.minute,
-        );
-        onDateChanged!(selectedDate);
-      });
+          onDateChanged(pickedDateTime);
+        });
+      } else {
+        onDateChanged(pickedDate);
+      }
     });
   }
 
@@ -69,10 +76,11 @@ class DatePickerComponent extends StatelessWidget {
                   child: CupertinoDatePicker(
                     backgroundColor: Colors.white,
                     use24hFormat: true,
-                    mode: CupertinoDatePickerMode.dateAndTime,
+                    mode: hasTime ? CupertinoDatePickerMode.dateAndTime : CupertinoDatePickerMode.date,
                     initialDateTime: DateTime.now(),
                     minimumDate: DateTime.now(),
-                    onDateTimeChanged: onDateChanged!,
+                    onDateTimeChanged: onDateChanged,
+                    showDayOfWeek: true,
                   ),
                 ),
               ],
@@ -83,38 +91,20 @@ class DatePickerComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
     return LayoutBuilder(builder: (context, constraints) {
-      return Container(
-        height: deviceSize.height * 0.10,
-        child: Row(
-          children: <Widget>[
-            SizedBox(
-              width: deviceSize.width * 0.8,
-              child: TextFormField(
-                  readOnly: true,
-                  controller: TextEditingController(
-                      text:
-                          '${DateFormat('dd/MM/yyyy HH:mm').format(selectedDate!)}'),
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoratorComponent(
-                    label: "Horário",
-                  ).decorator()),
+      return Row(
+        children: <Widget>[
+          TextButton(
+            onPressed: () => _showDatePicker(context),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.calendar_month),
+                SizedBox(width: 8),
+              ],
             ),
-            TextButton(
-              onPressed: () => platformIsIos(context)
-                  ? _showCupertinoModalPopup(context)
-                  : _showDatePicker(context),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.calendar_month),
-                  SizedBox(width: 8),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       );
     });
   }
