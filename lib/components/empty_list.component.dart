@@ -32,7 +32,7 @@ class EmptyList extends StatelessWidget {
               style: GoogleFonts.raleway(
                   fontSize: MediaQuery.of(context)
                       .textScaler
-                      .scale(12),
+                      .scale(14),
                   fontWeight: FontWeight.w400),
             ),
           ],

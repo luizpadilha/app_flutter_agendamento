@@ -36,8 +36,8 @@ class _ServicoFormPageState extends State<ServicoFormPage> {
 
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     if (widget.servico != null) {
       servicoController.precoController.text = UtilBrasilFields.obterReal(widget.servico!.preco!);
       servicoController.descricaoController.text = widget.servico!.descricao!;
@@ -47,6 +47,11 @@ class _ServicoFormPageState extends State<ServicoFormPage> {
       servicoController.descricaoController.text = '';
       servicoController.id = '';
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override

@@ -15,13 +15,17 @@ class PessoaFormPage extends StatefulWidget {
   @override
   State<PessoaFormPage> createState() => _PessoaFormPageState();
 
-  Pessoa ?pessoa;
+  Pessoa? pessoa;
+  final PessoaController pessoaController;
 
-  PessoaFormPage({this.pessoa, super.key});
+  PessoaFormPage({
+    this.pessoa,
+    required this.pessoaController,
+    super.key,
+  });
 }
 
 class _PessoaFormPageState extends State<PessoaFormPage> {
-  final PessoaController pessoaController = Modular.get();
   final _numeroFocus = FocusNode();
   final _nomeFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
@@ -35,8 +39,8 @@ class _PessoaFormPageState extends State<PessoaFormPage> {
 
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     if (widget.pessoa != null) {
       pessoaController.nomeController.text = widget.pessoa!.nome!;
       pessoaController.numeroController.text = widget.pessoa!.numero!;
@@ -47,6 +51,14 @@ class _PessoaFormPageState extends State<PessoaFormPage> {
       pessoaController.id = '';
     }
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  PessoaController get pessoaController => widget.pessoaController;
+
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +93,7 @@ class _PessoaFormPageState extends State<PessoaFormPage> {
                                       .requestFocus(_numeroFocus);
                                 },
                                 focusNode: _nomeFocus,
-                                controller:
-                                    pessoaController.nomeController,
+                                controller: pessoaController.nomeController,
                                 keyboardType: TextInputType.text,
                                 decoration: InputDecoratorComponent(
                                   label: "Nome",

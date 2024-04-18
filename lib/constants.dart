@@ -5,7 +5,7 @@ const BASE_URL = String.fromEnvironment('BASE_URL',
     defaultValue: "https://chamados.webpublico.com.br");
 
 const BASE_URL_HOMOLOGACAO = String.fromEnvironment('BASE_URL',
-    defaultValue: "http://localhost:8081");
+    defaultValue: "http://192.168.0.104:8081");
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
 

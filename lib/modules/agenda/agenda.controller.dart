@@ -8,8 +8,12 @@ import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/entity/servico.dart';
 import 'package:mybabernew/exceptions/http_exception.dart';
 import 'package:mybabernew/modules/agenda/agenda.repository.dart';
+import 'package:mybabernew/modules/pessoa/pessoa.controller.dart';
+import 'package:mybabernew/modules/servico/servico.controller.dart';
 
 class AgendaController extends Store<List<Agenda>> {
+  final ServicoController servicoController = Modular.get();
+  final PessoaController pessoaController = Modular.get();
   final AgendaRepository repo = Modular.get();
 
   Servico? servico;
@@ -17,8 +21,20 @@ class AgendaController extends Store<List<Agenda>> {
   DateTime horario = DateTime.now();
   String id = '';
   DateTime dataInicial = DateTime.now();
+  List<Servico> servicos = [];
+  List<Pessoa> pessoas = [];
 
   AgendaController() : super([]);
+
+
+  Future<void> init() async {
+    await servicoController.buscarServicos();
+    await pessoaController.buscarPessoas();
+    servicos = servicoController.state;
+    pessoas = pessoaController.state;
+    print('totalPEs: ${pessoaController.state.length}');
+    print('totalSErv: ${servicoController.state.length}');
+  }
 
   Future<void> buscarAgendas() async {
     try {
@@ -64,4 +80,6 @@ class AgendaController extends Store<List<Agenda>> {
   void atualizarPagina() {
     update(state, force: true);
   }
+
+
 }

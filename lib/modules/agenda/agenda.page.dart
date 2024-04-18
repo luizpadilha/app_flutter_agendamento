@@ -22,9 +22,12 @@ class AgendaPage extends StatefulWidget {
 }
 
 class _AgendaPageState extends State<AgendaPage> {
+  late Future _future;
+
   @override
   void initState() {
     super.initState();
+    _future = agendaController.buscarAgendas();
   }
 
   AgendaController get agendaController => widget.agendaController;
@@ -32,177 +35,206 @@ class _AgendaPageState extends State<AgendaPage> {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    _buscarAgendas(context);
     final msg = ScaffoldMessenger.of(context);
     return Scaffold(
-      bottomNavigationBar: const BottomBarComponent(),
-      extendBody: true,
-      appBar: AppBar(
-        title: const Text('Gerenciar Agenda'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add_circle_outline),
-            onPressed: () {
-              Modular.to
-                  .pushNamed(AgendaModule.ROUTE_AGENDA_FORM, arguments: null);
-            },
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Card(
-              color: Colors.white,
-              margin: const EdgeInsets.only(top: 5),
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
+        bottomNavigationBar: const BottomBarComponent(),
+        extendBody: true,
+        appBar: AppBar(
+          title: const Text('Gerenciar Agenda'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add_circle_outline),
+              onPressed: () {
+                Modular.to
+                    .pushNamed(AgendaModule.ROUTE_AGENDA_FORM, arguments: null);
+              },
+            ),
+          ],
+        ),
+        body: FutureBuilder(
+          future: _future,
+          builder: (_, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: Carregando(inverterCor: true));
+            } else {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(
-                      width: deviceSize.width * 0.4,
-                      child: Row(
-                        children: [
-                          Text(
-                            'Data: ${DateFormat('dd/MM/yyyy').format(agendaController.dataInicial)}',
-                            style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87),
-                          ),
-                          const SizedBox(height: 2),
-                            DatePickerComponent(
-                              isForm: false,
-                              hasTime: false,
-                              onDateChanged: (newDate) {
-                                setState(() {
-                                  agendaController.dataInicial = newDate;
-                                });
-                              },
-                          ),
-                        ],
+                    Card(
+                      color: Colors.white,
+                      margin: const EdgeInsets.only(top: 5),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: deviceSize.width * 0.5,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Data: ${DateFormat('dd/MM/yyyy').format(agendaController.dataInicial)}',
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  DatePickerComponent(
+                                    isForm: false,
+                                    hasTime: false,
+                                    onDateChanged: (newDate) {
+                                      setState(() {
+                                        agendaController.dataInicial = newDate;
+                                      });
+                                      _future = agendaController.buscarAgendas();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: TripleBuilder<AgendaController, List<Agenda>>(
+                        store: agendaController,
+                        builder: (ctx, triple) {
+                          return triple.isLoading
+                              ? const Center(
+                                  child: Carregando(inverterCor: true))
+                              : triple.state.isNotEmpty
+                                  ? RefreshIndicator(
+                                      onRefresh: () => _buscarAgendas(context),
+                                      child: ListView(
+                                        physics:
+                                            const AlwaysScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        children: triple.state.map((agend) {
+                                          return Card(
+                                            color: Colors.white,
+                                            margin:
+                                                const EdgeInsets.only(top: 5),
+                                            child: Column(
+                                              children: [
+                                                ListTile(
+                                                  leading: CircleAvatar(
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .colorScheme
+                                                            .primary,
+                                                    radius: 30,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5),
+                                                      child: FittedBox(
+                                                        child: Text(
+                                                            DateFormat('HH:mm')
+                                                                .format(agend
+                                                                    .horario!)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  title: LabelAndFieldComponent(
+                                                    label: "Pessoa",
+                                                    field:
+                                                        "${agend.pessoa!.nome}",
+                                                    inline: true,
+                                                  ),
+                                                  subtitle:
+                                                      LabelAndFieldComponent(
+                                                    label: "Serviço",
+                                                    field:
+                                                        "${agend.servico!.descricao}",
+                                                    inline: true,
+                                                  ),
+                                                  trailing: Column(
+                                                    children: [
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          showDialog<bool>(
+                                                            context: context,
+                                                            builder: (ctx) =>
+                                                                AlertDialog(
+                                                              title: const Text(
+                                                                  'Tem Certeza?'),
+                                                              content: const Text(
+                                                                  'Quer remover o item da Agenda?'),
+                                                              actions: [
+                                                                TextButton(
+                                                                  onPressed: () =>
+                                                                      Navigator.of(
+                                                                              ctx)
+                                                                          .pop(
+                                                                              false),
+                                                                  child:
+                                                                      const Text(
+                                                                          'Não'),
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () =>
+                                                                      Navigator.of(
+                                                                              ctx)
+                                                                          .pop(
+                                                                              true),
+                                                                  child:
+                                                                      const Text(
+                                                                          'Sim'),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ).then((value) async {
+                                                            if (value ??
+                                                                false) {
+                                                              try {
+                                                                await agendaController
+                                                                    .removerAgenda(
+                                                                        agend
+                                                                            .id!);
+                                                              } catch (error) {
+                                                                msg.showSnackBar(
+                                                                  SnackBar(
+                                                                    content: Text(
+                                                                        error
+                                                                            .toString()),
+                                                                  ),
+                                                                );
+                                                              }
+                                                            }
+                                                          });
+                                                        },
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .error,
+                                                        icon: const Icon(
+                                                            Icons.delete),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    )
+                                  : const EmptyList();
+                        },
                       ),
                     ),
                   ],
                 ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Flexible(
-              fit: FlexFit.loose,
-              child: TripleBuilder<AgendaController, List<Agenda>>(
-                store: agendaController,
-                builder: (ctx, triple) {
-                  return triple.isLoading
-                      ? const Center(child: Carregando(inverterCor: true))
-                      : triple.state.isNotEmpty
-                          ? RefreshIndicator(
-                              onRefresh: () => _buscarAgendas(context),
-                              child: ListView(
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                children: triple.state.map((agend) {
-                                  return Card(
-                                    color: Colors.white,
-                                    margin: const EdgeInsets.only(top: 5),
-                                    child: Column(
-                                      children: [
-                                        ListTile(
-                                          leading: CircleAvatar(
-                                            backgroundColor: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
-                                            radius: 30,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(5),
-                                              child: FittedBox(
-                                                child: Text(DateFormat('HH:mm')
-                                                    .format(agend.horario!)),
-                                              ),
-                                            ),
-                                          ),
-                                          title: LabelAndFieldComponent(
-                                            label: "Pessoa",
-                                            field: "${agend.pessoa!.nome}",
-                                            inline: true,
-                                          ),
-                                          subtitle: LabelAndFieldComponent(
-                                            label: "Serviço",
-                                            field:
-                                                "${agend.servico!.descricao}",
-                                            inline: true,
-                                          ),
-                                          trailing: Column(
-                                            children: [
-                                              IconButton(
-                                                onPressed: () {
-                                                  showDialog<bool>(
-                                                    context: context,
-                                                    builder: (ctx) =>
-                                                        AlertDialog(
-                                                      title: const Text(
-                                                          'Tem Certeza?'),
-                                                      content: const Text(
-                                                          'Quer remover o item da Agenda?'),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.of(ctx)
-                                                                  .pop(false),
-                                                          child:
-                                                              const Text('Não'),
-                                                        ),
-                                                        TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.of(ctx)
-                                                                  .pop(true),
-                                                          child:
-                                                              const Text('Sim'),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ).then((value) async {
-                                                    if (value ?? false) {
-                                                      try {
-                                                        await agendaController
-                                                            .removerAgenda(
-                                                                agend.id!);
-                                                      } catch (error) {
-                                                        msg.showSnackBar(
-                                                          SnackBar(
-                                                            content: Text(error.toString()),
-                                                          ),
-                                                        );
-                                                      }
-                                                    }
-                                                  });
-                                                },
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .error,
-                                                icon: const Icon(Icons.delete),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            )
-                          : const EmptyList();
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+              );
+            }
+          },
+        ));
   }
 
   Future<void> _buscarAgendas(BuildContext context) async {
