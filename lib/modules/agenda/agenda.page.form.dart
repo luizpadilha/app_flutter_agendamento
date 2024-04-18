@@ -1,7 +1,4 @@
-import 'package:brasil_fields/brasil_fields.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,14 +13,9 @@ import 'package:mybabernew/entity/agenda.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/entity/servico.dart';
 import 'package:mybabernew/modules/agenda/agenda.controller.dart';
-import 'package:mybabernew/modules/pessoa/pessoa.controller.dart';
-import 'package:mybabernew/modules/servico/servico.controller.dart';
-import 'package:mybabernew/modules/servico/servico.module.dart';
 
 class AgendaFormPage extends StatefulWidget {
   final AgendaController agendaController;
-  final ServicoController servicoController;
-  final PessoaController pessoaController;
   Agenda? agenda;
 
   @override
@@ -32,8 +24,6 @@ class AgendaFormPage extends StatefulWidget {
   AgendaFormPage({
     this.agenda,
     required this.agendaController,
-    required this.servicoController,
-    required this.pessoaController,
     super.key,
   });
 }
@@ -46,8 +36,6 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
   String _thermServico = '';
   bool _validatePessoa = false;
   bool _validateServico = false;
-  List<Servico> servicos = [];
-  List<Pessoa> pessoas = [];
   late Future _future;
 
   @override
@@ -60,6 +48,12 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _future = agendaController.init();
     if (widget.agenda != null) {
       agendaController.id = widget.agenda!.id!;
       agendaController.horario = widget.agenda!.horario!;
@@ -73,192 +67,174 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _future = _buscarDados();
-  }
-
-  Future<void> _buscarDados() async {
-    await servicoController.buscarServicos();
-    await pessoaController.buscarPessoas();
-    servicos = servicoController.state;
-    pessoas = pessoaController.state;
-    print('totalPEs: ${pessoaController.state.length}');
-    print('totalSErv: ${servicoController.state.length}');
-  }
-
-  ServicoController get servicoController => widget.servicoController;
-
-  PessoaController get pessoaController => widget.pessoaController;
-
   AgendaController get agendaController => widget.agendaController;
 
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
-    return FutureBuilder(
-      future: _future,
-      builder: (_, snapshot) {
-        if (ConnectionState.waiting == snapshot.connectionState) {
-          return const Center(
-            child: Carregando(inverterCor: true),
-          );
-        } else {
-          return Scaffold(
-              bottomNavigationBar: const BottomBarComponent(),
-              extendBody: true,
-              appBar: AppBar(title: const Text('Formulário de Agenda')),
-              body: TripleBuilder(
-                store: agendaController,
-                builder: (ctx, triple) {
-                  return triple.isLoading
-                      ? const Center(child: Carregando(inverterCor: true))
-                      : SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Form(
-                              key: _formKey,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: mediaQuery.size.width * 0.8,
-                                        child: TextFormField(
-                                            readOnly: true,
-                                            controller: TextEditingController(
-                                                text:
-                                                DateFormat('dd/MM/yyyy HH:mm').format(agendaController.horario)),
-                                            keyboardType: TextInputType.datetime,
-                                            decoration: InputDecoratorComponent(
-                                              label: "Horário",
-                                            ).decorator()),
-                                      ),
-                                      DatePickerComponent(
-                                        isForm: true,
-                                        hasTime: true,
-                                        onDateChanged: (newDate) {
-                                          agendaController.horario = newDate;
-                                          agendaController.atualizarPagina();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  AutoCompleteComponent(
-                                    optionsBuilder:
-                                        (TextEditingValue textEditingValue) {
-                                      _thermPessoa = textEditingValue.text;
-                                      _validatePessoa = false;
-                                      agendaController.atualizarPagina();
-
-                                      if (textEditingValue.text == '') {
-                                        return const Iterable<Pessoa>.empty();
-                                      }
-
-                                      return pessoas.where((Pessoa option) {
-                                        return option
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(textEditingValue.text
-                                                .toLowerCase()
-                                                .trim());
-                                      });
-                                    },
-                                    label: 'Pessoa',
-                                    hintText: 'Selecione a pessoa...',
-                                    term: _thermPessoa,
-                                    onSelected: (Object pessoa) {
-                                      agendaController.pessoa =
-                                          (pessoa as Pessoa);
-                                      agendaController.atualizarPagina();
-                                    },
-                                    validate: _validatePessoa,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  AutoCompleteComponent(
-                                    optionsBuilder:
-                                        (TextEditingValue textEditingValue) {
-                                      _thermServico = textEditingValue.text;
-                                      _validateServico = false;
-                                      agendaController.atualizarPagina();
-
-                                      if (textEditingValue.text == '') {
-                                        return const Iterable<Servico>.empty();
-                                      }
-
-                                      return servicos.where((Servico option) {
-                                        return option
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(textEditingValue.text
-                                                .toLowerCase()
-                                                .trim());
-                                      });
-                                    },
-                                    label: 'Serviço',
-                                    hintText: 'Selecione o serviço...',
-                                    term: _thermServico,
-                                    onSelected: (Object servico) {
-                                      agendaController.servico =
-                                          (servico as Servico);
-                                      agendaController.atualizarPagina();
-                                    },
-                                    validate: _validateServico,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Container(
-                                    height: 60,
-                                    alignment: Alignment.centerLeft,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.blueAccent,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
+    return Scaffold(
+      bottomNavigationBar: const BottomBarComponent(),
+      extendBody: true,
+      appBar: AppBar(title: const Text('Formulário de Agenda')),
+      body: FutureBuilder(
+        future: _future,
+        builder: (_, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: Carregando(inverterCor: true));
+          } else {
+            return TripleBuilder(
+              store: agendaController,
+              builder: (ctx, triple) {
+                return triple.isLoading
+                    ? const Center(child: Carregando(inverterCor: true))
+                    : SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: mediaQuery.size.width * 0.6,
+                                      child: TextFormField(
+                                          readOnly: true,
+                                          controller: TextEditingController(
+                                              text:
+                                                  DateFormat('dd/MM/yyyy HH:mm')
+                                                      .format(agendaController
+                                                          .horario)),
+                                          keyboardType: TextInputType.datetime,
+                                          decoration: InputDecoratorComponent(
+                                            label: "Horário",
+                                          ).decorator()),
                                     ),
-                                    child: SizedBox.expand(
-                                      child: TextButton(
-                                        onPressed: () {
-                                          _submit(context);
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(
-                                              "Gravar",
-                                              style: GoogleFonts.raleway(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.white,
-                                                  fontSize: mediaQuery
-                                                      .textScaler
-                                                      .scale(14)),
-                                              textAlign: TextAlign.left,
-                                            ),
-                                            const SizedBox(
-                                              child: Icon(
-                                                Icons.lock_open,
+                                    DatePickerComponent(
+                                      isForm: true,
+                                      hasTime: true,
+                                      onDateChanged: (newDate) {
+                                        agendaController.horario = newDate;
+                                        agendaController.atualizarPagina();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                AutoCompleteComponent(
+                                  optionsBuilder:
+                                      (TextEditingValue textEditingValue) {
+                                    _thermPessoa = textEditingValue.text;
+                                    _validatePessoa = false;
+                                    agendaController.atualizarPagina();
+
+                                    if (textEditingValue.text == '') {
+                                      return const Iterable<Pessoa>.empty();
+                                    }
+
+                                    return agendaController.pessoas
+                                        .where((Pessoa option) {
+                                      return option
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(textEditingValue.text
+                                              .toLowerCase()
+                                              .trim());
+                                    });
+                                  },
+                                  label: 'Pessoa',
+                                  hintText: 'Selecione a pessoa...',
+                                  term: _thermPessoa,
+                                  onSelected: (Object pessoa) {
+                                    agendaController.pessoa =
+                                        (pessoa as Pessoa);
+                                    agendaController.atualizarPagina();
+                                  },
+                                  validate: _validatePessoa,
+                                ),
+                                const SizedBox(height: 10),
+                                AutoCompleteComponent(
+                                  optionsBuilder:
+                                      (TextEditingValue textEditingValue) {
+                                    _thermServico = textEditingValue.text;
+                                    _validateServico = false;
+                                    agendaController.atualizarPagina();
+
+                                    if (textEditingValue.text == '') {
+                                      return const Iterable<Servico>.empty();
+                                    }
+
+                                    return agendaController.servicos
+                                        .where((Servico option) {
+                                      return option
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(textEditingValue.text
+                                              .toLowerCase()
+                                              .trim());
+                                    });
+                                  },
+                                  label: 'Serviço',
+                                  hintText: 'Selecione o serviço...',
+                                  term: _thermServico,
+                                  onSelected: (Object servico) {
+                                    agendaController.servico =
+                                        (servico as Servico);
+                                    agendaController.atualizarPagina();
+                                  },
+                                  validate: _validateServico,
+                                ),
+                                const SizedBox(height: 10),
+                                Container(
+                                  height: 60,
+                                  alignment: Alignment.centerLeft,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.blueAccent,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                  ),
+                                  child: SizedBox.expand(
+                                    child: TextButton(
+                                      onPressed: () {
+                                        _submit(context);
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text(
+                                            "Gravar",
+                                            style: GoogleFonts.raleway(
+                                                fontWeight: FontWeight.w600,
                                                 color: Colors.white,
-                                              ),
-                                            )
-                                          ],
-                                        ),
+                                                fontSize: mediaQuery.textScaler
+                                                    .scale(14)),
+                                            textAlign: TextAlign.left,
+                                          ),
+                                          const SizedBox(
+                                            child: Icon(
+                                              Icons.lock_open,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                        );
-                },
-              ));
-        }
-      },
+                        ),
+                      );
+              },
+            );
+          }
+        },
+      ),
     );
   }
 

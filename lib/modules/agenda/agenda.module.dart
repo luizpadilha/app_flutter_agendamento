@@ -22,8 +22,6 @@ class AgendaModule extends Module {
     r.child('/agenda-form', child: (context) => AgendaFormPage(
               agenda: r.args.data,
               agendaController: Modular.get(),
-              servicoController: Modular.get(),
-              pessoaController: Modular.get(),
             ));
   }
 

@@ -6,6 +6,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
+import 'package:mybabernew/components/empty_list.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
 import 'package:mybabernew/entity/notificacao.dart';
 import 'package:mybabernew/modules/home/home.controller.dart';
@@ -120,37 +121,7 @@ class _HomePageState extends State<HomePage> {
                               }).toList(),
                             ),
                           )
-                        : SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.80,
-                            width: MediaQuery.of(context).size.width * 0.80,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(15, 60, 15, 15),
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    'assets/images/empty-list.png',
-                                    width:
-                                        MediaQuery.of(context).size.width / 3,
-                                    // color: Colors.black87,
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  AutoSizeText(
-                                    "Não foram encontrados cadastros vinculados ao seu CPF/CNPJ",
-                                    maxLines: 5,
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.raleway(
-                                        fontSize: MediaQuery.of(context)
-                                            .textScaler
-                                            .scale(12),
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
+                        : const EmptyList();
               }),
         ),
       ),
