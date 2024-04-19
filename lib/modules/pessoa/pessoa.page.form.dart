@@ -5,6 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mybabernew/components/alert.component.dart';
+import 'package:mybabernew/components/app_drawer.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
@@ -63,6 +64,7 @@ class _PessoaFormPageState extends State<PessoaFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const AppDrawerComponent(),
       bottomNavigationBar: const BottomBarComponent(),
       extendBody: true,
       appBar: AppBar(title: Text('Formulário de Pessoa')),

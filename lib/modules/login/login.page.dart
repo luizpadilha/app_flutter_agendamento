@@ -10,11 +10,13 @@ import 'package:mybabernew/modules/home/home.module.dart';
 import 'package:mybabernew/modules/login/login.controller.dart';
 
 class LoginPage extends StatefulWidget {
-
   final LoginController controller;
+  final bool logout;
 
-
-  const LoginPage({required this.controller});
+  const LoginPage({
+    required this.controller,
+    required this.logout,
+  });
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -23,120 +25,137 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool showPassword = false;
   final _formKey = GlobalKey<FormState>();
+  late Future _future;
 
   @override
   void initState() {
     super.initState();
+    if (widget.logout) {
+      controller.zerarUsuario();
+    }
+    _future = controller.carregarDadosSessao();
   }
 
   LoginController get controller => widget.controller;
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
-      body: TripleBuilder(
-          store: controller,
-          builder: (ctx, triple) {
-            return triple.isLoading
-                ? const Center(child: Carregando(inverterCor: true))
-                : SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              height: 100,
-                            ),
-                            TextFormField(
-                                validator: (_value) {
-                                  final valueString = _value ?? '';
-                                  if (valueString.trim().isEmpty) {
-                                    return 'O campo deve ser informado';
-                                  }
-                                  return null;
-                                },
-                                controller: controller.loginController,
-                                keyboardType: TextInputType.text,
-                                decoration: InputDecoratorComponent(
-                                  label: "Login",
-                                ).decorator()),
-                            const SizedBox(height: 10),
-                            TextFormField(
-                              validator: (_value) {
-                                final valueString = _value ?? '';
-                                if (valueString.trim().isEmpty) {
-                                  return 'O campo deve ser informado';
-                                }
-                                return null;
-                              },
-                              controller: controller.passwordController,
-                              keyboardType: TextInputType.text,
-                              obscureText: !showPassword,
-                              decoration: InputDecoratorComponent(
-                                label: "Senha",
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    showPassword
-                                        ? Icons.remove_red_eye_outlined
-                                        : Icons.remove_red_eye,
-                                    color: Colors.black,
+      body: FutureBuilder(
+        future: _future,
+        builder: (_, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: Carregando(inverterCor: true));
+          } else {
+            return TripleBuilder(
+                store: controller,
+                builder: (ctx, triple) {
+                  return triple.isLoading
+                      ? const Center(child: Carregando(inverterCor: true))
+                      : SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Form(
+                              key: _formKey,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  SizedBox(
+                                    height: 100,
                                   ),
-                                  onPressed: () {
-                                    showPassword = !showPassword;
-                                    controller.atualizarPagina();
-                                  },
-                                ),
-                              ).decorator(),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              height: 60,
-                              alignment: Alignment.centerLeft,
-                              decoration: const BoxDecoration(
-                                color: Colors.blueAccent,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                              ),
-                              child: SizedBox.expand(
-                                child: TextButton(
-                                  onPressed: () => _submit(context),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        "Acessar",
-                                        style: GoogleFonts.raleway(
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
-                                            fontSize: MediaQuery.of(context).textScaler.scale(14)),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                      const SizedBox(
-                                        child: Icon(
-                                          Icons.lock_open,
-                                          color: Colors.white,
+                                  TextFormField(
+                                      validator: (_value) {
+                                        final valueString = _value ?? '';
+                                        if (valueString.trim().isEmpty) {
+                                          return 'O campo deve ser informado';
+                                        }
+                                        return null;
+                                      },
+                                      controller: controller.loginController,
+                                      keyboardType: TextInputType.text,
+                                      decoration: InputDecoratorComponent(
+                                        label: "Login",
+                                      ).decorator()),
+                                  const SizedBox(height: 10),
+                                  TextFormField(
+                                    validator: (_value) {
+                                      final valueString = _value ?? '';
+                                      if (valueString.trim().isEmpty) {
+                                        return 'O campo deve ser informado';
+                                      }
+                                      return null;
+                                    },
+                                    controller: controller.passwordController,
+                                    keyboardType: TextInputType.text,
+                                    obscureText: !showPassword,
+                                    decoration: InputDecoratorComponent(
+                                      label: "Senha",
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          showPassword
+                                              ? Icons.remove_red_eye_outlined
+                                              : Icons.remove_red_eye,
+                                          color: Colors.black,
                                         ),
-                                      )
-                                    ],
+                                        onPressed: () {
+                                          showPassword = !showPassword;
+                                          controller.atualizarPagina();
+                                        },
+                                      ),
+                                    ).decorator(),
                                   ),
-                                ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    height: 60,
+                                    alignment: Alignment.centerLeft,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.blueAccent,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
+                                    child: SizedBox.expand(
+                                      child: TextButton(
+                                        onPressed: () => _submit(context),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text(
+                                              "Acessar",
+                                              style: GoogleFonts.raleway(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white,
+                                                  fontSize:
+                                                      MediaQuery.of(context)
+                                                          .textScaler
+                                                          .scale(14)),
+                                              textAlign: TextAlign.left,
+                                            ),
+                                            const SizedBox(
+                                              child: Icon(
+                                                Icons.lock_open,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-          }),
+                            ),
+                          ),
+                        );
+                });
+          }
+        },
+      ),
       extendBody: true,
     );
   }

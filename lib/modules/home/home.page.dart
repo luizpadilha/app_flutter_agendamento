@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mybabernew/components/app_drawer.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
@@ -37,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Home Page')),
+      drawer: const AppDrawerComponent(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: SizedBox(

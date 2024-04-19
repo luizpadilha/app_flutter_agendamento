@@ -16,11 +16,13 @@ class LoginModule extends Module {
 
   @override
   void routes(r) {
-    r.child('/', child: (context) => LoginPage(controller: Modular.get()));
+    r.child('/',
+        child: (context) => LoginPage(
+              controller: Modular.get(),
+          logout: r.args.data ?? false,
+            ));
   }
 
   @override
-  List<Module> get imports => [
-    DioModule()
-  ];
+  List<Module> get imports => [DioModule()];
 }

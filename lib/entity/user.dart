@@ -2,9 +2,9 @@ class User {
   String? username;
   String? token;
   String? userId;
-  int? expiresIn;
+  String? expiresIn;
 
-  User({this.username, this.expiresIn});
+  User({this.username, this.token, this.userId, this.expiresIn});
 
   User.fromJson(Map<String, dynamic> json) {
     username = json['user'];

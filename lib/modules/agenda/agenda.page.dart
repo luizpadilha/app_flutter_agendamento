@@ -3,6 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:intl/intl.dart';
 import 'package:mybabernew/components/alert.component.dart';
+import 'package:mybabernew/components/app_drawer.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/date_picker.component.dart';
@@ -37,6 +38,7 @@ class _AgendaPageState extends State<AgendaPage> {
     final deviceSize = MediaQuery.of(context).size;
     final msg = ScaffoldMessenger.of(context);
     return Scaffold(
+        drawer: const AppDrawerComponent(),
         bottomNavigationBar: const BottomBarComponent(),
         extendBody: true,
         appBar: AppBar(
