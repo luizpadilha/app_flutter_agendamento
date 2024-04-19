@@ -15,3 +15,9 @@ get baseUrl => isProduction ? BASE_URL : BASE_URL_HOMOLOGACAO;
 bool platformIsIos(BuildContext context) {
   return Theme.of(context).platform == TargetPlatform.iOS;
 }
+
+const String KEY_USERLOGIN = "userlogin";
+const String KEY_USERPASSWORD = "passwordlogin";
+const String KEY_USERID = "useridlogin";
+const String KEY_EXPIRYDATE = "expirylogin";
+const String KEY_TOKEN = "tokenlogin";

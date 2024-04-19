@@ -4,6 +4,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mybabernew/components/alert.component.dart';
+import 'package:mybabernew/components/app_drawer.component.dart';
 import 'package:mybabernew/components/auto_complete.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
@@ -73,6 +74,7 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
     return Scaffold(
+      drawer: const AppDrawerComponent(),
       bottomNavigationBar: const BottomBarComponent(),
       extendBody: true,
       appBar: AppBar(title: const Text('Formulário de Agenda')),
