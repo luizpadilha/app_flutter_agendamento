@@ -58,7 +58,6 @@ class _ServicoFormPageState extends State<ServicoFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const AppDrawerComponent(),
       bottomNavigationBar: const BottomBarComponent(),
       extendBody: true,
       appBar: AppBar(title: Text('Formulário de Servico')),

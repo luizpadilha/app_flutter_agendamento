@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
     if (!isValid) {
       return;
     }
-    User? user = await controller.getUser();
+    User? user = await controller.buscarUser();
     if (user != null) {
       AlertComponent.show(context,
           title: "Olá ${user.username}",

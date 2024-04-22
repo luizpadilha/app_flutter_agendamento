@@ -1,5 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mybabernew/core/modulesGlobal/dio.module.dart';
+import 'package:mybabernew/core/modulesGlobal/general.module.dart';
 import 'package:mybabernew/modules/login/login.controller.dart';
 import 'package:mybabernew/modules/login/login.repository.dart';
 
@@ -10,8 +11,6 @@ class LoginModule extends Module {
 
   @override
   void binds(i) {
-    i.add(LoginRepository.new);
-    i.addSingleton(LoginController.new);
   }
 
   @override
@@ -24,5 +23,5 @@ class LoginModule extends Module {
   }
 
   @override
-  List<Module> get imports => [DioModule()];
+  List<Module> get imports => [DioModule(), GeneralModule()];
 }

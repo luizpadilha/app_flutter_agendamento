@@ -19,24 +19,12 @@ class LoginController extends Store<User> {
 
   LoginController() : super(User());
 
-  Future<User?> getUser() async {
+  Future<User?> buscarUser() async {
     try {
       setLoading(true);
-      User? user =
-          await repo.getUser(loginController.text, passwordController.text);
+      User? user = await repo.getUser(loginController.text, passwordController.text);
       if (user != null) {
-        if (GetIt.instance.isRegistered<User>()) {
-          GetIt.instance.unregister<User>();
-        }
-        GetIt.instance.registerSingleton(user);
-        prefs = await SharedPreferences.getInstance();
-        prefs.setString(KEY_USERLOGIN, loginController.text);
-        prefs.setString(KEY_USERPASSWORD, passwordController.text);
-        prefs.setString(KEY_USERID, user.userId!);
-        prefs.setString(KEY_EXPIRYDATE, user.expiresIn!.toIso8601String());
-        prefs.setString(KEY_TOKEN, user.token!);
-
-        update(user);
+        atualizarUser(user);
         return user;
       }
     } on DioException catch (e, s) {
@@ -46,6 +34,34 @@ class LoginController extends Store<User> {
       setLoading(false);
     }
     return null;
+  }
+
+  void unregisterUser() {
+    if (GetIt.instance.isRegistered<User>()) {
+      GetIt.instance.unregister<User>();
+    }
+  }
+
+  Future<void> atualizarUser(User? user) async {
+    try {
+      setLoading(true);
+      if (user != null) {
+        unregisterUser();
+        GetIt.instance.registerSingleton(user);
+        prefs = await SharedPreferences.getInstance();
+        prefs.setString(KEY_USERLOGIN, loginController.text);
+        prefs.setString(KEY_USERPASSWORD, passwordController.text);
+        prefs.setString(KEY_USERID, user.userId!);
+        prefs.setString(KEY_EXPIRYDATE, user.expiresIn!.toIso8601String());
+        prefs.setString(KEY_TOKEN, user.token!);
+        update(user);
+      }
+    } on DioException catch (e, s) {
+      log('Erro ao buscar notificações', error: e, stackTrace: s);
+      rethrow;
+    } finally {
+      setLoading(false);
+    }
   }
 
   void atualizarPagina() {
@@ -72,7 +88,7 @@ class LoginController extends Store<User> {
   }
 
   Future<void> carregarDadosSessao() async {
-    log("Vai carregar dados da sessão -----------------");
+    log("---Vai carregar dados da sessão---");
     prefs = await SharedPreferences.getInstance();
     loginController.clear();
     passwordController.clear();

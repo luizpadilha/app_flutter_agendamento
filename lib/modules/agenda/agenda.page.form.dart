@@ -74,7 +74,6 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
     return Scaffold(
-      drawer: const AppDrawerComponent(),
       bottomNavigationBar: const BottomBarComponent(),
       extendBody: true,
       appBar: AppBar(title: const Text('Formulário de Agenda')),
