@@ -64,7 +64,6 @@ class _PessoaFormPageState extends State<PessoaFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const AppDrawerComponent(),
       bottomNavigationBar: const BottomBarComponent(),
       extendBody: true,
       appBar: AppBar(title: Text('Formulário de Pessoa')),

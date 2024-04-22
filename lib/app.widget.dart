@@ -3,6 +3,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
 class AppWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData tema = ThemeData(
@@ -10,6 +12,7 @@ class AppWidget extends StatelessWidget {
     );
     final mediaQuery = MediaQuery.of(context);
     return MaterialApp.router(
+      scaffoldMessengerKey: scaffoldMessengerKey,
       title: 'My barber',
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
