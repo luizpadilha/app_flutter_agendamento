@@ -54,19 +54,13 @@ class _ServicoPageState extends State<ServicoPage> {
         ],
       ),
       body: FutureBuilder(
-        future: _future,
-        builder: (_, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-            case ConnectionState.waiting:
+          future: _future,
+          builder: (_, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: Carregando(inverterCor: true));
-            case ConnectionState.active:
-            case ConnectionState.done:
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+            } else {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height,
                     child: TripleBuilder<ServicoController, List<Servico>>(
@@ -170,7 +164,6 @@ class _ServicoPageState extends State<ServicoPage> {
                 );
               }
           }
-        },
       ),
     );
   }
