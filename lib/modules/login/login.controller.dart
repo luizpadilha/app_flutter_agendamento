@@ -33,7 +33,7 @@ class LoginController extends Store<User> {
         prefs.setString(KEY_USERLOGIN, loginController.text);
         prefs.setString(KEY_USERPASSWORD, passwordController.text);
         prefs.setString(KEY_USERID, user.userId!);
-        prefs.setString(KEY_EXPIRYDATE, user.expiresIn!);
+        prefs.setString(KEY_EXPIRYDATE, user.expiresIn!.toIso8601String());
         prefs.setString(KEY_TOKEN, user.token!);
 
         update(user);
@@ -52,17 +52,23 @@ class LoginController extends Store<User> {
     update(state, force: true);
   }
 
-  void zerarUsuario() {
+  Future<void> zerarUsuario(bool isLogout) async {
     if (GetIt.instance.isRegistered<User>()) {
       GetIt.instance.unregister<User>();
+    }
+    if (isLogout) {
+      prefs = await SharedPreferences.getInstance();
     }
     prefs.setString(KEY_USERLOGIN, "");
     prefs.setString(KEY_USERPASSWORD, "");
     prefs.setString(KEY_USERID, "");
-    prefs.setString(KEY_EXPIRYDATE, "");
     prefs.setString(KEY_TOKEN, "");
+    prefs.setString(KEY_EXPIRYDATE, "");
     loginController.text = "";
     passwordController.text = "";
+    if (GetIt.instance.isRegistered<User>()) {
+      GetIt.instance.unregister<User>();
+    }
   }
 
   Future<void> carregarDadosSessao() async {
@@ -72,9 +78,9 @@ class LoginController extends Store<User> {
     passwordController.clear();
     String? login = prefs.getString(KEY_USERLOGIN);
     String? password = prefs.getString(KEY_USERPASSWORD);
-    String? token = prefs.getString(KEY_TOKEN);
-    String? expiresIn = prefs.getString(KEY_EXPIRYDATE);
     String? userId = prefs.getString(KEY_USERID);
+    String? token = prefs.getString(KEY_TOKEN);
+    String? expiresInToIso = prefs.getString(KEY_EXPIRYDATE);
 
     if (login != null && login.isNotEmpty) {
       loginController.text = login;
@@ -83,7 +89,17 @@ class LoginController extends Store<User> {
       passwordController.text = password;
     }
 
-    if (loginController.text.isNotEmpty && passwordController.text.isNotEmpty && token != null && token.isNotEmpty && expiresIn != null && expiresIn.isNotEmpty) {
+    if (loginController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty &&
+        token != null &&
+        token.isNotEmpty &&
+        expiresInToIso != null &&
+        expiresInToIso.isNotEmpty) {
+      DateTime expiresIn = DateTime.parse(expiresInToIso);
+      if (expiresIn.isBefore(DateTime.now())) {
+        zerarUsuario(false);
+        return;
+      }
       User user = User(username: login, token: token, userId: userId, expiresIn: expiresIn);
       if (GetIt.instance.isRegistered<User>()) {
         GetIt.instance.unregister<User>();
@@ -92,6 +108,4 @@ class LoginController extends Store<User> {
       Modular.to.pushReplacementNamed(HomeModule.ROUTE);
     }
   }
-
-
 }

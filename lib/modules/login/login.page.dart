@@ -31,9 +31,10 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     if (widget.logout) {
-      controller.zerarUsuario();
+      _future = controller.zerarUsuario(true);
+    } else {
+      _future = controller.carregarDadosSessao();
     }
-    _future = controller.carregarDadosSessao();
   }
 
   LoginController get controller => widget.controller;
