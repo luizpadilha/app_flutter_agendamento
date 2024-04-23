@@ -43,10 +43,10 @@ class PessoaController extends Store<List<Pessoa>> {
     }
   }
 
-  Future<void> removerPessoa(String idServico) async {
+  Future<void> removerPessoa(String idPessoa) async {
     try {
       setLoading(true);
-      await repo.removerPessoa(idServico);
+      await repo.removerPessoa(idPessoa);
       await buscarPessoas();
     } on DioException catch (e, s) {
       log('Erro ao remover pessoa', error: e, stackTrace: s);
