@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mybabernew/components/app_drawer.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
+import 'package:mybabernew/components/dismissible.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
 import 'package:mybabernew/entity/servico.dart';
@@ -75,84 +76,55 @@ class _ServicoPageState extends State<ServicoPage> {
                               physics:
                               const AlwaysScrollableScrollPhysics(),
                               children: triple.state.map((serv) {
-                                return Card(
-                                  color: Colors.white,
-                                  margin:
-                                  const EdgeInsets.only(top: 10),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width:
-                                          MediaQuery.of(context).size.width * 0.70,
-                                          child: Column(
-                                            children: [
-                                              LabelAndFieldComponent(
-                                                label: "Descrição",
-                                                field: "${serv.descricao}",
-                                                inline: true,
-                                              ),
-                                              LabelAndFieldComponent(
-                                                label: "Preço",
-                                                field: UtilBrasilFields.obterReal(serv.preco!),
-                                                inline: true,
-                                              ),
-                                            ],
+                                return DismissibleComponent(
+                                  contextPai: context,
+                                  keyDism: Key(serv.id.toString()),
+                                  idRemover: serv.id!,
+                                  object: serv,
+                                  futureRemover: () => _remover(serv.id!),
+                                  child: Card(
+                                    color: Colors.white,
+                                    margin:
+                                    const EdgeInsets.only(top: 5),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width:
+                                            MediaQuery.of(context).size.width * 0.70,
+                                            child: Column(
+                                              children: [
+                                                LabelAndFieldComponent(
+                                                  label: "Descrição",
+                                                  field: "${serv.descricao}",
+                                                  inline: true,
+                                                ),
+                                                LabelAndFieldComponent(
+                                                  label: "Preço",
+                                                  field: UtilBrasilFields.obterReal(serv.preco!),
+                                                  inline: true,
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context).size.width * 0.20,
-                                          child: Column(
-                                            children: [
-                                              IconButton(
-                                                onPressed: () {
-                                                  Modular.to.pushNamed(ServicoModule.ROUTE_SERVICOS_FORM,
-                                                      arguments: serv);
-                                                },
-                                                color: Theme.of(context).colorScheme.primary,
-                                                icon: const Icon(Icons.edit),
-                                              ),
-                                              IconButton(
-                                                onPressed: () {
-                                                  showDialog<bool>(
-                                                    context: context,
-                                                    builder: (ctx) =>
-                                                        AlertDialog(
-                                                          title: const Text('Tem Certeza?'),
-                                                          content: const Text('Quer remover o Serviço?'),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () => Navigator.of(ctx).pop(false),
-                                                              child: const Text('Não'),
-                                                            ),
-                                                            TextButton(
-                                                              onPressed: () => Navigator.of(ctx).pop(true),
-                                                              child: const Text('Sim'),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                  ).then((value) async {
-                                                        if (value ?? false) {
-                                                          try {
-                                                            await servicoController.removerServico(serv.id!);
-                                                          } catch (error) {
-                                                            msg.showSnackBar(
-                                                              SnackBar(
-                                                                content: Text(error.toString()),
-                                                              ),
-                                                            );
-                                                          }
-                                                        }
-                                                      });
-                                                },
-                                                color: Theme.of(context).colorScheme.error,
-                                                icon: Icon(Icons.delete),
-                                              ),
-                                            ],
+                                          SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.20,
+                                            child: Column(
+                                              children: [
+                                                IconButton(
+                                                  onPressed: () {
+                                                    Modular.to.pushNamed(ServicoModule.ROUTE_SERVICOS_FORM,
+                                                        arguments: serv);
+                                                  },
+                                                  color: Theme.of(context).colorScheme.primary,
+                                                  icon: const Icon(Icons.edit),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -166,5 +138,9 @@ class _ServicoPageState extends State<ServicoPage> {
           }
       ),
     );
+  }
+
+  Future<void> _remover(String id) async {
+    await servicoController.removerServico(id);
   }
 }

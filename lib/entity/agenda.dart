@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/entity/servico.dart';
 
@@ -26,4 +27,9 @@ class Agenda {
         'horario': horario,
         'servico': servico?.toJson(),
       };
+
+  @override
+  String toString() {
+    return '${pessoa!.nome} - ${DateFormat('HH:mm').format(horario!)}';
+  }
 }

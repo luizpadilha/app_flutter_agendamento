@@ -1,13 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/app_drawer.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
+import 'package:mybabernew/components/dismissible.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
 import 'package:mybabernew/entity/pessoa.dart';
@@ -75,118 +78,65 @@ class _PessoaPageState extends State<PessoaPage> {
                                 ? RefreshIndicator(
                                     onRefresh: pessoaController.buscarPessoas,
                                     child: ListView(
-                                      physics:
-                                          const AlwaysScrollableScrollPhysics(),
+                                      physics: const AlwaysScrollableScrollPhysics(),
                                       children: triple.state.map((pess) {
-                                        return Card(
-                                          color: Colors.white,
-                                          margin:
-                                              const EdgeInsets.only(top: 10),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.70,
-                                                  child: Column(
-                                                    children: [
-                                                      LabelAndFieldComponent(
-                                                        label: "Nome",
-                                                        field: "${pess.nome}",
-                                                        inline: true,
-                                                      ),
-                                                      LabelAndFieldComponent(
-                                                        label: "Número",
-                                                        field: pess.numero!,
-                                                        inline: true,
-                                                      ),
-                                                    ],
+                                        return DismissibleComponent(
+                                          contextPai: context,
+                                          keyDism: Key(pess.id.toString()),
+                                          idRemover: pess.id!,
+                                          object: pess,
+                                          futureRemover: () => _remover(pess.id!),
+                                          child: Card(
+                                            color: Colors.white,
+                                            margin: const EdgeInsets.only(top: 5),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(5),
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                        0.70,
+                                                    child: Column(
+                                                      children: [
+                                                        LabelAndFieldComponent(
+                                                          label: "Nome",
+                                                          field: "${pess.nome}",
+                                                          inline: true,
+                                                        ),
+                                                        LabelAndFieldComponent(
+                                                          label: "Número",
+                                                          field: pess.numero!,
+                                                          inline: true,
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.20,
-                                                  child: Column(
-                                                    children: [
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          Modular.to.pushNamed(
-                                                              PessoaModule
-                                                                  .ROUTE_PESSOAS_FORM,
-                                                              arguments: pess);
-                                                        },
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .primary,
-                                                        icon: Icon(Icons.edit),
-                                                      ),
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          showDialog<bool>(
-                                                            context: context,
-                                                            builder: (ctx) =>
-                                                                AlertDialog(
-                                                              title: const Text(
-                                                                  'Tem Certeza?'),
-                                                              content: const Text(
-                                                                  'Quer remover a Pessoa?'),
-                                                              actions: [
-                                                                TextButton(
-                                                                  onPressed: () =>
-                                                                      Navigator.of(
-                                                                              ctx)
-                                                                          .pop(
-                                                                              false),
-                                                                  child:
-                                                                      const Text(
-                                                                          'Não'),
-                                                                ),
-                                                                TextButton(
-                                                                  onPressed: () =>
-                                                                      Navigator.of(
-                                                                              ctx)
-                                                                          .pop(
-                                                                              true),
-                                                                  child:
-                                                                      const Text(
-                                                                          'Sim'),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ).then((value) async {
-                                                            if (value ??
-                                                                false) {
-                                                              try {
-                                                                await pessoaController
-                                                                    .removerPessoa(
-                                                                        pess.id!);
-                                                              } catch (error) {
-                                                                msg.showSnackBar(
-                                                                  SnackBar(
-                                                                    content: Text(
-                                                                        error
-                                                                            .toString()),
-                                                                  ),
-                                                                );
-                                                              }
-                                                            }
-                                                          });
-                                                        },
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .error,
-                                                        icon: const Icon(
-                                                            Icons.delete),
-                                                      ),
-                                                    ],
+                                                  SizedBox(
+                                                    width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                        0.10,
+                                                    child: Column(
+                                                      children: [
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            Modular.to.pushNamed(
+                                                                PessoaModule
+                                                                    .ROUTE_PESSOAS_FORM,
+                                                                arguments: pess);
+                                                          },
+                                                          color: Theme.of(context)
+                                                              .colorScheme
+                                                              .primary,
+                                                          icon: Icon(Icons.edit),
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         );
@@ -200,5 +150,9 @@ class _PessoaPageState extends State<PessoaPage> {
             }
           },
         ));
+  }
+
+  Future<void> _remover(String id) async {
+      await pessoaController.removerPessoa(id);
   }
 }
