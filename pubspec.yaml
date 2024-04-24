@@ -48,6 +48,7 @@ dependencies:
   font_awesome_flutter:
   substring_highlight: ^1.0.33
   intl: ^0.18.1
+  encrypted_shared_preferences: ^3.0.1
 
 dev_dependencies:
   flutter_test:

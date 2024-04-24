@@ -19,7 +19,6 @@ class LoginRepository {
           'password': pass,
         }),
       );
-      log(response.data.toString());
       if (response.data != null && response.data['erro'] == null) {
         var user = User.fromJson(response.data);
         return user;

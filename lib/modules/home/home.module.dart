@@ -1,5 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mybabernew/core/modulesGlobal/dio.module.dart';
+import 'package:mybabernew/core/modulesGlobal/general.module.dart';
 import 'package:mybabernew/modules/home/home.controller.dart';
 import 'package:mybabernew/modules/home/home.repository.dart';
 
@@ -20,5 +21,5 @@ class HomeModule extends Module {
   }
 
   @override
-  List<Module> get imports => [DioModule()];
+  List<Module> get imports => [DioModule(), GeneralModule()];
 }
