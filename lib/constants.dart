@@ -20,4 +20,5 @@ const String KEY_USERLOGIN = "userlogin";
 const String KEY_USERPASSWORD = "passwordlogin";
 const String KEY_USERID = "useridlogin";
 const String KEY_EXPIRYDATE = "expirylogin";
+const String KEY_EXPIRYTOKENDATE = "expirytoken";
 const String KEY_TOKEN = "tokenlogin";

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mybabernew/constants.dart';
@@ -23,15 +24,13 @@ class CustomInterceptors extends QueuedInterceptorsWrapper {
       options.path = (basePath + options.path);
     }
 
-    if (GetIt.instance.isRegistered<User>()) {
+    if (GetIt.instance.isRegistered<User>() && !options.path.contains("/api/auth/login")) {
       User user = GetIt.instance.get<User>();
       options.headers[HttpHeaders.authorizationHeader.toLowerCase()] ='Bearer ${user.token!}';
       options.followRedirects = false;
     }
-    options.headers[HttpHeaders.contentTypeHeader] = "application/json";
-    log("REQUEST[${options.method}] => PATH: ${options.path}");
-    log("HEADERS[${options.headers}]");
 
+    options.headers[HttpHeaders.contentTypeHeader] = "application/json";
     return super.onRequest(options, handler);
   }
 
@@ -44,7 +43,7 @@ class CustomInterceptors extends QueuedInterceptorsWrapper {
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
       log("Erro: ${err.response?.data['erro']}");
-      await refreshUser();
+      await _refreshToken();
       try {
         handler.resolve(await _retry(err.requestOptions));
       } on DioException catch (e) {
@@ -67,23 +66,14 @@ class CustomInterceptors extends QueuedInterceptorsWrapper {
         options: options);
   }
 
-  Future<void> refreshUser() async {
-    log("---atualizando token expirado---");
+  Future<void> _refreshToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    EncryptedSharedPreferences prefsEncrypted = EncryptedSharedPreferences();
     LoginController loginController = Modular.get();
-    loginController.unregisterUser();
     String? login = prefs.getString(KEY_USERLOGIN);
-    String? password = prefs.getString(KEY_USERPASSWORD);
-    var response = await _dio.post(
-      "/api/auth/login",
-      data: jsonEncode({
-        'login': login,
-        'password': password,
-      }),
-    );
-    if (response.data != null && response.data['erro'] == null) {
-      var user = User.fromJson(response.data);
-      await loginController.atualizarUser(user);
+    String? password = await prefsEncrypted.getString(KEY_USERPASSWORD);
+    if (login != null && login.isNotEmpty && password.isNotEmpty) {
+      await loginController.atualizarToken(login, password);
     }
   }
 
