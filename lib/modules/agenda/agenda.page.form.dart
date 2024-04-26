@@ -114,6 +114,7 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                           ).decorator()),
                                     ),
                                     DatePickerComponent(
+                                      firstDate: DateTime.now(),
                                       isForm: true,
                                       hasTime: true,
                                       onDateChanged: (newDate) {

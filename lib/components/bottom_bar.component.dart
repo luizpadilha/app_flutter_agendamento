@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' hide Badge;
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mybabernew/modules/agenda/agenda.module.dart';
 import 'package:mybabernew/modules/config/config.module.dart';
+import 'package:mybabernew/modules/graficos/graficos.module.dart';
 import 'package:mybabernew/modules/home/home.module.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.module.dart';
 import 'package:mybabernew/modules/servico/servico.module.dart';
@@ -29,25 +30,25 @@ class _BottomBarComponentState extends State<BottomBarComponent> {
             Modular.to.pushReplacementNamed(HomeModule.ROUTE);
             break;
           case 1:
-            Modular.to.pushReplacementNamed(ConfigModule.ROUTE);
-            break;
-          case 2:
             Modular.to.pushReplacementNamed(ServicoModule.ROUTE);
             break;
-          case 3:
+          case 2:
             Modular.to.pushReplacementNamed(PessoaModule.ROUTE);
             break;
-          case 4:
+          case 3:
             Modular.to.pushReplacementNamed(AgendaModule.ROUTE);
+            break;
+          case 4:
+            Modular.to.pushReplacementNamed(GraficoModule.ROUTE);
             break;
         }
       },
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.edit_note_sharp), label: "Config"),
         BottomNavigationBarItem(icon: Icon(Icons.add_business), label: "Serviço"),
         BottomNavigationBarItem(icon: Icon(Icons.people), label: "Pessoa"),
         BottomNavigationBarItem(icon: Icon(Icons.schedule), label: "Agenda"),
+        BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "Gráficos"),
       ],
     );
   }

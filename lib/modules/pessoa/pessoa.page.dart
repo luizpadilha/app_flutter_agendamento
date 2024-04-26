@@ -42,7 +42,6 @@ class _PessoaPageState extends State<PessoaPage> {
 
   @override
   Widget build(BuildContext context) {
-    final msg = ScaffoldMessenger.of(context);
     return Scaffold(
         drawer: const AppDrawerComponent(),
         bottomNavigationBar: const BottomBarComponent(),

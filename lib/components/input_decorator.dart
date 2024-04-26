@@ -55,6 +55,7 @@ class InputDecoratorComponent {
       hintText: hintText,
       errorText: errorText,
       prefixIcon: prefixIcon,
+
     );
   }
 }
