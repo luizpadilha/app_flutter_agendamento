@@ -37,7 +37,6 @@ class _ServicoPageState extends State<ServicoPage> {
 
   @override
   Widget build(BuildContext context) {
-    final msg = ScaffoldMessenger.of(context);
     return Scaffold(
       drawer: const AppDrawerComponent(),
       bottomNavigationBar: const BottomBarComponent(),

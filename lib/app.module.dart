@@ -1,8 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mybabernew/core/dio/custom.dio.dart';
 import 'package:mybabernew/modules/agenda/agenda.module.dart';
 import 'package:mybabernew/modules/config/config.module.dart';
+import 'package:mybabernew/modules/graficos/graficos.module.dart';
 import 'package:mybabernew/modules/home/home.module.dart';
 import 'package:mybabernew/modules/login/login.module.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.module.dart';
@@ -26,5 +25,6 @@ class AppModule extends Module {
     r.module(ServicoModule.ROUTE, module: ServicoModule());
     r.module(PessoaModule.ROUTE, module: PessoaModule());
     r.module(AgendaModule.ROUTE, module: AgendaModule());
+    r.module(GraficoModule.ROUTE, module: GraficoModule());
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mybabernew/components/input_decorator.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
@@ -31,9 +32,8 @@ class _AutoCompleteComponentState extends State<AutoCompleteComponent> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery
-        .of(context)
-        .size;
+    final mediaQuery = MediaQuery.of(context);
+    final deviceSize = mediaQuery.size;
     return LayoutBuilder(
       builder: (context, constraints) {
         return Autocomplete(
@@ -45,6 +45,10 @@ class _AutoCompleteComponentState extends State<AutoCompleteComponent> {
             return TextField(
               controller: controller,
               focusNode: focusNode,
+              style: GoogleFonts.raleway(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                  fontSize: mediaQuery.textScaler.scale(14)),
               onEditingComplete: onEditingComplete,
               decoration: InputDecoratorComponent (
                 label: widget.label,

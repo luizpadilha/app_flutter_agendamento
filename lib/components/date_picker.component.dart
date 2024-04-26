@@ -1,19 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:mybabernew/components/box_decorator.dart';
-import 'package:mybabernew/components/input_decorator.dart';
-import 'package:mybabernew/constants.dart';
 
 class DatePickerComponent extends StatelessWidget {
   final Function(DateTime) onDateChanged;
   final bool isForm;
   final bool hasTime;
+  final DateTime firstDate;
 
   DatePickerComponent({
     required this.onDateChanged,
     required this.isForm,
     required this.hasTime,
+    required this.firstDate,
   });
 
   _showDatePicker(BuildContext context) {
@@ -22,7 +20,7 @@ class DatePickerComponent extends StatelessWidget {
       cancelText: 'Cancelar',
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
+      firstDate: firstDate,
       lastDate: DateTime.now().add(const Duration(days: 366)),
       keyboardType: TextInputType.datetime,
     ).then((pickedDate) {

@@ -37,7 +37,6 @@ class _AgendaPageState extends State<AgendaPage> {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    final msg = ScaffoldMessenger.of(context);
     return Scaffold(
         drawer: const AppDrawerComponent(),
         bottomNavigationBar: const BottomBarComponent(),
@@ -87,6 +86,7 @@ class _AgendaPageState extends State<AgendaPage> {
                                   ),
                                   const SizedBox(height: 2),
                                   DatePickerComponent(
+                                    firstDate: DateTime(2024, 1, 1),
                                     isForm: false,
                                     hasTime: false,
                                     onDateChanged: (newDate) {
