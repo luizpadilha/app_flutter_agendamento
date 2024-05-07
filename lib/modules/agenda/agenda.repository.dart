@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mybabernew/entity/agenda.dart';
+import 'package:mybabernew/entity/horarios.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/entity/servico.dart';
 import 'package:mybabernew/entity/user.dart';
@@ -19,6 +20,17 @@ class AgendaRepository {
     if (response.statusCode == 200 && response.data != null) {
       return List<Agenda>.from(
           response.data.map((itemsJson) => Agenda.fromJson(itemsJson)));
+    }
+    return [];
+  }
+
+  Future<List<Horarios>> getHorarios(String servicoId, DateTime data) async {
+    User user = GetIt.instance.get<User>();
+    var response = await _client
+        .get("/api/horario/horarios-por-data?userId=${user.userId}&servicoId=$servicoId&data=${data.toIso8601String()}");
+    if (response.statusCode == 200 && response.data != null) {
+      return List<Horarios>.from(
+          response.data.map((itemsJson) => Horarios.fromJson(itemsJson)));
     }
     return [];
   }

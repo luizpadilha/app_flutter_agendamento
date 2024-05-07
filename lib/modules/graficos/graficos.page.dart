@@ -160,13 +160,13 @@ class GraficoPageState extends State<GraficoPage> {
                                       // Enable legend
                                       legend: const Legend(isVisible: true),
                                       // Enable tooltip
-                                      tooltipBehavior: TooltipBehavior(enable: true),
+                                      tooltipBehavior: TooltipBehavior(enable: true, header: 'Total R\$'),
                                       series: <CartesianSeries>[
                                         StackedColumnSeries<Grafico, String>(
                                               dataSource: triple.state,
                                               xValueMapper: (Grafico graf, _) => graf.descricao!.substring(0, 3),
                                               yValueMapper: (Grafico graf, _) => graf.valor,
-                                              name: 'Total',
+                                              name: 'Total R\$',
                                               dataLabelMapper: (Grafico graf, _) => graf.valor!.toStringAsFixed(0),
                                               dataLabelSettings: const DataLabelSettings(isVisible: true))
                                         ])

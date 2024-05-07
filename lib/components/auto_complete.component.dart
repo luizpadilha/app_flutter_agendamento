@@ -66,8 +66,9 @@ class _AutoCompleteComponentState extends State<AutoCompleteComponent> {
                 elevation: 4.0,
                 child: ConstrainedBox(
                   constraints:
-                  BoxConstraints(maxHeight: (deviceSize.height * 0.50),
-                      maxWidth: deviceSize.width * 0.90),
+                  BoxConstraints(
+                      maxHeight: (deviceSize.height * 0.50),
+                      maxWidth: constraints.maxWidth),
                   //RELEVANT CHANGE: added maxWidth
                   child: ListView.builder(
                     padding: EdgeInsets.zero,

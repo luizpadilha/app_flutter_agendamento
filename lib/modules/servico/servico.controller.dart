@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
@@ -13,6 +14,7 @@ class ServicoController extends Store<List<Servico>> {
   final descricaoController = TextEditingController();
   final precoController = TextEditingController();
   String id = '';
+  TimeOfDay tempo = const TimeOfDay(minute: 0, hour: 0);
 
   ServicoController() : super([]);
 
@@ -32,11 +34,11 @@ class ServicoController extends Store<List<Servico>> {
     }
   }
 
-  Future<void> salvarServicos() async {
+  Future<void> salvarServicos(BuildContext context) async {
     try {
       setLoading(true);
       await repo.salvarServicos(id, descricaoController.text,
-          UtilBrasilFields.converterMoedaParaDouble(precoController.text));
+          UtilBrasilFields.converterMoedaParaDouble(precoController.text), tempo.format(context));
     } on DioException catch (e, s) {
       log('Erro ao salvar serviço', error: e, stackTrace: s);
       rethrow;
@@ -56,5 +58,9 @@ class ServicoController extends Store<List<Servico>> {
     } finally {
       setLoading(false);
     }
+  }
+
+  void atualizarPagina() {
+    update(state, force: true);
   }
 }

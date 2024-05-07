@@ -4,6 +4,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
+import 'package:mybabernew/components/container_text_button.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
 import 'package:mybabernew/entity/user.dart';
 import 'package:mybabernew/modules/home/home.module.dart';
@@ -110,44 +111,11 @@ class _LoginPageState extends State<LoginPage> {
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  Container(
-                                    height: 60,
-                                    alignment: Alignment.centerLeft,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.blueAccent,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                    ),
-                                    child: SizedBox.expand(
-                                      child: TextButton(
-                                        onPressed: () => _submit(context),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(
-                                              "Acessar",
-                                              style: GoogleFonts.raleway(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.white,
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                          .textScaler
-                                                          .scale(14)),
-                                              textAlign: TextAlign.left,
-                                            ),
-                                            const SizedBox(
-                                              child: Icon(
-                                                Icons.lock_open,
-                                                color: Colors.white,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
+                                  ContainerTextButtonComponenet(
+                                    label: 'Acessar',
+                                    icon: Icons.lock_open,
+                                    onPressed: () => _submit(context),
+                                  ),
                                 ],
                               ),
                             ),

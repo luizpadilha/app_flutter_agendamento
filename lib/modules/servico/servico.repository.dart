@@ -18,7 +18,7 @@ class ServicoRepository {
         response.data.map((itemsJson) => Servico.fromJson(itemsJson)));
   }
 
-  Future<void> salvarServicos(String id, String descricao, double preco) async {
+  Future<void> salvarServicos(String id, String descricao, double preco, String tempo) async {
     User user = GetIt.instance.get<User>();
     var response = await _client.post(
       "/api/servico/salvar-servico",
@@ -27,6 +27,7 @@ class ServicoRepository {
         'descricao': descricao,
         'preco': preco,
         'userId': user.userId,
+        'tempo': tempo,
       }),
     );
   }

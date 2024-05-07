@@ -73,31 +73,28 @@ class _AgendaPageState extends State<AgendaPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              width: deviceSize.width * 0.5,
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Data: ${DateFormat('dd/MM/yyyy').format(agendaController.dataInicial)}',
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black87),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  DatePickerComponent(
-                                    firstDate: DateTime(2024, 1, 1),
-                                    isForm: false,
-                                    hasTime: false,
-                                    onDateChanged: (newDate) {
-                                      setState(() {
-                                        agendaController.dataInicial = newDate;
-                                      });
-                                      _future = agendaController.buscarAgendas();
-                                    },
-                                  ),
-                                ],
-                              ),
+                            Row(
+                              children: [
+                                Text(
+                                  'Data: ${DateFormat('dd/MM/yyyy').format(agendaController.dataInicial)}',
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87),
+                                ),
+                                const SizedBox(height: 2),
+                                DatePickerComponent(
+                                  firstDate: DateTime(2024, 1, 1),
+                                  isForm: false,
+                                  hasTime: false,
+                                  onDateChanged: (newDate) {
+                                    setState(() {
+                                      agendaController.dataInicial = newDate;
+                                    });
+                                    _future = agendaController.buscarAgendas();
+                                  },
+                                ),
+                              ],
                             ),
                           ],
                         ),
