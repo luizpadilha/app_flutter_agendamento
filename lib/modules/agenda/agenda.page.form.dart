@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,12 +10,16 @@ import 'package:mybabernew/components/app_drawer.component.dart';
 import 'package:mybabernew/components/auto_complete.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
+import 'package:mybabernew/components/container_text_button.component.dart';
 import 'package:mybabernew/components/date_picker.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
+import 'package:mybabernew/components/time_picker.component.dart';
 import 'package:mybabernew/entity/agenda.dart';
+import 'package:mybabernew/entity/horarios.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/entity/servico.dart';
 import 'package:mybabernew/modules/agenda/agenda.controller.dart';
+import 'package:mybabernew/modules/pessoa/pessoa.module.dart';
 
 class AgendaFormPage extends StatefulWidget {
   final AgendaController agendaController;
@@ -37,6 +43,7 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
   String _thermServico = '';
   bool _validatePessoa = false;
   bool _validateServico = false;
+  bool _validateHorario = false;
   late Future _future;
 
   @override
@@ -61,9 +68,11 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
       agendaController.servico = widget.agenda!.servico!;
       agendaController.pessoa = widget.agenda!.pessoa!;
     } else {
-      agendaController.horario = DateTime.now();
+      agendaController.data = DateTime.now();
+      agendaController.horario = null;
       agendaController.servico = Servico();
       agendaController.pessoa = Pessoa();
+      agendaController.horarios = [];
       agendaController.id = '';
     }
   }
@@ -75,7 +84,7 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
     var mediaQuery = MediaQuery.of(context);
     return Scaffold(
       bottomNavigationBar: const BottomBarComponent(),
-      extendBody: true,
+      extendBody: false,
       appBar: AppBar(title: const Text('Formulário de Agenda')),
       body: FutureBuilder(
         future: _future,
@@ -99,62 +108,47 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                 const SizedBox(height: 10),
                                 Row(
                                   children: [
-                                    SizedBox(
-                                      width: mediaQuery.size.width * 0.6,
-                                      child: TextFormField(
-                                          readOnly: true,
-                                          controller: TextEditingController(
-                                              text:
-                                                  DateFormat('dd/MM/yyyy HH:mm')
-                                                      .format(agendaController
-                                                          .horario)),
-                                          keyboardType: TextInputType.datetime,
-                                          decoration: InputDecoratorComponent(
-                                            label: "Horário",
-                                          ).decorator()),
+                                    Expanded(
+                                      child: AutoCompleteComponent(
+                                        optionsBuilder:
+                                            (TextEditingValue textEditingValue) {
+                                          _thermPessoa = textEditingValue.text;
+                                          _validatePessoa = false;
+                                          agendaController.atualizarPagina();
+
+                                          if (textEditingValue.text == '') {
+                                            return const Iterable<Pessoa>.empty();
+                                          }
+
+                                          return agendaController.pessoas
+                                              .where((Pessoa option) {
+                                            return option
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(textEditingValue.text
+                                                    .toLowerCase()
+                                                    .trim());
+                                          });
+                                        },
+                                        label: 'Pessoa',
+                                        hintText: 'Selecione a pessoa...',
+                                        term: _thermPessoa,
+                                        onSelected: (Object pessoa) {
+                                          agendaController.pessoa =
+                                              (pessoa as Pessoa);
+                                          agendaController.atualizarPagina();
+                                        },
+                                        validate: _validatePessoa,
+                                      ),
                                     ),
-                                    DatePickerComponent(
-                                      firstDate: DateTime.now(),
-                                      isForm: true,
-                                      hasTime: true,
-                                      onDateChanged: (newDate) {
-                                        agendaController.horario = newDate;
-                                        agendaController.atualizarPagina();
+                                    IconButton(
+                                      color: Theme.of(context).colorScheme.primary,
+                                      icon: const Icon(Icons.person_add_outlined),
+                                      onPressed: () {
+                                        Modular.to.pushNamed(PessoaModule.ROUTE_PESSOAS_FORM, arguments: null).then((value) => agendaController.atualizarPessoas());
                                       },
                                     ),
                                   ],
-                                ),
-                                const SizedBox(height: 10),
-                                AutoCompleteComponent(
-                                  optionsBuilder:
-                                      (TextEditingValue textEditingValue) {
-                                    _thermPessoa = textEditingValue.text;
-                                    _validatePessoa = false;
-                                    agendaController.atualizarPagina();
-
-                                    if (textEditingValue.text == '') {
-                                      return const Iterable<Pessoa>.empty();
-                                    }
-
-                                    return agendaController.pessoas
-                                        .where((Pessoa option) {
-                                      return option
-                                          .toString()
-                                          .toLowerCase()
-                                          .contains(textEditingValue.text
-                                              .toLowerCase()
-                                              .trim());
-                                    });
-                                  },
-                                  label: 'Pessoa',
-                                  hintText: 'Selecione a pessoa...',
-                                  term: _thermPessoa,
-                                  onSelected: (Object pessoa) {
-                                    agendaController.pessoa =
-                                        (pessoa as Pessoa);
-                                    agendaController.atualizarPagina();
-                                  },
-                                  validate: _validatePessoa,
                                 ),
                                 const SizedBox(height: 10),
                                 AutoCompleteComponent(
@@ -182,51 +176,137 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                   hintText: 'Selecione o serviço...',
                                   term: _thermServico,
                                   onSelected: (Object servico) {
-                                    agendaController.servico =
-                                        (servico as Servico);
-                                    agendaController.atualizarPagina();
+                                    agendaController.servico = (servico as Servico);
+                                    _future = agendaController.buscarHorarios().then((value) => agendaController.atualizarPagina());
                                   },
                                   validate: _validateServico,
                                 ),
                                 const SizedBox(height: 10),
-                                Container(
-                                  height: 60,
-                                  alignment: Alignment.centerLeft,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.blueAccent,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: mediaQuery.size.width * 0.6,
+                                      child: TextFormField(
+                                          readOnly: true,
+                                          controller: TextEditingController(
+                                              text: DateFormat('dd/MM/yyyy')
+                                                  .format(
+                                                      agendaController.data)),
+                                          keyboardType: TextInputType.datetime,
+                                          decoration: InputDecoratorComponent(
+                                            label: "Data",
+                                          ).decorator()),
                                     ),
-                                  ),
-                                  child: SizedBox.expand(
-                                    child: TextButton(
-                                      onPressed: () {
-                                        _submit(context);
+                                    DatePickerComponent(
+                                      firstDate: DateTime.now(),
+                                      isForm: true,
+                                      hasTime: false,
+                                      onDateChanged: (newDate) {
+                                        agendaController.data = newDate;
+                                        agendaController.horario = null;
+                                        _validateHorario = false;
+                                        _future = agendaController.buscarHorarios().then((value) => agendaController.atualizarPagina());
                                       },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            "Gravar",
-                                            style: GoogleFonts.raleway(
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.white,
-                                                fontSize: mediaQuery.textScaler
-                                                    .scale(14)),
-                                            textAlign: TextAlign.left,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        height: 30,
+                                        padding: const EdgeInsets.only(left: 10),
+                                        alignment: Alignment.centerLeft,
+                                        decoration: BoxDecoration(
+                                          border: _validateHorario ? Border.all(color: Colors.red, width: 1) : null,
+                                          color: Colors.green[100]!,
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(10),
                                           ),
-                                          const SizedBox(
-                                            child: Icon(
-                                              Icons.lock_open,
-                                              color: Colors.white,
-                                            ),
-                                          )
-                                        ],
+                                        ),
+                                        child: Text(
+                                          'Horário Selecionado: ${agendaController.horario == null ? 'Nenhum' : DateFormat('dd/MM/yyyy HH:mm').format(agendaController.horario!)}',
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black87),
+                                        ),
                                       ),
                                     ),
+                                    TimePickerComponent(
+                                      helpText: "Selecione o Horário",
+                                      onTimeChanged: (newTime) {
+                                        _validateHorario = false;
+                                        agendaController.atribuirHorario(Horarios(horario: '${newTime.hour}:${newTime.minute}'));
+                                        agendaController.atualizarPagina();
+                                        print(newTime);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Visibility(
+                                  visible: agendaController.horarios.isNotEmpty,
+                                  child: SizedBox(
+                                    height: mediaQuery.size.height * 0.40,
+                                    child: GridView.builder(
+                                        padding: const EdgeInsets.all(10.0),
+                                        itemCount: agendaController.horarios.length,
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 4,
+                                          childAspectRatio: 3 / 2,
+                                          crossAxisSpacing: 8,
+                                          mainAxisSpacing: 8,
+                                        ),
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                              return ClipRRect(
+                                                borderRadius: BorderRadius.circular(10),
+                                                child: GridTile(
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      _validateHorario = false;
+                                                      agendaController.atribuirHorario(agendaController.horarios[index]);
+                                                      agendaController.atualizarPagina();
+                                                    },
+                                                    child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(10),
+                                                      border: Border.all(color: agendaController.isHorarioSelecionado(agendaController.horarios[index])
+                                                          ? Colors.greenAccent
+                                                          : Colors.white,
+                                                          width: 3),
+                                                      gradient: LinearGradient(
+                                                        colors: [Theme.of(context).colorScheme.primary, Colors.grey],
+                                                        begin: Alignment.topLeft,
+                                                        end: Alignment.bottomRight,
+                                                      ),
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                    agendaController.horarios[index].horario!,
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.black87),
+                                                    ),
+                                                    ),
+                                                                                                      ),
+                                              ),
+                                            ),
+                                          );
+                                        }),
                                   ),
                                 ),
+                                const SizedBox(height: 10),
+                                ContainerTextButtonComponenet(
+                                  label: 'Gravar',
+                                  icon: Icons.save,
+                                  onPressed: () => _submit(context),
+                                ),
+                                const SizedBox(height: 10),
                               ],
                             ),
                           ),
@@ -242,11 +322,10 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
 
   Future<void> _submit(BuildContext context) async {
     final isValid = _formKey.currentState?.validate() ?? false;
-    _validatePessoa =
-        agendaController.pessoa == null || agendaController.pessoa?.id == null;
-    _validateServico = agendaController.servico == null ||
-        agendaController.servico?.id == null;
-    if (!isValid || _validatePessoa || _validateServico) {
+    _validatePessoa =  agendaController.pessoa == null || agendaController.pessoa?.id == null;
+    _validateServico = agendaController.servico == null || agendaController.servico?.id == null;
+    _validateHorario = agendaController.horario == null;
+    if (!isValid || _validatePessoa || _validateServico || _validateHorario) {
       agendaController.atualizarPagina();
       return;
     }

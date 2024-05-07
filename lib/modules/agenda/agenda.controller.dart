@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:mybabernew/entity/agenda.dart';
+import 'package:mybabernew/entity/horarios.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/entity/servico.dart';
 import 'package:mybabernew/exceptions/http_exception.dart';
@@ -18,14 +19,15 @@ class AgendaController extends Store<List<Agenda>> {
 
   Servico? servico;
   Pessoa? pessoa;
-  DateTime horario = DateTime.now();
+  DateTime? horario;
+  DateTime data = DateTime.now();
   String id = '';
   DateTime dataInicial = DateTime.now();
   List<Servico> servicos = [];
   List<Pessoa> pessoas = [];
+  List<Horarios> horarios = [];
 
   AgendaController() : super([]);
-
 
   Future<void> init() async {
     await servicoController.buscarServicos();
@@ -55,7 +57,7 @@ class AgendaController extends Store<List<Agenda>> {
   Future<void> salvarAgendas() async {
     try {
       setLoading(true);
-      await repo.salvarAgendas(id, horario, pessoa!, servico!);
+      await repo.salvarAgendas(id, horario!, pessoa!, servico!);
     } on DioException catch (e, s) {
       log('Erro ao salvar agenda', error: e, stackTrace: s);
       rethrow;
@@ -77,9 +79,54 @@ class AgendaController extends Store<List<Agenda>> {
     }
   }
 
+  void atribuirHorario(Horarios horarioVo) {
+    try {
+      setLoading(true);
+      List<String> partes = horarioVo.horario!.split(':');
+      int hour = int.parse(partes[0]);
+      int minute = int.parse(partes[1]);
+      this.horario = DateTime(
+        data.year,
+        data.month,
+        data.day,
+        hour,
+        minute,
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  bool isHorarioSelecionado(Horarios horarioVo) {
+    if (horario == null) return false;
+    List<String> partes = horarioVo.horario!.split(':');
+    int hour = int.parse(partes[0]);
+    int minute = int.parse(partes[1]);
+
+    int minuteH = horario!.minute;
+    int hourH = horario!.hour;
+
+    return (hour == hourH && minute == minuteH);
+  }
+
   void atualizarPagina() {
     update(state, force: true);
   }
 
+  void atualizarPessoas() {
+    pessoas = pessoaController.state;
+  }
 
+  Future<void> buscarHorarios() async {
+    try {
+      if (servico == null || servico!.id == null) return;
+      horarios = await repo.getHorarios(servico!.id!, data);
+    } on DioException catch (e, s) {
+      log('Erro ao buscar horarios', error: e, stackTrace: s);
+      rethrow;
+    } on Exception catch (e) {
+      log('Erro ao buscar horarios', error: e);
+      rethrow;
+    }
+  }
 }
