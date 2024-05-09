@@ -6,7 +6,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
-import 'package:mybabernew/components/container_text_button.component.dart';
+import 'package:mybabernew/components/box_text_button.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
 import 'package:mybabernew/components/time_picker.component.dart';
 import 'package:mybabernew/entity/servico.dart';
@@ -152,7 +152,7 @@ class _ServicoFormPageState extends State<ServicoFormPage> {
                                   label: "Preço",
                                 ).decorator()),
                             const SizedBox(height: 10),
-                            ContainerTextButtonComponenet(
+                            BoxTextButtonComponenet(
                               label: 'Gravar',
                               icon: Icons.save,
                               onPressed: () => _submit(context),

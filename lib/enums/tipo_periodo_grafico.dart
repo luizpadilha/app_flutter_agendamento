@@ -1,22 +1,16 @@
 enum TipoPeriodoGrafico {
-  SEMANA,
-  SEMESTRE1,
-  SEMESTRE2;
-}
+  SEMANA('Semana'),
+  SEMESTRE1('1º Semestre'),
+  SEMESTRE2('2º Semestre');
 
-extension TipoPeriodoGraficoExtension on TipoPeriodoGrafico {
+  final String descricao;
 
-  String get descricao {
-    switch (this) {
-      case TipoPeriodoGrafico.SEMANA:
-        return 'Semana';
-      case TipoPeriodoGrafico.SEMESTRE1:
-        return '1º Semestre';
-      case TipoPeriodoGrafico.SEMESTRE2:
-        return '2º Semestre';
-      default:
-        return '';
-    }
+  const TipoPeriodoGrafico(
+    this.descricao,
+  );
+
+  @override
+  String toString() {
+    return descricao;
   }
-
 }

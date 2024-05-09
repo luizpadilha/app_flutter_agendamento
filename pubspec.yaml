@@ -50,6 +50,7 @@ dependencies:
   intl: ^0.18.1
   encrypted_shared_preferences: ^3.0.1
   syncfusion_flutter_charts: ^25.1.41+1
+  url_launcher: ^6.0.9
 
 dev_dependencies:
   flutter_test:

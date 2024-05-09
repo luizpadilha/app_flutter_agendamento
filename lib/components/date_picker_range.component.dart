@@ -74,10 +74,7 @@ class DatePickerRangeComponent extends StatelessWidget {
                   MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text("Selecionar",
-                      style: GoogleFonts.raleway(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                          fontSize: mediaQuery.textScaler.scale(14)),
+                      style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.left,
                   ),
                   SizedBox(width: mediaQuery.size.width * 0.02),

@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ContainerTextButtonComponenet extends StatelessWidget {
+class TextButtonComponent extends StatelessWidget {
   String label;
   IconData icon;
   Function() onPressed;
 
-  ContainerTextButtonComponenet({
+  TextButtonComponent({
     super.key,
     required this.label,
     required this.icon,
@@ -20,12 +20,6 @@ class ContainerTextButtonComponenet extends StatelessWidget {
     return Container(
       height: 60,
       alignment: Alignment.centerLeft,
-      decoration: const BoxDecoration(
-        color: Colors.blueAccent,
-        borderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
-      ),
       child: SizedBox.expand(
         child: TextButton(
           onPressed: () {
@@ -34,18 +28,14 @@ class ContainerTextButtonComponenet extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(
-                label,
-                style: GoogleFonts.raleway(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontSize: mediaQuery.textScaler.scale(14)),
+              Text(label,
+                style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.left,
               ),
               SizedBox(
                 child: Icon(
                   icon,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               )
             ],

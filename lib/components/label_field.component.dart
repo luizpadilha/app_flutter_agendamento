@@ -15,9 +15,10 @@ class LabelAndFieldComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme;
     var labelWidget = Text(
       "${label.toUpperCase()}:",
-      style: const TextStyle(fontSize: 12),
+      style: textTheme.bodySmall,
     );
     var fieldWidget = Flexible(
       fit: FlexFit.loose,
@@ -25,7 +26,7 @@ class LabelAndFieldComponent extends StatelessWidget {
         field,
         maxLines: 2,
         overflowReplacement: const Text("..."),
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87),
+          style: textTheme.displaySmall,
       ),
     );
 
