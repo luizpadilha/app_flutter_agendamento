@@ -23,6 +23,7 @@ class DismissibleComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    var textTheme = Theme.of(context).textTheme;
     return Dismissible(
       direction: DismissDirection.endToStart,
       key: keyDism,
@@ -41,6 +42,7 @@ class DismissibleComponent extends StatelessWidget {
           context: context,
           builder: (ctx) => AlertDialog(
             title: const Text('Tem Certeza?'),
+            titleTextStyle: textTheme.bodyLarge,
             content: const Text('Quer remover o item?'),
             actions: [
               TextButton(

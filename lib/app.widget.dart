@@ -18,6 +18,31 @@ class AppWidget extends StatelessWidget {
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.blueAccent,
         ),
+        textTheme: TextTheme(
+          //campos entrada
+          bodySmall: GoogleFonts.raleway(
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+              fontSize: mediaQuery.textScaler.scale(12)),
+          bodyMedium: GoogleFonts.raleway(
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+              fontSize: mediaQuery.textScaler.scale(14)),
+          bodyLarge: GoogleFonts.raleway(
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+              fontSize: mediaQuery.textScaler.scale(16)),
+          //campos saida
+          displaySmall: GoogleFonts.raleway(
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+              fontSize: mediaQuery.textScaler.scale(12)),
+          //botoes
+          labelLarge: GoogleFonts.raleway(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontSize: mediaQuery.textScaler.scale(16)),
+        ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           type: BottomNavigationBarType.fixed, // Fixed
           backgroundColor: Colors.blueAccent, // <-- This works for fixed

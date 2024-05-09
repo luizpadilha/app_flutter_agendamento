@@ -14,7 +14,7 @@ class BottomBarComponent extends StatefulWidget {
   State<BottomBarComponent> createState() => _BottomBarComponentState();
 }
 
-int _currentIndex = 0;
+int _currentIndex = 3;
 
 class _BottomBarComponentState extends State<BottomBarComponent> {
   @override

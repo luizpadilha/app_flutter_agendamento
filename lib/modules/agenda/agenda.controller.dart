@@ -119,14 +119,18 @@ class AgendaController extends Store<List<Agenda>> {
 
   Future<void> buscarHorarios() async {
     try {
+      setLoading(true);
       if (servico == null || servico!.id == null) return;
       horarios = await repo.getHorarios(servico!.id!, data);
+      log('buscou');
     } on DioException catch (e, s) {
       log('Erro ao buscar horarios', error: e, stackTrace: s);
       rethrow;
     } on Exception catch (e) {
       log('Erro ao buscar horarios', error: e);
       rethrow;
+    } finally {
+      setLoading(false);
     }
   }
 }

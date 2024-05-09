@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
-import 'package:mybabernew/components/container_text_button.component.dart';
+import 'package:mybabernew/components/box_text_button.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
 import 'package:mybabernew/entity/user.dart';
-import 'package:mybabernew/modules/home/home.module.dart';
+import 'package:mybabernew/modules/agenda/agenda.module.dart';
 import 'package:mybabernew/modules/login/login.controller.dart';
 
 class LoginPage extends StatefulWidget {
@@ -111,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  ContainerTextButtonComponenet(
+                                  BoxTextButtonComponenet(
                                     label: 'Acessar',
                                     icon: Icons.lock_open,
                                     onPressed: () => _submit(context),
@@ -139,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
       AlertComponent.show(context,
           title: "Olá ${user.username}",
           subTitle: "Seja bem vindo", onConfirm: () {
-        Modular.to.pushReplacementNamed(HomeModule.ROUTE);
+        Modular.to.pushReplacementNamed(AgendaModule.ROUTE);
       });
     } else {
       AlertComponent.show(context,

@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:mybabernew/components/input_decorator.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
 class AutoCompleteComponent extends StatefulWidget {
   final Function(Object) onSelected;
-  final bool validate;
   final AutocompleteOptionsBuilder<Object> optionsBuilder;
-  final String hintText;
-  final String label;
   final String? term;
+  final String? initialValue;
+  Widget Function(
+      BuildContext context,
+      TextEditingController textEditingController,
+      FocusNode focusNode,
+      VoidCallback onFieldSubmitted,
+      ) fieldViewBuilder;
 
   AutoCompleteComponent({
     required this.onSelected,
-    required this.validate,
     required this.optionsBuilder,
-    required this.hintText,
-    required this.label,
     required this.term,
+    required this.initialValue,
+    required this.fieldViewBuilder,
   });
 
   @override
@@ -37,37 +38,19 @@ class _AutoCompleteComponentState extends State<AutoCompleteComponent> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Autocomplete(
+          initialValue: TextEditingValue(text: widget.initialValue ?? ''),
           displayStringForOption: _displayStringForOption,
           optionsBuilder: widget.optionsBuilder,
           onSelected: widget.onSelected,
-          fieldViewBuilder:
-              (context, controller, focusNode, onEditingComplete) {
-            return TextField(
-              controller: controller,
-              focusNode: focusNode,
-              style: GoogleFonts.raleway(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                  fontSize: mediaQuery.textScaler.scale(14)),
-              onEditingComplete: onEditingComplete,
-              decoration: InputDecoratorComponent (
-                label: widget.label,
-                hintText: widget.hintText,
-                errorText:
-                widget.validate ? "O campo deve ser informado" : null,
-                prefixIcon: const Icon(Icons.search),
-              ).decorator(),
-            );
-          },
+          fieldViewBuilder: widget.fieldViewBuilder,
           optionsViewBuilder: (context, onSelected, options) {
             return Align(
               alignment: Alignment.topLeft,
               child: Material(
                 elevation: 4.0,
                 child: ConstrainedBox(
-                  constraints:
-                  BoxConstraints(
-                      maxHeight: (deviceSize.height * 0.50),
+                  constraints: BoxConstraints(
+                      maxHeight: (deviceSize.height * 0.25),
                       maxWidth: constraints.maxWidth),
                   //RELEVANT CHANGE: added maxWidth
                   child: ListView.builder(
@@ -92,14 +75,12 @@ class _AutoCompleteComponentState extends State<AutoCompleteComponent> {
                           }
                           return Container(
                             color:
-                            highlight ? Theme
-                                .of(context)
-                                .focusColor : null,
+                                highlight ? Theme.of(context).focusColor : null,
                             padding: const EdgeInsets.all(16.0),
                             child: SubstringHighlight(
                               text: option.toString(),
                               textStyleHighlight:
-                              const TextStyle(color: Colors.purple),
+                                  const TextStyle(color: Colors.purple),
                               term: widget.term,
                             ),
                           );
@@ -116,3 +97,5 @@ class _AutoCompleteComponentState extends State<AutoCompleteComponent> {
     );
   }
 }
+
+

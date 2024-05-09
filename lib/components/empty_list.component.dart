@@ -1,7 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class EmptyList extends StatelessWidget {
   const EmptyList({super.key});
@@ -29,11 +27,7 @@ class EmptyList extends StatelessWidget {
               "Não foram encontrados registros vinculado ao seu usuario",
               maxLines: 5,
               textAlign: TextAlign.center,
-              style: GoogleFonts.raleway(
-                  fontSize: MediaQuery.of(context)
-                      .textScaler
-                      .scale(14),
-                  fontWeight: FontWeight.w400),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),

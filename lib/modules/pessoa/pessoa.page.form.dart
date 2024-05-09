@@ -6,7 +6,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
-import 'package:mybabernew/components/container_text_button.component.dart';
+import 'package:mybabernew/components/box_text_button.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.controller.dart';
@@ -47,7 +47,7 @@ class _PessoaFormPageState extends State<PessoaFormPage> {
       pessoaController.id = widget.pessoa!.id!;
     } else {
       pessoaController.nomeController.text = '';
-      pessoaController.numeroController.text = '';
+      pessoaController.numeroController.text = '44';
       pessoaController.id = '';
     }
   }
@@ -120,7 +120,7 @@ class _PessoaFormPageState extends State<PessoaFormPage> {
                                   label: "Número",
                                 ).decorator()),
                             const SizedBox(height: 10),
-                            ContainerTextButtonComponenet(
+                            BoxTextButtonComponenet(
                               label: 'Gravar',
                               icon: Icons.save,
                               onPressed: () => _submit(context),

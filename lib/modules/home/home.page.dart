@@ -110,10 +110,8 @@ class _HomePageState extends State<HomePage> {
                                           const SizedBox(
                                             height: 5,
                                           ),
-                                          Text(
-                                            "Notificação",
-                                            style: GoogleFonts.raleway(
-                                                fontWeight: FontWeight.bold),
+                                          Text("Notificação",
+                                            style: Theme.of(context).textTheme.bodyMedium,
                                           )
                                         ],
                                       ),

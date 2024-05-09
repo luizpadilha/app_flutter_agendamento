@@ -45,7 +45,7 @@ class _ServicoPageState extends State<ServicoPage> {
         title: Text('Gerenciar Serviços'),
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () {
               Modular.to.pushNamed(ServicoModule.ROUTE_SERVICOS_FORM,
                   arguments: null);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class InputDecoratorComponent {
   final String label;
@@ -55,7 +56,6 @@ class InputDecoratorComponent {
       hintText: hintText,
       errorText: errorText,
       prefixIcon: prefixIcon,
-
     );
   }
 }
