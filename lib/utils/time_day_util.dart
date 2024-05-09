@@ -11,8 +11,7 @@ class TimeDayUtil {
   }
 
   static String converterTimeOfDayToString(TimeOfDay timeOfDay) {
-    final formattedTime = DateFormat.Hm().format(DateTime(2022, 1, 1, timeOfDay.hour, timeOfDay.minute));
-    print(formattedTime);
+    final formattedTime = DateFormat('HH:mm').format(DateTime(2022, 1, 1, timeOfDay.hour, timeOfDay.minute));
     return formattedTime;
   }
 

@@ -7,6 +7,7 @@ import 'package:mybabernew/components/box_text_button.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
 import 'package:mybabernew/entity/user.dart';
 import 'package:mybabernew/modules/agenda/agenda.module.dart';
+import 'package:mybabernew/modules/home/home.module.dart';
 import 'package:mybabernew/modules/login/login.controller.dart';
 
 class LoginPage extends StatefulWidget {
@@ -138,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
       AlertComponent.show(context,
           title: "Olá ${user.username}",
           subTitle: "Seja bem vindo", onConfirm: () {
-        Modular.to.pushReplacementNamed(AgendaModule.ROUTE);
+        Modular.to.pushReplacementNamed(HomeModule.ROUTE);
       });
     } else {
       AlertComponent.show(context,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
+import 'package:intl/intl.dart';
 import 'package:mybabernew/components/app_drawer.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
@@ -36,7 +37,7 @@ class _ConfigExpedientePageState extends State<ConfigExpedientePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         bottomNavigationBar: const BottomBarComponent(),
-        extendBody: true,
+        extendBody: false,
         appBar: AppBar(
           title: Text('Configurar Expediente'),
         ),
@@ -64,47 +65,39 @@ class _ConfigExpedientePageState extends State<ConfigExpedientePage> {
                                         return Card(
                                           color: Colors.white,
                                           margin: const EdgeInsets.only(top: 5),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: MediaQuery.of(context).size.width * 0.70,
-                                                  child: Column(
-                                                    children: [
-                                                      LabelAndFieldComponent(
-                                                        label: "Expediente",
-                                                        field: "${config.inicioExpediente!.format(context)} à ${config.finalExpediente!.format(context)}",
-                                                        inline: true,
-                                                      ),
-                                                      LabelAndFieldComponent(
-                                                        label: "Almoço",
-                                                        field: "${config.inicioAlmoco!.format(context)} à ${config.finalAlmoco!.format(context)}",
-                                                        inline: true,
-                                                      ),
-                                                    ],
+                                          child: Column(
+                                            children: [
+                                              ListTile(
+                                                leading: CircleAvatar(
+                                                backgroundColor: Theme.of(context).colorScheme.primary,
+                                                radius: 30,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all( 5),
+                                                  child: FittedBox(
+                                                    child: Text(config.diaSemana!.descricao.substring(0, 3)),
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                  width: MediaQuery.of(context).size.width * 0.10,
-                                                  child: Column(
-                                                    children: [
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          Modular.to.pushNamed(
-                                                              '${ConfigExpedienteModule.ROUTE_CONFIG_EXPD_FORM}?idConfig=${widget.configId}',
-                                                              arguments: config);
-                                                        },
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .primary,
-                                                        icon: Icon(Icons.edit),
-                                                      )
-                                                    ],
-                                                  ),
+                                              ),
+                                                title:  LabelAndFieldComponent(
+                                                  label: "Expediente",
+                                                  field: "${config.inicioExpediente!.format(context)} à ${config.finalExpediente!.format(context)}",
+                                                  inline: true,
                                                 ),
-                                              ],
-                                            ),
+                                                subtitle: LabelAndFieldComponent(
+                                                  label: "Almoço",
+                                                  field: "${config.inicioAlmoco!.format(context)} à ${config.finalAlmoco!.format(context)}",
+                                                  inline: true,
+                                                ),
+                                                trailing: IconButton(
+                                                  onPressed: () {
+                                                    Modular.to.pushNamed(
+                                                        '${ConfigExpedienteModule.ROUTE_CONFIG_EXPD_FORM}?idConfig=${widget.configId}', arguments: config);
+                                                  },
+                                                  color: Theme.of(context).colorScheme.primary,
+                                                  icon: const Icon(Icons.edit),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         );
                                       }).toList(),
