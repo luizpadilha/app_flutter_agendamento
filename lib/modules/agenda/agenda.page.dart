@@ -150,12 +150,10 @@ class _AgendaPageState extends State<AgendaPage> {
                                                       inline: true,
                                                     ),
                                                     trailing: WhatsAppButton(
-
                                                       phoneNumber: UtilBrasilFields.obterTelefone(agend.pessoa!.numero!, mascara: false),
                                                       mensagem: 'Olá ${agend.pessoa!.nome}, aviso de compromisso.\n'
                                                           '🕑 ${DateFormat('dd/MM').format(agend.horario!)} às ${DateFormat('HH:mm').format(agend.horario!)}h.\n',
                                                     ),
-
                                                   ),
                                                 ],
                                               ),

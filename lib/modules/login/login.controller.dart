@@ -9,6 +9,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mybabernew/constants.dart';
 import 'package:mybabernew/entity/user.dart';
 import 'package:mybabernew/modules/agenda/agenda.module.dart';
+import 'package:mybabernew/modules/home/home.module.dart';
 import 'package:mybabernew/modules/login/login.repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -170,7 +171,7 @@ class LoginController extends Store<User> {
         GetIt.instance.unregister<User>();
       }
       GetIt.instance.registerSingleton(user);
-      Modular.to.pushReplacementNamed(AgendaModule.ROUTE);
+      Modular.to.pushReplacementNamed(HomeModule.ROUTE);
     }
   }
 }
