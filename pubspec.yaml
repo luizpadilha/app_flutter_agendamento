@@ -51,6 +51,24 @@ dependencies:
   encrypted_shared_preferences: ^3.0.1
   syncfusion_flutter_charts: ^25.1.41+1
   url_launcher: ^6.0.9
+  flutter_native_splash: ^2.2.0+1
+  flutter_launcher_icons: ^0.13.0
+
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: "assets/app/splash.png"
+  android: true
+  ios: true
+
+flutter_icons:
+  image_path: "assets/app/icon.png"
+  ios: true
+  remove_alpha_ios: true
+  android: "launcher_icon"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/app/icon-android.png"
+
 
 dev_dependencies:
   flutter_test:
