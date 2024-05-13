@@ -79,7 +79,7 @@ class _ConfigExpedientePageState extends State<ConfigExpedientePage> {
                                                 ),
                                               ),
                                                 title:  LabelAndFieldComponent(
-                                                  label: "Expediente",
+                                                  label: "Turno",
                                                   field: "${config.inicioExpediente!.format(context)} à ${config.finalExpediente!.format(context)}",
                                                   inline: true,
                                                 ),

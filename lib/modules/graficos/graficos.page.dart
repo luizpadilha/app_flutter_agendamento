@@ -70,7 +70,7 @@ class GraficoPageState extends State<GraficoPage> {
                                     Visibility(
                                       visible: graficoController.tipoPeriodoGrafico == TipoPeriodoGrafico.SEMANA,
                                       child: ConstrainedBox(
-                                        constraints: BoxConstraints(maxWidth: deviceSize.width * 0.40),
+                                        constraints: BoxConstraints(maxWidth: deviceSize.width * 0.45),
                                         child: DatePickerRangeComponent(
                                             isSemanal: true,
                                             onDateChanged: (newDate) {

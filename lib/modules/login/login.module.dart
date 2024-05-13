@@ -7,7 +7,7 @@ import 'package:mybabernew/modules/login/login.repository.dart';
 import 'login.page.dart';
 
 class LoginModule extends Module {
-  static final String ROUTE = "/";
+  static final String ROUTE = "/login/";
 
   @override
   void binds(i) {
