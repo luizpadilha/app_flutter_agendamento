@@ -30,7 +30,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
+    print('teste1');
     super.initState();
+    print('teste');
     if (widget.logout) {
       _future = controller.zerarUsuario(true);
     } else {

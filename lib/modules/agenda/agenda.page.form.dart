@@ -234,7 +234,6 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                   children: [
                                     Expanded(
                                       child: Container(
-                                        height: 50,
                                         padding: const EdgeInsets.only(left: 10),
                                         alignment: Alignment.centerLeft,
                                         decoration: BoxDecoration(

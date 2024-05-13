@@ -51,44 +51,48 @@ class DatePickerRangeComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    final deviceSize = mediaQuery.size;
     return LayoutBuilder(builder: (context, constraints) {
-      return Container(
-          height: 60,
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.blue,
-              width: 0,
-            ),
-            color: Colors.white,
-            borderRadius: const BorderRadius.all(
-              Radius.circular(10),
-            ),
-          ),
-          child: Row(
-            children: [
-              TextButton(
-                onPressed: () => _showDatePicker(context),
-                child: Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text("Selecionar",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      textAlign: TextAlign.left,
-                  ),
-                  SizedBox(width: mediaQuery.size.width * 0.02),
-                  const SizedBox(
-                      child: Icon(
-                        Icons.calendar_month,
-                      ),
-                    )
-                  ],
-                ),
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+            maxHeight: constraints.maxWidth,
+            maxWidth: constraints.maxWidth),
+        child: Container(
+            height: 60,
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.blue,
+                width: 0,
               ),
-            ],
+              color: Colors.white,
+              borderRadius: const BorderRadius.all(
+                Radius.circular(10),
+              ),
+            ),
+            child: Row(
+              children: [
+                TextButton(
+                  onPressed: () => _showDatePicker(context),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text("Selecionar",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: TextAlign.left,
+                    ),
+                    const SizedBox(
+                        child: Icon(
+                          Icons.calendar_month,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        );
+      );
     });
   }
 }
