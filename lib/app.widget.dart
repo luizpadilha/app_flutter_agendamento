@@ -16,8 +16,7 @@ class AppWidget extends StatelessWidget {
       title: 'My barber',
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
-
-          primary: Colors.blueAccent,
+          primary: const Color(0xFF448AFF),
         ),
         textTheme: TextTheme(
           //campos entrada
