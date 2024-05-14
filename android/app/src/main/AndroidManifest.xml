@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="mybabernew"
-        android:name="${applicationName}"
+        android:label="Agendamento"
+        android:name="Agendamento"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"

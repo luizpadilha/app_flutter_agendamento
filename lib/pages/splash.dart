@@ -18,7 +18,7 @@ class _SplashState extends State<Splash> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 6), () {
-      Modular.to.pushReplacementNamed(LoginModule.ROUTE);
+      Modular.to.navigate(LoginModule.ROUTE);
     });
   }
 
@@ -27,9 +27,9 @@ class _SplashState extends State<Splash> {
     var size = MediaQuery.of(context).size;
     var textTheme = Theme.of(context).textTheme;
     return Container(
-      color: const Color(0xFF55AFE7),
+      color: const Color(0xFF448AFF),
       child: Padding(
-        padding: EdgeInsets.only(top: size.height * 0.20, bottom: size.height * 0.05),
+        padding: EdgeInsets.only(top: size.height * 0.20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -38,7 +38,7 @@ class _SplashState extends State<Splash> {
               fit: BoxFit.fill,
             ),
             SizedBox(
-              height: size.height * 0.30,
+              height: size.height * 0.25,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
