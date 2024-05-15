@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 get baseUrl => 'http://ec2-13-58-62-11.us-east-2.compute.amazonaws.com:80';
+//get baseUrl => 'http://localhost:8081';
 
 
 bool platformIsIos(BuildContext context) {

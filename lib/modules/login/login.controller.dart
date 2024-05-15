@@ -8,6 +8,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mybabernew/constants.dart';
 import 'package:mybabernew/entity/user.dart';
+import 'package:mybabernew/exceptions/http_exception.dart';
 import 'package:mybabernew/modules/agenda/agenda.module.dart';
 import 'package:mybabernew/modules/home/home.module.dart';
 import 'package:mybabernew/modules/login/login.repository.dart';
@@ -32,7 +33,10 @@ class LoginController extends Store<User> {
         return user;
       }
     } on DioException catch (e, s) {
-      log('Erro ao buscar notificações', error: e, stackTrace: s);
+      log('Erro ao buscar usuario', error: e, stackTrace: s);
+      rethrow;
+    } on HttpException catch (e) {
+      log('Erro ao buscar agenda', error: e);
       rethrow;
     } finally {
       setLoading(false);
@@ -59,7 +63,8 @@ class LoginController extends Store<User> {
       }
       prefs = await SharedPreferences.getInstance();
       prefs.setString(KEY_TOKEN, user.token!);
-      prefs.setString(KEY_EXPIRYTOKENDATE, user.tokenExpiresIn!.toIso8601String());
+      prefs.setString(
+          KEY_EXPIRYTOKENDATE, user.tokenExpiresIn!.toIso8601String());
     }
   }
 
@@ -75,7 +80,8 @@ class LoginController extends Store<User> {
         prefsEncrypted.setString(KEY_USERPASSWORD, passwordController.text);
         prefs.setString(KEY_USERID, user.userId!);
         prefs.setString(KEY_EXPIRYDATE, user.userExpiresIn!.toIso8601String());
-        prefs.setString(KEY_EXPIRYTOKENDATE, user.tokenExpiresIn!.toIso8601String());
+        prefs.setString(
+            KEY_EXPIRYTOKENDATE, user.tokenExpiresIn!.toIso8601String());
         prefs.setString(KEY_TOKEN, user.token!);
         update(user);
       }
@@ -138,7 +144,6 @@ class LoginController extends Store<User> {
         token.isNotEmpty &&
         expiresInToIso != null &&
         expiresInToIso.isNotEmpty) {
-
       log("---Vai verificar expires do user---");
       DateTime userExpiresIn = DateTime.parse(expiresInToIso);
       if (userExpiresIn.isBefore(DateTime.now())) {

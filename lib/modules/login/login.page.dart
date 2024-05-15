@@ -132,21 +132,23 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _submit(BuildContext context) async {
-    final isValid = _formKey.currentState?.validate() ?? false;
-    if (!isValid) {
-      return;
-    }
-    User? user = await controller.buscarUser();
-    if (user != null) {
-      AlertComponent.show(context,
-          title: "Olá ${user.username}",
-          subTitle: "Seja bem vindo", onConfirm: () {
-        Modular.to.pushReplacementNamed(HomeModule.ROUTE);
-      });
-    } else {
+    try {
+      final isValid = _formKey.currentState?.validate() ?? false;
+      if (!isValid) {
+        return;
+      }
+      User? user = await controller.buscarUser();
+      if (user != null) {
+        AlertComponent.show(context,
+            title: "Olá ${user.username}",
+            subTitle: "Seja bem vindo", onConfirm: () {
+              Modular.to.pushReplacementNamed(HomeModule.ROUTE);
+            });
+      }
+    } catch (erro) {
       AlertComponent.show(context,
           title: "Ops!",
-          subTitle: "Usuário ou senha inválido",
+          subTitle: erro.toString(),
           style: AlertStyle.error);
     }
   }
