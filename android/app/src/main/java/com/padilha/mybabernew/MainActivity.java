@@ -1,4 +1,4 @@
-package com.example.mybabernew;
+package com.padilha.mybabernew;
 
 import io.flutter.embedding.android.FlutterActivity;
 
