@@ -47,7 +47,7 @@ dependencies:
   flutter_triple:
   font_awesome_flutter:
   substring_highlight: ^1.0.33
-  intl: ^0.18.1
+  intl: ^0.19.0
   encrypted_shared_preferences: ^3.0.1
   syncfusion_flutter_charts: ^25.1.41+1
   url_launcher: ^6.0.9
