@@ -37,7 +37,7 @@ class _ConfigPageState extends State<ConfigPage> {
         bottomNavigationBar: const BottomBarComponent(),
         extendBody: true,
         appBar: AppBar(
-          title: Text('Configurações'),
+          title: const Text('Configurações'),
         ),
       body: FutureBuilder(
         future: _future,

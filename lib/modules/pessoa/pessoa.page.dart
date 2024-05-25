@@ -1,12 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:brasil_fields/brasil_fields.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/app_drawer.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
@@ -14,11 +8,8 @@ import 'package:mybabernew/components/dismissible.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
 import 'package:mybabernew/entity/pessoa.dart';
-import 'package:mybabernew/entity/servico.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.controller.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.module.dart';
-import 'package:mybabernew/modules/servico/servico.controller.dart';
-import 'package:mybabernew/modules/servico/servico.module.dart';
 
 class PessoaPage extends StatefulWidget {
   final PessoaController pessoaController;
@@ -47,7 +38,7 @@ class _PessoaPageState extends State<PessoaPage> {
         bottomNavigationBar: const BottomBarComponent(),
         extendBody: true,
         appBar: AppBar(
-          title: Text('Gerenciar Pessoas'),
+          title: const Text('Gerenciar Pessoas'),
           actions: [
             IconButton(
               icon: Icon(Icons.add),

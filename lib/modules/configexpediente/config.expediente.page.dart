@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:intl/intl.dart';
-import 'package:mybabernew/components/app_drawer.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
@@ -39,7 +37,7 @@ class _ConfigExpedientePageState extends State<ConfigExpedientePage> {
         bottomNavigationBar: const BottomBarComponent(),
         extendBody: false,
         appBar: AppBar(
-          title: Text('Configurar Expediente'),
+          title: const Text('Configurar Expediente'),
         ),
         body: FutureBuilder(
           future: _future,

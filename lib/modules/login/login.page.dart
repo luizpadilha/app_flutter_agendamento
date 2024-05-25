@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:mybabernew/components/alert.component.dart';
-import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/box_text_button.component.dart';
+import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
 import 'package:mybabernew/entity/user.dart';
-import 'package:mybabernew/modules/agenda/agenda.module.dart';
 import 'package:mybabernew/modules/home/home.module.dart';
 import 'package:mybabernew/modules/login/login.controller.dart';
 
@@ -30,9 +29,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    print('teste1');
     super.initState();
-    print('teste');
     if (widget.logout) {
       _future = controller.zerarUsuario(true);
     } else {
@@ -66,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 100,
                                   ),
                                   TextFormField(
@@ -110,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                     ).decorator(),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   BoxTextButtonComponenet(

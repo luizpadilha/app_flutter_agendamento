@@ -37,94 +37,92 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Home Page')),
+      appBar: AppBar(title: const Text('Home Page')),
       drawer: const AppDrawerComponent(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: TripleBuilder<HomeController, List<Notificacao>>(
-              store: controller,
-              builder: (ctx, triple) {
-                return triple.isLoading
-                    ? const Center(child: Carregando(inverterCor: true))
-                    : triple.state.isNotEmpty
-                        ? RefreshIndicator(
-                            onRefresh: controller.buscarAplicacoes,
-                            child: ListView(
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              children: triple.state.map((notificacao) {
-                                return Stack(
-                                  children: [
-                                    Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        side: const BorderSide(
-                                          color: Colors.blueAccent,
-                                        ),
-                                      ),
-                                      elevation: 0,
-                                      color: Colors.white,
-                                      margin: const EdgeInsets.only(top: 50),
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            15, 60, 15, 15),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            LabelAndFieldComponent(
-                                              label: "Titulo",
-                                              field: "${notificacao.titulo}",
-                                              inline: true,
-                                            ),
-                                            LabelAndFieldComponent(
-                                              label: "Descrição",
-                                              field: "${notificacao.descricao}",
-                                              inline: true,
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                          ],
-                                        ),
+      body: TripleBuilder<HomeController, List<Notificacao>>(
+          store: controller,
+          builder: (ctx, triple) {
+            return triple.isLoading
+                ? const Center(child: Carregando(inverterCor: true))
+                : triple.state.isNotEmpty
+                    ? RefreshIndicator(
+                        onRefresh: controller.buscarAplicacoes,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: ListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            children: triple.state.map((notificacao) {
+                              return Stack(
+                                children: [
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(10.0),
+                                      side: const BorderSide(
+                                        color: Colors.blueAccent,
                                       ),
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.only(top: 10),
-                                      alignment: Alignment.center,
+                                    elevation: 0,
+                                    color: Colors.white,
+                                    margin: const EdgeInsets.only(top: 50),
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          15, 60, 15, 15),
                                       child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const CircleAvatar(
-                                              radius: 30,
-                                              backgroundColor:
-                                                  Colors.blueAccent,
-                                              child: Icon(
-                                                FontAwesomeIcons.gear,
-                                                color: Colors.white,
-                                                size: 30,
-                                              )),
-                                          const SizedBox(
-                                            height: 5,
+                                          LabelAndFieldComponent(
+                                            label: "Titulo",
+                                            field: "${notificacao.titulo}",
+                                            inline: true,
                                           ),
-                                          Text("Notificação",
-                                            style: Theme.of(context).textTheme.bodyMedium,
-                                          )
+                                          LabelAndFieldComponent(
+                                            label: "Descrição",
+                                            field: "${notificacao.descricao}",
+                                            inline: true,
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
                                         ],
                                       ),
-                                    )
-                                  ],
-                                );
-                              }).toList(),
-                            ),
-                          )
-                        : const EmptyList();
-              }),
-        ),
-      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 10),
+                                    alignment: Alignment.center,
+                                    child: Column(
+                                      children: [
+                                        const CircleAvatar(
+                                            radius: 30,
+                                            backgroundColor:
+                                                Colors.blueAccent,
+                                            child: Icon(
+                                              FontAwesomeIcons.gear,
+                                              color: Colors.white,
+                                              size: 30,
+                                            )),
+                                        const SizedBox(
+
+                                          height: 5,
+                                        ),
+                                        Text("Notificação",
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      )
+                    : const EmptyList();
+          }),
       extendBody: true,
       bottomNavigationBar: const BottomBarComponent(),
     );

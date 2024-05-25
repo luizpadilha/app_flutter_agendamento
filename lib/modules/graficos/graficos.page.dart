@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:intl/intl.dart';
 import 'package:mybabernew/components/app_drawer.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';

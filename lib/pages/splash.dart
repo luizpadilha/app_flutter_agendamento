@@ -17,7 +17,7 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 6), () {
+    Timer(const Duration(seconds: 4), () {
       Modular.to.navigate(LoginModule.ROUTE);
     });
   }
@@ -27,25 +27,31 @@ class _SplashState extends State<Splash> {
     var size = MediaQuery.of(context).size;
     var textTheme = Theme.of(context).textTheme;
     return Container(
-      color: const Color(0xFF448AFF),
+      color: const Color(0xFFAAFDFF),
       child: Padding(
-        padding: EdgeInsets.only(top: size.height * 0.20),
+        padding: EdgeInsets.only(top: size.height * 0.30),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Lottie.asset(
-              'assets/json/splashAnimation.json',
-              fit: BoxFit.fill,
+            SizedBox(
+              height: size.height * 0.40,
+              child: Lottie.asset(
+                'assets/json/splashAnimation.json',
+                fit: BoxFit.fill,
+              ),
             ),
             SizedBox(
-              height: size.height * 0.25,
+              height: size.height * 0.15,
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text('Padilha', style: textTheme.bodyLarge),
-                Text('software', style: textTheme.bodyMedium),
-              ],
+            SizedBox(
+              height: size.height * 0.15,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text('Padilha', style: textTheme.bodyLarge),
+                  Text('software', style: textTheme.bodyMedium),
+                ],
+              ),
             ),
           ],
         ),

@@ -6,30 +6,33 @@ class EmptyList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.80,
-      width: MediaQuery.of(context).size.width * 0.80,
-      child: Padding(
-        padding:
-        const EdgeInsets.fromLTRB(15, 60, 15, 15),
-        child: Column(
-          children: [
-            Image.asset(
-              'assets/images/empty-list.png',
-              width:
-              MediaQuery.of(context).size.width / 3,
-              // color: Colors.black87,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            AutoSizeText(
-              "Não foram encontrados registros vinculado ao seu usuario",
-              maxLines: 5,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ],
+    return Center(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.80,
+        width: MediaQuery.of(context).size.width * 0.80,
+        child: Padding(
+          padding:
+          const EdgeInsets.fromLTRB(15, 60, 15, 15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/empty-list.png',
+                width:
+                MediaQuery.of(context).size.width / 3,
+                // color: Colors.black87,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              AutoSizeText(
+                "Não foram encontrados registros vinculado ao seu usuario",
+                maxLines: 5,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+          ),
         ),
       ),
     );
