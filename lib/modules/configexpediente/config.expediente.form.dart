@@ -74,7 +74,7 @@ class _ConfigExpedienteFormPageState extends State<ConfigExpedienteFormPage> {
     return Scaffold(
       bottomNavigationBar: const BottomBarComponent(),
       extendBody: true,
-      appBar: AppBar(title: Text('Formulário de Expediente')),
+      appBar: AppBar(title: const Text('Formulário de Expediente')),
       body: TripleBuilder(
           store: configExpedienteController,
           builder: (ctx, triple) {

@@ -1,10 +1,7 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:brasil_fields/brasil_fields.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mybabernew/components/app_drawer.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
@@ -42,7 +39,7 @@ class _ServicoPageState extends State<ServicoPage> {
       bottomNavigationBar: const BottomBarComponent(),
       extendBody: true,
       appBar: AppBar(
-        title: Text('Gerenciar Serviços'),
+        title: const Text('Gerenciar Serviços'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),

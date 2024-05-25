@@ -7,7 +7,6 @@ import 'package:mybabernew/entity/agenda.dart';
 import 'package:mybabernew/entity/horarios.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/entity/servico.dart';
-import 'package:mybabernew/exceptions/http_exception.dart';
 import 'package:mybabernew/modules/agenda/agenda.repository.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.controller.dart';
 import 'package:mybabernew/modules/servico/servico.controller.dart';

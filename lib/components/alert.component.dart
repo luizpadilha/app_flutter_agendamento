@@ -16,12 +16,12 @@ abstract class AlertComponent {
         builder: (context) {
           return Container(
               height: MediaQuery.of(context).size.height / 3,
-              padding: EdgeInsets.only(left: 10, top: 20, right: 10),
+              padding: const EdgeInsets.only(left: 10, top: 20, right: 10),
               decoration: BoxDecoration(
                   color: style == AlertStyle.error
                       ? Colors.redAccent
                       : Colors.green,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30))),
               child: Column(
@@ -35,7 +35,7 @@ abstract class AlertComponent {
                           child: AutoSizeText("$title",
                               maxLines: 2,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)),
@@ -48,7 +48,7 @@ abstract class AlertComponent {
                               maxLines: 8,
                               textAlign: TextAlign.center,
                               style:
-                                  TextStyle(fontSize: 15, color: Colors.white)),
+                                  const TextStyle(fontSize: 15, color: Colors.white)),
                         ),
                       ),
                     ],
@@ -62,7 +62,7 @@ abstract class AlertComponent {
                         visible: textDismiss != null && textConfirm.isNotEmpty,
                         child: TextButton(
                             child: Text('${textDismiss}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white)),
                             onPressed: () async {
@@ -76,7 +76,7 @@ abstract class AlertComponent {
                       TextButton(
                           child: Text(
                               '${textConfirm != null ? textConfirm : 'Continuar'}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)),
                           onPressed: () async {
