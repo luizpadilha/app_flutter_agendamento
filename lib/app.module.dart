@@ -4,12 +4,11 @@ import 'package:mybabernew/modules/config/config.module.dart';
 import 'package:mybabernew/modules/configexpediente/config.expediente.module.dart';
 import 'package:mybabernew/modules/graficos/graficos.module.dart';
 import 'package:mybabernew/modules/home/home.module.dart';
-import 'package:mybabernew/modules/home/home.page.dart';
 import 'package:mybabernew/modules/login/login.module.dart';
-import 'package:mybabernew/modules/login/login.page.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.module.dart';
 import 'package:mybabernew/modules/servico/servico.module.dart';
 import 'package:mybabernew/pages/splash.dart';
+import 'package:mybabernew/pages/usuario.page.dart';
 
 class AppModule extends Module {
 
@@ -24,6 +23,7 @@ class AppModule extends Module {
   @override
   void routes(r) {
     r.child('/', child: (context) => const Splash());
+    r.child('/usuario/', child: (context) => const UsuarioPage());
     r.module(LoginModule.ROUTE, module: LoginModule());
     r.module(HomeModule.ROUTE, module: HomeModule());
     r.module(ConfigModule.ROUTE, module: ConfigModule());

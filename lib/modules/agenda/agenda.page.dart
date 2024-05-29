@@ -11,6 +11,7 @@ import 'package:mybabernew/components/date_picker.component.dart';
 import 'package:mybabernew/components/dismissible.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
+import 'package:mybabernew/components/slidable.component.dart';
 import 'package:mybabernew/components/whatsapp_button.component.dart';
 import 'package:mybabernew/entity/agenda.dart';
 import 'package:mybabernew/modules/agenda/agenda.controller.dart';
@@ -38,7 +39,8 @@ class _AgendaPageState extends State<AgendaPage> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
+    final mediaQuery = MediaQuery.of(context);
+    final deviceSizeHeight = mediaQuery.size.height - mediaQuery.padding.top;
     var textTheme = Theme.of(context).textTheme;
     return Scaffold(
         drawer: const AppDrawerComponent(),
@@ -50,8 +52,7 @@ class _AgendaPageState extends State<AgendaPage> {
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
-                Modular.to
-                    .pushNamed(AgendaModule.ROUTE_AGENDA_FORM, arguments: null);
+                Modular.to.pushNamed(AgendaModule.ROUTE_AGENDA_FORM, arguments: null);
               },
             ),
           ],
@@ -63,106 +64,105 @@ class _AgendaPageState extends State<AgendaPage> {
               return const Center(child: Carregando(inverterCor: true));
             } else {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Card(
-                      color: Colors.white,
-                      margin: const EdgeInsets.only(top: 5),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Data: ${DateFormat('dd/MM/yyyy').format(agendaController.dataInicial)}',
-                                  style: textTheme.displaySmall,
-                                ),
-                                const SizedBox(height: 2),
-                                DatePickerComponent(
-                                  firstDate: DateTime(2024, 1, 1),
-                                  isForm: false,
-                                  hasTime: false,
-                                  onDateChanged: (newDate) {
-                                    setState(() {
-                                      agendaController.dataInicial = newDate;
-                                    });
-                                    _future = agendaController.buscarAgendas();
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
                     Flexible(
                       fit: FlexFit.loose,
                       child: TripleBuilder<AgendaController, List<Agenda>>(
                         store: agendaController,
                         builder: (ctx, triple) {
                           return triple.isLoading
-                              ? const Center(
-                                  child: Carregando(inverterCor: true))
-                              : triple.state.isNotEmpty
-                                  ? RefreshIndicator(
-                                      onRefresh: () => _buscarAgendas(context),
-                                      child: ListView(
-                                        physics:
-                                            const AlwaysScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        children: triple.state.map((agend) {
-                                          return DismissibleComponent(
-                                            contextPai: context,
-                                            keyDism: Key(agend.id.toString()),
-                                            idRemover: agend.id!,
-                                            object: agend,
-                                            futureRemover: () => _remover(agend.id!),
-                                            child: Card(
-                                              color: Colors.white,
-                                              margin: const EdgeInsets.only(top: 5),
-                                              child: Column(
-                                                children: [
-                                                  ListTile(
-                                                    leading: CircleAvatar(
-                                                      backgroundColor: Theme.of(context).colorScheme.primary,
-                                                      radius: 30,
-                                                      child: Padding(
-                                                        padding: const EdgeInsets.all( 5),
-                                                        child: FittedBox(
-                                                          child: Text(DateFormat('HH:mm').format(agend.horario!)),
-                                                        ),
+                              ? const Center(child: Carregando(inverterCor: true))
+                              : Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    Card(
+                                      color: Colors.white,
+                                      margin: const EdgeInsets.only(top: 5),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text('Data: ${DateFormat('dd/MM/yyyy').format(agendaController.dataInicial)}',
+                                                  style: textTheme.displaySmall,
+                                                ),
+                                                const SizedBox(height: 2),
+                                                DatePickerComponent(
+                                                  firstDate: DateTime(2024, 1, 1),
+                                                  isForm: false,
+                                                  hasTime: false,
+                                                  onDateChanged: (newDate) {
+                                                    agendaController.dataInicial = newDate;
+                                                    _future = agendaController.buscarAgendas();
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    triple.state.isNotEmpty
+                                    //usar Expanded quando estiver um component com scroll dentro de um Column
+                                        ? Expanded(
+                                          child: RefreshIndicator(
+                                              onRefresh: () => _buscarAgendas(context),
+                                              child: ListView(
+                                                physics: const AlwaysScrollableScrollPhysics(),
+                                                children: triple.state.map((agend) {
+                                                  return Card(
+                                                    color: Colors.white,
+                                                    margin: const EdgeInsets.only(top: 2),
+                                                    child: SlidableComponent(
+                                                      contextPai: context,
+                                                      keySlid: Key(agend.id.toString()),
+                                                      object: agend,
+                                                      futureRemover: () => _remover(agend.id!),
+                                                      child: Column(
+                                                        children: [
+                                                          ListTile(
+                                                            leading: CircleAvatar(
+                                                              backgroundColor: Theme.of(context).colorScheme.primary,
+                                                              radius: 30,
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.all(5),
+                                                                child: FittedBox(
+                                                                  child: Text(DateFormat('HH:mm').format(agend.horario!)),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            title: LabelAndFieldComponent(
+                                                              label: "Pessoa",
+                                                              field: "${agend.pessoa!.nome}",
+                                                              inline: true,
+                                                            ),
+                                                            subtitle: LabelAndFieldComponent(
+                                                              label: "Serviço",
+                                                              field: "${agend.servico!.descricao}",
+                                                              inline: true,
+                                                            ),
+                                                            trailing: WhatsAppButton(phoneNumber: UtilBrasilFields.obterTelefone(agend.pessoa!.numero!, mascara: false),
+                                                              mensagem: 'Olá ${agend.pessoa!.nome}, aviso de compromisso.\n'
+                                                                  '🕑 ${DateFormat('dd/MM').format(agend.horario!)} às ${DateFormat('HH:mm').format(agend.horario!)}h.\n',
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
-                                                    title: LabelAndFieldComponent(
-                                                      label: "Pessoa",
-                                                      field: "${agend.pessoa!.nome}",
-                                                      inline: true,
-                                                    ),
-                                                    subtitle: LabelAndFieldComponent(
-                                                      label: "Serviço",
-                                                      field: "${agend.servico!.descricao}",
-                                                      inline: true,
-                                                    ),
-                                                    trailing: WhatsAppButton(
-                                                      phoneNumber: UtilBrasilFields.obterTelefone(agend.pessoa!.numero!, mascara: false),
-                                                      mensagem: 'Olá ${agend.pessoa!.nome}, aviso de compromisso.\n'
-                                                          '🕑 ${DateFormat('dd/MM').format(agend.horario!)} às ${DateFormat('HH:mm').format(agend.horario!)}h.\n',
-                                                    ),
-                                                  ),
-                                                ],
+                                                  );
+                                                }).toList(),
                                               ),
                                             ),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    )
-                                  : const EmptyList();
+                                        )
+                                        : const EmptyList(),
+                                  ],
+                                );
                         },
                       ),
                     ),

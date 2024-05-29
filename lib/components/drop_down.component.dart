@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mybabernew/components/input_decorator.dart';
 
-
 class DropDownComponent extends StatefulWidget {
   final Function(Object?) onChanged;
   final List<Object> items;
   final String label;
   final Object? value;
   final double? menuMaxHeight;
+  final bool validate;
 
   const DropDownComponent({
     super.key,
@@ -17,6 +17,7 @@ class DropDownComponent extends StatefulWidget {
     required this.label,
     required this.value,
     this.menuMaxHeight,
+    this.validate = false,
   });
 
   @override
@@ -29,20 +30,20 @@ class _DropDownComponentState extends State<DropDownComponent> {
     final mediaQuery = MediaQuery.of(context);
     final deviceSize = mediaQuery.size;
     var textTheme = Theme.of(context).textTheme;
-    return LayoutBuilder(builder: (context, constraints) {
-      return DropdownButtonFormField<Object>(
+    return ButtonTheme(
+      alignedDropdown: true,
+      child: DropdownButtonFormField<Object>(
         isExpanded: true,
         menuMaxHeight: widget.menuMaxHeight,
         value: widget.value,
         icon: const Icon(Icons.keyboard_arrow_down_rounded),
         onChanged: widget.onChanged,
+        alignment: AlignmentDirectional.centerEnd,
         items: widget.items.map((Object option) {
           return DropdownMenuItem<Object>(
             value: option,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxHeight: (deviceSize.height * 0.25),
-                  maxWidth: constraints.maxWidth),
+            child: SizedBox(
+              width: deviceSize.width * 0.50,
               child: Text(
                 option.toString(),
                 style: textTheme.bodyMedium,
@@ -51,9 +52,10 @@ class _DropDownComponentState extends State<DropDownComponent> {
           );
         }).toList(),
         decoration: InputDecoratorComponent(
+          errorText: widget.validate ? "O campo deve ser informado" : null,
           label: widget.label,
         ).decorator(),
-      );
-    });
+      ),
+    );
   }
 }

@@ -5,6 +5,7 @@ import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/box_text_button.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
+import 'package:mybabernew/components/text.form.field.component.dart';
 import 'package:mybabernew/entity/user.dart';
 import 'package:mybabernew/modules/home/home.module.dart';
 import 'package:mybabernew/modules/login/login.controller.dart';
@@ -66,46 +67,17 @@ class _LoginPageState extends State<LoginPage> {
                                   const SizedBox(
                                     height: 100,
                                   ),
-                                  TextFormField(
-                                      validator: (_value) {
-                                        final valueString = _value ?? '';
-                                        if (valueString.trim().isEmpty) {
-                                          return 'O campo deve ser informado';
-                                        }
-                                        return null;
-                                      },
-                                      controller: controller.loginController,
-                                      keyboardType: TextInputType.text,
-                                      decoration: InputDecoratorComponent(
-                                        label: "Login",
-                                      ).decorator()),
+                                  TextFormFieldComponent(
+                                    controller: controller.loginController,
+                                    keyboardType: TextInputType.text,
+                                    label: 'Login',
+                                  ),
                                   const SizedBox(height: 10),
-                                  TextFormField(
-                                    validator: (_value) {
-                                      final valueString = _value ?? '';
-                                      if (valueString.trim().isEmpty) {
-                                        return 'O campo deve ser informado';
-                                      }
-                                      return null;
-                                    },
+                                  TextFormFieldComponent(
                                     controller: controller.passwordController,
                                     keyboardType: TextInputType.text,
                                     obscureText: !showPassword,
-                                    decoration: InputDecoratorComponent(
-                                      label: "Senha",
-                                      suffixIcon: IconButton(
-                                        icon: Icon(
-                                          showPassword
-                                              ? Icons.remove_red_eye_outlined
-                                              : Icons.remove_red_eye,
-                                          color: Colors.black,
-                                        ),
-                                        onPressed: () {
-                                          showPassword = !showPassword;
-                                          controller.atualizarPagina();
-                                        },
-                                      ),
-                                    ).decorator(),
+                                    label: 'Senha',
                                   ),
                                   const SizedBox(
                                     height: 10,

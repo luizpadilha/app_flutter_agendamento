@@ -8,6 +8,7 @@ import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/dismissible.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
+import 'package:mybabernew/components/slidable.component.dart';
 import 'package:mybabernew/entity/servico.dart';
 import 'package:mybabernew/modules/servico/servico.controller.dart';
 import 'package:mybabernew/modules/servico/servico.module.dart';
@@ -58,81 +59,57 @@ class _ServicoPageState extends State<ServicoPage> {
             } else {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: TripleBuilder<ServicoController, List<Servico>>(
-                        store: servicoController,
-                        builder: (ctx, triple) {
-                          return triple.isLoading
-                              ? const Center(child: Carregando(inverterCor: true))
-                              : triple.state.isNotEmpty
-                              ? RefreshIndicator(
-                            onRefresh: servicoController.buscarServicos,
-                            child: ListView(
-                              physics:
-                              const AlwaysScrollableScrollPhysics(),
-                              children: triple.state.map((serv) {
-                                return DismissibleComponent(
-                                  contextPai: context,
-                                  keyDism: Key(serv.id.toString()),
-                                  idRemover: serv.id!,
-                                  object: serv,
-                                  futureRemover: () => _remover(serv.id!),
-                                  child: Card(
-                                    color: Colors.white,
-                                    margin:
-                                    const EdgeInsets.only(top: 5),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(5),
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width:
-                                            MediaQuery.of(context).size.width * 0.70,
-                                            child: Column(
-                                              children: [
-                                                LabelAndFieldComponent(
-                                                  label: "Descrição",
-                                                  field: "${serv.descricao}",
-                                                  inline: true,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: TripleBuilder<ServicoController, List<Servico>>(
+                          store: servicoController,
+                          builder: (ctx, triple) {
+                            return triple.isLoading
+                                ? const Center(child: Carregando(inverterCor: true))
+                                : triple.state.isNotEmpty
+                                    ? RefreshIndicator(
+                                        onRefresh: servicoController.buscarServicos,
+                                        child: ListView(
+                                          physics: const AlwaysScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          children: triple.state.map((serv) {
+                                            return Card(
+                                              color: Colors.white,
+                                              margin: const EdgeInsets.only(top: 2),
+                                              child: SlidableComponent(
+                                                contextPai: context,
+                                                functionEditar: () => Modular.to.pushNamed(ServicoModule.ROUTE_SERVICOS_FORM, arguments: serv),
+                                                keySlid: Key(serv.id.toString()),
+                                                object: serv,
+                                                futureRemover: () => _remover(serv.id!),
+                                                child: ListTile(
+                                                  title: LabelAndFieldComponent(
+                                                    label: "Descrição",
+                                                    field: "${serv.descricao}",
+                                                    inline: true,
+                                                  ),
+                                                  subtitle: LabelAndFieldComponent(
+                                                    label: "Preço",
+                                                    field: UtilBrasilFields.obterReal(serv.preco!),
+                                                    inline: true,
+                                                  ),
                                                 ),
-                                                LabelAndFieldComponent(
-                                                  label: "Preço",
-                                                  field: UtilBrasilFields.obterReal(serv.preco!),
-                                                  inline: true,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: MediaQuery.of(context).size.width * 0.20,
-                                            child: Column(
-                                              children: [
-                                                IconButton(
-                                                  onPressed: () {
-                                                    Modular.to.pushNamed(ServicoModule.ROUTE_SERVICOS_FORM,
-                                                        arguments: serv);
-                                                  },
-                                                  color: Theme.of(context).colorScheme.primary,
-                                                  icon: const Icon(Icons.edit),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),)
-                              : const EmptyList();
-                        }),
-                  ),
-                );
-              }
-          }
-      ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      )
+                                    : const EmptyList();
+                          }),
+                    ),
+                  ],
+                ),
+              );
+            }
+          }),
     );
   }
 

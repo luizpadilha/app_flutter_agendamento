@@ -13,7 +13,7 @@ class AppWidget extends StatelessWidget {
     final mediaQuery = MediaQuery.of(context);
     return MaterialApp.router(
       scaffoldMessengerKey: scaffoldMessengerKey,
-      title: 'Agendamento',
+      title: 'Agende Fácil',
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
           primary: const Color(0xFF448AFF),

@@ -48,96 +48,83 @@ class GraficoPageState extends State<GraficoPage> {
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Card(
-                        color: Colors.white,
-                        margin: const EdgeInsets.only(top: 5),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    //SEMANA
-                                    Visibility(
-                                      visible: graficoController.tipoPeriodoGrafico == TipoPeriodoGrafico.SEMANA,
-                                      child: ConstrainedBox(
-                                        constraints: BoxConstraints(maxWidth: deviceSize.width * 0.45),
-                                        child: DatePickerRangeComponent(
-                                            isSemanal: true,
-                                            onDateChanged: (newDate) {
-                                              setState(() {
-                                                graficoController.periodo = newDate;
-                                              });
-                                              _future = graficoController
-                                                  .buscarDadosGrafico();
-                                            },
+                child: TripleBuilder<GraficoController, List<Grafico>>(
+                    store: graficoController,
+                    builder: (ctx, triple) {
+                      return triple.isLoading
+                          ? const Center(child: Carregando(inverterCor: true))
+                          : Column(
+                              children: [
+                                Card(
+                                  color: Colors.white,
+                                  margin: const EdgeInsets.only(top: 5),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              //SEMANA
+                                              Visibility(
+                                                visible: graficoController.tipoPeriodoGrafico == TipoPeriodoGrafico.SEMANA,
+                                                child: ConstrainedBox(
+                                                  constraints: BoxConstraints(
+                                                      maxWidth: deviceSize.width * 0.45),
+                                                  child: DatePickerRangeComponent(
+                                                    isSemanal: true,
+                                                    onDateChanged: (newDate) {
+                                                      graficoController.periodo = newDate;
+                                                      _future = graficoController.buscarDadosGrafico();
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible: graficoController.tipoPeriodoGrafico != TipoPeriodoGrafico.SEMANA,
+                                                child: ConstrainedBox(
+                                                  constraints: BoxConstraints(
+                                                      maxWidth: deviceSize.width * 0.30),
+                                                  child: DropDownComponent(
+                                                    menuMaxHeight: deviceSize.height * 0.4,
+                                                    value: graficoController.ano,
+                                                    items: anos,
+                                                    label: 'Ano',
+                                                    onChanged: (Object? tipo) {
+                                                      graficoController.ano = tipo as int;
+                                                      _future = graficoController.buscarDadosGrafico();
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                              ConstrainedBox(
+                                                constraints: BoxConstraints(
+                                                    maxWidth: (graficoController.tipoPeriodoGrafico == TipoPeriodoGrafico.SEMANA
+                                                        ? deviceSize.width * 0.40
+                                                        : deviceSize.width * 0.50)),
+                                                child: DropDownComponent(
+                                                  menuMaxHeight: deviceSize.height * 0.4,
+                                                  value: graficoController.tipoPeriodoGrafico,
+                                                  items: TipoPeriodoGrafico.values,
+                                                  label: 'Período',
+                                                  onChanged: (Object? tipo) {
+                                                    graficoController.tipoPeriodoGrafico = (tipo as TipoPeriodoGrafico);
+                                                    graficoController.atribuirPeriodoSemanaAtual();
+                                                    _future = graficoController.buscarDadosGrafico();
+                                                  },
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                      ),
-                                    ),
-
-                                    Visibility(
-                                      visible: graficoController.tipoPeriodoGrafico != TipoPeriodoGrafico.SEMANA,
-                                      child:  ConstrainedBox(
-                                        constraints: BoxConstraints(maxWidth: deviceSize.width * 0.30),
-                                        child: DropDownComponent(
-                                          menuMaxHeight: deviceSize.height * 0.4,
-                                          value: graficoController.ano,
-                                          items: anos,
-                                          label: 'Ano',
-                                          onChanged: (Object? tipo) {
-                                            setState(() {
-                                              graficoController.ano = tipo as int;
-                                            });
-                                            _future = graficoController.buscarDadosGrafico();
-                                          },
                                         ),
-                                      ),
+                                      ],
                                     ),
-
-                                    ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                          maxWidth: (graficoController.tipoPeriodoGrafico == TipoPeriodoGrafico.SEMANA
-                                              ? deviceSize.width * 0.40
-                                              : deviceSize.width * 0.50)),
-                                      child: DropDownComponent(
-                                        menuMaxHeight: deviceSize.height * 0.4,
-                                        value: graficoController.tipoPeriodoGrafico,
-                                        items: TipoPeriodoGrafico.values,
-                                        label: 'Período',
-                                        onChanged: (Object? tipo) {
-                                          setState(() {
-                                            graficoController.tipoPeriodoGrafico = (tipo as TipoPeriodoGrafico);
-                                            graficoController.atribuirPeriodoSemanaAtual();
-                                          });
-                                          _future = graficoController.buscarDadosGrafico();
-                                        },
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        )
-                    ),
-
-                    SizedBox(
-                      height: deviceSize.width * 0.6,
-                      width: deviceSize.width * 0.95,
-                      child: TripleBuilder<GraficoController, List<Grafico>>(
-                          store: graficoController,
-                          builder: (ctx, triple) {
-                            return triple.isLoading
-                                ? const Center(
-                                    child: Carregando(inverterCor: true))
-                                : triple.state.isNotEmpty
+                                triple.state.isNotEmpty
                                     ? SfCartesianChart(
                                         plotAreaBorderWidth: 0,
                                         primaryXAxis: const CategoryAxis(
@@ -149,9 +136,10 @@ class GraficoPageState extends State<GraficoPage> {
                                         // Enable legend
                                         legend: const Legend(isVisible: true),
                                         // Enable tooltip
-                                        tooltipBehavior: TooltipBehavior(enable: true, header: 'Total R\$'),
+                                        tooltipBehavior: TooltipBehavior(
+                                            enable: true, header: 'Total R\$'),
                                         series: <CartesianSeries>[
-                                          StackedColumnSeries<Grafico, String>(
+                                            StackedColumnSeries<Grafico, String>(
                                                 dataSource: triple.state,
                                                 xValueMapper: (Grafico graf, _) => graf.descricao!.substring(0, 3),
                                                 yValueMapper: (Grafico graf, _) => graf.valor,
@@ -159,17 +147,16 @@ class GraficoPageState extends State<GraficoPage> {
                                                 dataLabelMapper: (Grafico graf, _) => graf.valor!.toStringAsFixed(0),
                                                 dataLabelSettings: const DataLabelSettings(isVisible: true))
                                           ])
-                                    : const EmptyList();
-                          }),
-                    ),
-                  ],
-                ),
+                                    : const EmptyList(),
+                              ],
+                            );
+                    }),
               ),
             );
           }
         },
       ),
-      extendBody: true,
+      extendBody: false,
       bottomNavigationBar: const BottomBarComponent(),
     );
   }
