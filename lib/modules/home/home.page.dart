@@ -15,7 +15,6 @@ import 'package:mybabernew/modules/home/home.controller.dart';
 import '../../components/carregando.component.dart';
 
 class HomePage extends StatefulWidget {
-
   final HomeController cadastroController;
 
   const HomePage({required this.cadastroController});
@@ -25,7 +24,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   @override
   void initState() {
     super.initState();
@@ -44,84 +42,92 @@ class _HomePageState extends State<HomePage> {
           builder: (ctx, triple) {
             return triple.isLoading
                 ? const Center(child: Carregando(inverterCor: true))
-                : triple.state.isNotEmpty
-                    ? RefreshIndicator(
-                        onRefresh: controller.buscarAplicacoes,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: ListView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            children: triple.state.map((notificacao) {
-                              return Stack(
-                                children: [
-                                  Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0),
-                                      side: const BorderSide(
-                                        color: Colors.blueAccent,
+                : Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: triple.state.isNotEmpty
+                        ? RefreshIndicator(
+                            onRefresh: controller.buscarAplicacoes,
+                            child: ListView(
+                              physics:
+                                  const AlwaysScrollableScrollPhysics(),
+                              children: triple.state.map((notificacao) {
+                                return Stack(
+                                  children: [
+                                    Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        side: const BorderSide(
+                                          color: Colors.blueAccent,
+                                        ),
+                                      ),
+                                      elevation: 0,
+                                      color: Colors.white,
+                                      margin:
+                                          const EdgeInsets.only(top: 50),
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            15, 60, 15, 15),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                          children: [
+                                            LabelAndFieldComponent(
+                                              label: "Titulo",
+                                              field:
+                                                  "${notificacao.titulo}",
+                                              inline: true,
+                                            ),
+                                            LabelAndFieldComponent(
+                                              label: "Descrição",
+                                              field:
+                                                  "${notificacao.descricao}",
+                                              inline: true,
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    elevation: 0,
-                                    color: Colors.white,
-                                    margin: const EdgeInsets.only(top: 50),
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          15, 60, 15, 15),
+                                    Container(
+                                      margin:
+                                          const EdgeInsets.only(top: 10),
+                                      alignment: Alignment.center,
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          LabelAndFieldComponent(
-                                            label: "Titulo",
-                                            field: "${notificacao.titulo}",
-                                            inline: true,
-                                          ),
-                                          LabelAndFieldComponent(
-                                            label: "Descrição",
-                                            field: "${notificacao.descricao}",
-                                            inline: true,
-                                          ),
+                                          const CircleAvatar(
+                                              radius: 30,
+                                              backgroundColor:
+                                                  Colors.blueAccent,
+                                              child: Icon(
+                                                FontAwesomeIcons.gear,
+                                                color: Colors.white,
+                                                size: 30,
+                                              )),
                                           const SizedBox(
-                                            height: 10,
+                                            height: 5,
                                           ),
+                                          Text(
+                                            "Notificação",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium,
+                                          )
                                         ],
                                       ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 10),
-                                    alignment: Alignment.center,
-                                    child: Column(
-                                      children: [
-                                        const CircleAvatar(
-                                            radius: 30,
-                                            backgroundColor:
-                                                Colors.blueAccent,
-                                            child: Icon(
-                                              FontAwesomeIcons.gear,
-                                              color: Colors.white,
-                                              size: 30,
-                                            )),
-                                        const SizedBox(
-
-                                          height: 5,
-                                        ),
-                                        Text("Notificação",
-                                          style: Theme.of(context).textTheme.bodyMedium,
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      )
-                    : const EmptyList();
+                                    )
+                                  ],
+                                );
+                              }).toList(),
+                            ),
+                          )
+                        : const EmptyList(),
+                  );
           }),
       extendBody: true,
       bottomNavigationBar: const BottomBarComponent(),

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mybabernew/entity/user.dart';
 import 'package:mybabernew/modules/agenda/agenda.module.dart';
 import 'package:mybabernew/modules/config/config.module.dart';
 import 'package:mybabernew/modules/graficos/graficos.module.dart';
@@ -15,13 +17,52 @@ class AppDrawerComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            buildHeader(context),
+            buildItens(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildHeader(BuildContext context) {
+    User user = GetIt.instance.get<User>();
+    var textTheme = Theme.of(context).textTheme;
+    return Material(
+      child: InkWell(
+        onTap: () {
+          Navigator.pop(context);
+          Modular.to.pushReplacementNamed('/usuario/');
+        },
+        child: Container(
+          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+          color: Theme.of(context).colorScheme.primary,
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                const CircleAvatar(
+                  radius: 52,
+                  backgroundImage: AssetImage('assets/images/user-defalut.jpg'),
+                ),
+                Text(user.username!, style: textTheme.bodyMedium,),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildItens(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
       child: Column(
         children: [
-          AppBar(
-            title: const Text('Bem Vindo'),
-            automaticallyImplyLeading: false,
-          ),
-          const Divider(),
           ListTile(
             leading: const Icon(Icons.home),
             title: const Text('Home'),
@@ -74,7 +115,9 @@ class AppDrawerComponent extends StatelessWidget {
             leading: const Icon(Icons.exit_to_app),
             title: const Text('Sair'),
             onTap: () {
-              Modular.to.pushNamedAndRemoveUntil(LoginModule.ROUTE, (route) => route.isFirst, arguments: true);
+              Modular.to.pushNamedAndRemoveUntil(
+                  LoginModule.ROUTE, (route) => route.isFirst,
+                  arguments: true);
             },
           ),
         ],

@@ -54,20 +54,24 @@ dependencies:
   flutter_native_splash: ^2.2.0+1
   flutter_launcher_icons: ^0.13.0
   lottie: ^3.1.1
+  flutter_slidable: ^3.1.0
+  flutter_animate: ^4.5.0
 
 
 flutter_native_splash:
-  color: "#AAFDFF"
+  color: "#FFFFFF"
   image: "assets/app/splash.png"
   android: true
   ios: true
+  color_dark: "#121212"
+  image_dark: "assets/app/splash.png"
 
 flutter_icons:
   image_path: "assets/app/icon.png"
   ios: true
   remove_alpha_ios: true
   android: "launcher_icon"
-  adaptive_icon_background: "#AAFDFF"
+  adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: "assets/app/icon-android.png"
 
 

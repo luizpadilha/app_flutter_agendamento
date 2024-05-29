@@ -7,6 +7,7 @@ import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/dismissible.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
+import 'package:mybabernew/components/slidable.component.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.controller.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.module.dart';
@@ -41,7 +42,7 @@ class _PessoaPageState extends State<PessoaPage> {
           title: const Text('Gerenciar Pessoas'),
           actions: [
             IconButton(
-              icon: Icon(Icons.add),
+              icon: const Icon(Icons.add),
               onPressed: () {
                 Modular.to.pushNamed(PessoaModule.ROUTE_PESSOAS_FORM,
                     arguments: null);
@@ -70,62 +71,25 @@ class _PessoaPageState extends State<PessoaPage> {
                                     child: ListView(
                                       physics: const AlwaysScrollableScrollPhysics(),
                                       children: triple.state.map((pess) {
-                                        return DismissibleComponent(
-                                          contextPai: context,
-                                          keyDism: Key(pess.id.toString()),
-                                          idRemover: pess.id!,
-                                          object: pess,
-                                          futureRemover: () => _remover(pess.id!),
-                                          child: Card(
-                                            color: Colors.white,
-                                            margin: const EdgeInsets.only(top: 5),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(5),
-                                              child: Row(
-                                                children: [
-                                                  SizedBox(
-                                                    width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                        0.70,
-                                                    child: Column(
-                                                      children: [
-                                                        LabelAndFieldComponent(
-                                                          label: "Nome",
-                                                          field: "${pess.nome}",
-                                                          inline: true,
-                                                        ),
-                                                        LabelAndFieldComponent(
-                                                          label: "Número",
-                                                          field: pess.numero!,
-                                                          inline: true,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                        0.10,
-                                                    child: Column(
-                                                      children: [
-                                                        IconButton(
-                                                          onPressed: () {
-                                                            Modular.to.pushNamed(
-                                                                PessoaModule
-                                                                    .ROUTE_PESSOAS_FORM,
-                                                                arguments: pess);
-                                                          },
-                                                          color: Theme.of(context)
-                                                              .colorScheme
-                                                              .primary,
-                                                          icon: Icon(Icons.edit),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
+                                        return Card(
+                                          color: Colors.white,
+                                          margin: const EdgeInsets.only(top: 2),
+                                          child: SlidableComponent(
+                                            contextPai: context,
+                                            keySlid: Key(pess.id.toString()),
+                                            functionEditar: () => Modular.to.pushNamed(PessoaModule.ROUTE_PESSOAS_FORM, arguments: pess),
+                                            object: pess,
+                                            futureRemover: () => _remover(pess.id!),
+                                            child: ListTile(
+                                              title: LabelAndFieldComponent(
+                                                label: "Nome",
+                                                field: "${pess.nome}",
+                                                inline: true,
+                                              ),
+                                              subtitle: LabelAndFieldComponent(
+                                                label: "Número",
+                                                field: pess.numero!,
+                                                inline: true,
                                               ),
                                             ),
                                           ),
@@ -143,6 +107,6 @@ class _PessoaPageState extends State<PessoaPage> {
   }
 
   Future<void> _remover(String id) async {
-      await pessoaController.removerPessoa(id);
+    await pessoaController.removerPessoa(id);
   }
 }
