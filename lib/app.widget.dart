@@ -38,23 +38,27 @@ class AppWidget extends StatelessWidget {
               color: Colors.black87,
               fontSize: mediaQuery.textScaler.scale(10)),
           //botoes
+          labelSmall: GoogleFonts.raleway(
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+              fontSize: mediaQuery.textScaler.scale(10)),
           labelLarge: GoogleFonts.raleway(
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Colors.black87,
               fontSize: mediaQuery.textScaler.scale(14)),
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           type: BottomNavigationBarType.fixed, // Fixed
           backgroundColor: Colors.blueAccent, // <-- This works for fixed
-          selectedItemColor: Colors.black,
+          selectedItemColor: Colors.black87,
           unselectedItemColor: Colors.grey,
         ),
         appBarTheme: AppBarTheme(
           color: Colors.blueAccent,
           foregroundColor: Colors.black,
           titleTextStyle: GoogleFonts.raleway(
-            fontSize: mediaQuery.textScaler.scale(16),
-            color: Colors.white,
+            fontSize: mediaQuery.textScaler.scale(14),
+            color: Colors.black87,
             fontWeight: FontWeight.bold,
           ),
           centerTitle: true,

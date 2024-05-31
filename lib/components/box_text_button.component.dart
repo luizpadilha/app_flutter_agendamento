@@ -41,7 +41,7 @@ class BoxTextButtonComponenet extends StatelessWidget {
               SizedBox(
                 child: Icon(
                   icon,
-                  color: Colors.white,
+                  color: Colors.black87,
                 ),
               )
             ],

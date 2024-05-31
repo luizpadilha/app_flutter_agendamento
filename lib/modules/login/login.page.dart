@@ -42,8 +42,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final deviceSize = mediaQuery.size;
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      extendBodyBehindAppBar: true,
       body: FutureBuilder(
         future: _future,
         builder: (_, snapshot) {
@@ -57,31 +59,47 @@ class _LoginPageState extends State<LoginPage> {
                       ? const Center(child: Carregando(inverterCor: true))
                       : SingleChildScrollView(
                           child: Padding(
-                            padding: const EdgeInsets.all(15),
+                            padding: EdgeInsets.only(
+                              top: deviceSize.height * 0.20,
+                              right: deviceSize.width * 0.10,
+                              left: deviceSize.width * 0.10,
+                            ),
                             child: Form(
                               key: _formKey,
                               child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const SizedBox(
-                                    height: 100,
+                                  SizedBox(
+                                    width: deviceSize.width * 0.20,
+                                    child: Image.asset('assets/app/icon.png'),
                                   ),
+                                  SizedBox(height: deviceSize.height * 0.05),
                                   TextFormFieldComponent(
+                                    suffixIcon: const Icon(Icons.account_circle_outlined),
                                     controller: controller.loginController,
                                     keyboardType: TextInputType.text,
                                     label: 'Login',
                                   ),
-                                  const SizedBox(height: 10),
+                                  SizedBox(height: deviceSize.height * 0.02),
                                   TextFormFieldComponent(
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        showPassword
+                                            ? Icons.remove_red_eye_outlined
+                                            : Icons.remove_red_eye,
+                                        color: Colors.black,
+                                      ),
+                                      onPressed: () {
+                                        showPassword = !showPassword;
+                                        controller.atualizarPagina();
+                                      },
+                                    ),
                                     controller: controller.passwordController,
                                     keyboardType: TextInputType.text,
                                     obscureText: !showPassword,
                                     label: 'Senha',
                                   ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
+                                  SizedBox(height: deviceSize.height * 0.05),
                                   BoxTextButtonComponenet(
                                     label: 'Acessar',
                                     icon: Icons.lock_open,
@@ -111,14 +129,12 @@ class _LoginPageState extends State<LoginPage> {
         AlertComponent.show(context,
             title: "Olá ${user.username}",
             subTitle: "Seja bem vindo", onConfirm: () {
-              Modular.to.pushReplacementNamed(HomeModule.ROUTE);
-            });
+          Modular.to.pushReplacementNamed(HomeModule.ROUTE);
+        });
       }
     } catch (erro) {
       AlertComponent.show(context,
-          title: "Ops!",
-          subTitle: erro.toString(),
-          style: AlertStyle.error);
+          title: "Ops!", subTitle: erro.toString(), style: AlertStyle.error);
     }
   }
 }

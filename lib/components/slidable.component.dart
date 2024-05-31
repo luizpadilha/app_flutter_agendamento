@@ -27,42 +27,65 @@ class SlidableComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Slidable(
-      child: child,
       key: keySlid,
       startActionPane: ActionPane(
         extentRatio: 0.5,
         motion: const DrawerMotion(),
         children: _children(),
       ),
+      child: child,
     );
   }
 
   List<Widget> _children() {
+    var textTheme = Theme.of(contextPai).textTheme;
     List<Widget> children = [];
     if (actions != null && actions!.isNotEmpty) {
       children.addAll(actions!);
     }
     if (functionEditar != null) {
       children.add(
-        SlidableAction(
-          onPressed: (context) => functionEditar!(),
-          backgroundColor: Colors.yellow,
-          foregroundColor: Colors.white,
-          icon: Icons.edit,
-          label: 'Editar',
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () => functionEditar!(),
+            style: ElevatedButton.styleFrom(
+              textStyle: textTheme.labelSmall,
+              backgroundColor: Colors.black12,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Expanded(child: Icon(Icons.edit, color: Colors.black54)),
+                Expanded(child: Text('Editar', style: textTheme.labelSmall))
+              ],
+            ),
+          ),
         ),
       );
     }
     if (futureRemover != null) {
       children.add(
-        SlidableAction(
-          onPressed: (context) async {
-            await _remover();
-          },
-          backgroundColor: Colors.red,
-          foregroundColor: Colors.white,
-          icon: Icons.delete,
-          label: 'Remover',
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () async => await _remover(),
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
+              ),
+              textStyle: textTheme.labelSmall,
+              backgroundColor: Colors.redAccent,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Expanded(child: Icon(Icons.delete, color: Colors.black54)),
+                Expanded(child: Text('Remover', style: textTheme.labelSmall))
+              ],
+            ),
+          ),
         ),
       );
     }
