@@ -13,6 +13,7 @@ import 'package:mybabernew/components/empty_list.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
 import 'package:mybabernew/components/slidable.component.dart';
 import 'package:mybabernew/components/whatsapp_button.component.dart';
+import 'package:mybabernew/constants.dart';
 import 'package:mybabernew/entity/agenda.dart';
 import 'package:mybabernew/modules/agenda/agenda.controller.dart';
 import 'package:mybabernew/modules/agenda/agenda.module.dart';
@@ -43,6 +44,16 @@ class _AgendaPageState extends State<AgendaPage> {
     final deviceSizeHeight = mediaQuery.size.height - mediaQuery.padding.top;
     var textTheme = Theme.of(context).textTheme;
     return Scaffold(
+        floatingActionButton: platformIsIos(context)
+            ? null
+            : FloatingActionButton(
+          onPressed: () {
+            Modular.to.pushNamed(AgendaModule.ROUTE_AGENDA_FORM,
+                arguments: null);
+          },
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add),
+        ),
         drawer: const AppDrawerComponent(),
         bottomNavigationBar: const BottomBarComponent(),
         extendBody: true,
@@ -87,23 +98,22 @@ class _AgendaPageState extends State<AgendaPage> {
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
-                                            Row(
-                                              children: [
-                                                Text('Data: ${DateFormat('dd/MM/yyyy').format(agendaController.dataInicial)}',
-                                                  style: textTheme.displaySmall,
-                                                ),
-                                                const SizedBox(height: 2),
-                                                DatePickerComponent(
-                                                  firstDate: DateTime(2024, 1, 1),
-                                                  isForm: false,
-                                                  hasTime: false,
-                                                  onDateChanged: (newDate) {
-                                                    agendaController.dataInicial = newDate;
-                                                    _future = agendaController.buscarAgendas();
-                                                  },
-                                                ),
-                                              ],
+                                            Text('Data: ${DateFormat('dd/MM/yyyy').format(agendaController.dataInicial)}',
+                                              style: textTheme.displaySmall,
                                             ),
+                                            const SizedBox(height: 2),
+                                            DatePickerComponent(
+                                              firstDate: DateTime(2024, 1, 1),
+                                              isForm: false,
+                                              hasTime: false,
+                                              onDateChanged: (newDate) {
+                                                agendaController.dataInicial = newDate;
+                                                _future = agendaController.buscarAgendas();
+                                              },
+                                            ),
+                                            const SizedBox(height: 2),
+
+
                                           ],
                                         ),
                                       ),
@@ -124,35 +134,31 @@ class _AgendaPageState extends State<AgendaPage> {
                                                       keySlid: Key(agend.id.toString()),
                                                       object: agend,
                                                       futureRemover: () => _remover(agend.id!),
-                                                      child: Column(
-                                                        children: [
-                                                          ListTile(
-                                                            leading: CircleAvatar(
-                                                              backgroundColor: Theme.of(context).colorScheme.primary,
-                                                              radius: 30,
-                                                              child: Padding(
-                                                                padding: const EdgeInsets.all(5),
-                                                                child: FittedBox(
-                                                                  child: Text(DateFormat('HH:mm').format(agend.horario!)),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            title: LabelAndFieldComponent(
-                                                              label: "Pessoa",
-                                                              field: "${agend.pessoa!.nome}",
-                                                              inline: true,
-                                                            ),
-                                                            subtitle: LabelAndFieldComponent(
-                                                              label: "Serviço",
-                                                              field: "${agend.servico!.descricao}",
-                                                              inline: true,
-                                                            ),
-                                                            trailing: WhatsAppButton(phoneNumber: UtilBrasilFields.obterTelefone(agend.pessoa!.numero!, mascara: false),
-                                                              mensagem: 'Olá ${agend.pessoa!.nome}, aviso de compromisso.\n'
-                                                                  '🕑 ${DateFormat('dd/MM').format(agend.horario!)} às ${DateFormat('HH:mm').format(agend.horario!)}h.\n',
+                                                      child: ListTile(
+                                                        leading: CircleAvatar(
+                                                          backgroundColor: Theme.of(context).colorScheme.primary,
+                                                          radius: 30,
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.all(5),
+                                                            child: FittedBox(
+                                                              child: Text(DateFormat('HH:mm').format(agend.horario!)),
                                                             ),
                                                           ),
-                                                        ],
+                                                        ),
+                                                        title: LabelAndFieldComponent(
+                                                          label: "Pessoa",
+                                                          field: "${agend.pessoa!.nome}",
+                                                          inline: true,
+                                                        ),
+                                                        subtitle: LabelAndFieldComponent(
+                                                          label: "Serviço",
+                                                          field: "${agend.servico!.descricao}",
+                                                          inline: true,
+                                                        ),
+                                                        trailing: WhatsAppButton(phoneNumber: UtilBrasilFields.obterTelefone(agend.pessoa!.numero!, mascara: false),
+                                                          mensagem: 'Olá ${agend.pessoa!.nome}, aviso de compromisso.\n'
+                                                              '🕑 ${DateFormat('dd/MM').format(agend.horario!)} às ${DateFormat('HH:mm').format(agend.horario!)}h.\n',
+                                                        ),
                                                       ),
                                                     ),
                                                   );

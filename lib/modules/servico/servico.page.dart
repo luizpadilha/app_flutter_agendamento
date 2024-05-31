@@ -9,6 +9,7 @@ import 'package:mybabernew/components/dismissible.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
 import 'package:mybabernew/components/slidable.component.dart';
+import 'package:mybabernew/constants.dart';
 import 'package:mybabernew/entity/servico.dart';
 import 'package:mybabernew/modules/servico/servico.controller.dart';
 import 'package:mybabernew/modules/servico/servico.module.dart';
@@ -36,6 +37,16 @@ class _ServicoPageState extends State<ServicoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: platformIsIos(context)
+          ? null
+          : FloatingActionButton(
+        onPressed: () {
+          Modular.to.pushNamed(ServicoModule.ROUTE_SERVICOS_FORM,
+              arguments: null);
+        },
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add),
+      ),
       drawer: const AppDrawerComponent(),
       bottomNavigationBar: const BottomBarComponent(),
       extendBody: true,

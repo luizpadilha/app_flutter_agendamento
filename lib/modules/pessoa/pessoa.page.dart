@@ -8,6 +8,7 @@ import 'package:mybabernew/components/dismissible.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
 import 'package:mybabernew/components/slidable.component.dart';
+import 'package:mybabernew/constants.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.controller.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.module.dart';
@@ -35,6 +36,16 @@ class _PessoaPageState extends State<PessoaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: platformIsIos(context)
+            ? null
+            : FloatingActionButton(
+                onPressed: () {
+                  Modular.to.pushNamed(PessoaModule.ROUTE_PESSOAS_FORM,
+                      arguments: null);
+                },
+                shape: const CircleBorder(),
+                child: const Icon(Icons.add),
+              ),
         drawer: const AppDrawerComponent(),
         bottomNavigationBar: const BottomBarComponent(),
         extendBody: true,
@@ -69,7 +80,8 @@ class _PessoaPageState extends State<PessoaPage> {
                                 ? RefreshIndicator(
                                     onRefresh: pessoaController.buscarPessoas,
                                     child: ListView(
-                                      physics: const AlwaysScrollableScrollPhysics(),
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
                                       children: triple.state.map((pess) {
                                         return Card(
                                           color: Colors.white,
@@ -77,9 +89,14 @@ class _PessoaPageState extends State<PessoaPage> {
                                           child: SlidableComponent(
                                             contextPai: context,
                                             keySlid: Key(pess.id.toString()),
-                                            functionEditar: () => Modular.to.pushNamed(PessoaModule.ROUTE_PESSOAS_FORM, arguments: pess),
+                                            functionEditar: () => Modular.to
+                                                .pushNamed(
+                                                    PessoaModule
+                                                        .ROUTE_PESSOAS_FORM,
+                                                    arguments: pess),
                                             object: pess,
-                                            futureRemover: () => _remover(pess.id!),
+                                            futureRemover: () =>
+                                                _remover(pess.id!),
                                             child: ListTile(
                                               title: LabelAndFieldComponent(
                                                 label: "Nome",
