@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 get baseUrl => 'https://api.agendamento.padilha.dev.br';
-//get baseUrl => 'http://localhost:8081';
+//get baseUrl => 'http://192.168.0.114:8081';
 
 
 bool platformIsIos(BuildContext context) {

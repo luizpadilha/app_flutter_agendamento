@@ -28,19 +28,39 @@ class AgendaController extends Store<List<Agenda>> {
 
   AgendaController() : super([]);
 
-  Future<void> init() async {
-    await servicoController.buscarServicos();
-    await pessoaController.buscarPessoas();
-    servicos = servicoController.state;
-    pessoas = pessoaController.state;
+  Future<void> initForm() async {
+    pessoas = await pessoaController.buscarPessoasSemState();
+    servicos = await servicoController.buscarServicosSemState();
     print('totalPEs: ${pessoaController.state.length}');
     print('totalSErv: ${servicoController.state.length}');
+  }
+
+  Future<void> init() async {
+    pessoas = await pessoaController.buscarPessoasSemState();
+    print('totalPEs: ${pessoas.length}');
+    await buscarAgendas();
   }
 
   Future<void> buscarAgendas() async {
     try {
       setLoading(true);
       List<Agenda> agendas = await repo.getAgendas(dataInicial);
+      update(agendas);
+    } on DioException catch (e, s) {
+      log('Erro ao buscar agenda', error: e, stackTrace: s);
+      rethrow;
+    } on Exception catch (e) {
+      log('Erro ao buscar agenda', error: e);
+      rethrow;
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  Future<void> buscarAgendasByPessoa() async {
+    try {
+      setLoading(true);
+      List<Agenda> agendas = await repo.getAgendasByPessoa(pessoa!);
       update(agendas);
     } on DioException catch (e, s) {
       log('Erro ao buscar agenda', error: e, stackTrace: s);

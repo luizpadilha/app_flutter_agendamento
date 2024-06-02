@@ -5,16 +5,19 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:intl/intl.dart';
 import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/app_drawer.component.dart';
+import 'package:mybabernew/components/auto_complete.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/date_picker.component.dart';
 import 'package:mybabernew/components/dismissible.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
+import 'package:mybabernew/components/input_decorator.dart';
 import 'package:mybabernew/components/label_field.component.dart';
 import 'package:mybabernew/components/slidable.component.dart';
 import 'package:mybabernew/components/whatsapp_button.component.dart';
 import 'package:mybabernew/constants.dart';
 import 'package:mybabernew/entity/agenda.dart';
+import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/modules/agenda/agenda.controller.dart';
 import 'package:mybabernew/modules/agenda/agenda.module.dart';
 
@@ -29,11 +32,12 @@ class AgendaPage extends StatefulWidget {
 
 class _AgendaPageState extends State<AgendaPage> {
   late Future _future;
+  String _thermPessoa = '';
 
   @override
   void initState() {
     super.initState();
-    _future = agendaController.buscarAgendas();
+    _future = agendaController.init();
   }
 
   AgendaController get agendaController => widget.agendaController;
@@ -112,8 +116,42 @@ class _AgendaPageState extends State<AgendaPage> {
                                               },
                                             ),
                                             const SizedBox(height: 2),
+                                            Expanded(
+                                              child: AutoCompleteComponent(
+                                                initialValue: agendaController.pessoa?.toString(),
+                                                optionsBuilder: (TextEditingValue textEditingValue) {
+                                                  _thermPessoa = textEditingValue.text;
+                                                  agendaController.atualizarPagina();
 
+                                                  if (textEditingValue.text == '') {
+                                                    return const Iterable<Pessoa>.empty();
+                                                  }
 
+                                                  return agendaController.pessoas.where((Pessoa option) {
+                                                    return option.toString().toLowerCase().contains(textEditingValue.text.toLowerCase().trim());
+                                                  });
+                                                },
+                                                fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
+                                                  return TextField(
+                                                    controller: controller,
+                                                    focusNode: focusNode,
+                                                    style: textTheme.bodyMedium,
+                                                    onEditingComplete: onEditingComplete,
+                                                    decoration: InputDecoratorComponent(
+                                                      label: 'Pessoa',
+                                                      hintText: 'Selecione a pessoa...',
+                                                      prefixIcon: const Icon(Icons.search),
+                                                    ).decorator(),
+                                                  );
+                                                },
+                                                term: _thermPessoa,
+                                                onSelected: (Object pessoa) {
+                                                  agendaController.pessoa = (pessoa as Pessoa);
+                                                  agendaController.buscarAgendasByPessoa();
+                                                  agendaController.atualizarPagina();
+                                                },
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),

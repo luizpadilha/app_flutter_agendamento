@@ -24,6 +24,17 @@ class AgendaRepository {
     return [];
   }
 
+  Future<List<Agenda>> getAgendasByPessoa(Pessoa pessoa) async {
+    User user = GetIt.instance.get<User>();
+    var response = await _client
+        .get("/api/agenda/agendas-pessoa?userId=${user.userId}&pessoaId=${pessoa.id}");
+    if (response.statusCode == 200 && response.data != null) {
+      return List<Agenda>.from(
+          response.data.map((itemsJson) => Agenda.fromJson(itemsJson)));
+    }
+    return [];
+  }
+
   Future<List<Horarios>> getHorarios(String servicoId, DateTime data) async {
     User user = GetIt.instance.get<User>();
     var response = await _client

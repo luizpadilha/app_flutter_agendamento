@@ -67,6 +67,7 @@ class AppDrawerComponent extends StatelessWidget {
             leading: const Icon(Icons.home),
             title: const Text('Home'),
             onTap: () {
+              Navigator.pop(context);
               Modular.to.pushReplacementNamed(HomeModule.ROUTE);
             },
           ),
@@ -75,6 +76,7 @@ class AppDrawerComponent extends StatelessWidget {
             leading: const Icon(Icons.edit_note_sharp),
             title: const Text('Config'),
             onTap: () {
+              Navigator.pop(context);
               Modular.to.pushReplacementNamed(ConfigModule.ROUTE);
             },
           ),
@@ -83,6 +85,7 @@ class AppDrawerComponent extends StatelessWidget {
             leading: const Icon(Icons.add_business),
             title: const Text('Serviço'),
             onTap: () {
+              Navigator.pop(context);
               Modular.to.pushReplacementNamed(ServicoModule.ROUTE);
             },
           ),
@@ -91,6 +94,7 @@ class AppDrawerComponent extends StatelessWidget {
             leading: const Icon(Icons.people),
             title: const Text('Pessoa'),
             onTap: () {
+              Navigator.pop(context);
               Modular.to.pushReplacementNamed(PessoaModule.ROUTE);
             },
           ),
@@ -99,6 +103,7 @@ class AppDrawerComponent extends StatelessWidget {
             leading: const Icon(Icons.schedule),
             title: const Text('Agenda'),
             onTap: () {
+              Navigator.pop(context);
               Modular.to.pushReplacementNamed(AgendaModule.ROUTE);
             },
           ),
@@ -107,6 +112,7 @@ class AppDrawerComponent extends StatelessWidget {
             leading: const Icon(Icons.bar_chart),
             title: const Text('Gráficos'),
             onTap: () {
+              Navigator.pop(context);
               Modular.to.pushReplacementNamed(GraficoModule.ROUTE);
             },
           ),
