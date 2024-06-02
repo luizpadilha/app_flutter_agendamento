@@ -56,7 +56,7 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
   @override
   void initState() {
     super.initState();
-    _future = agendaController.init();
+    _future = agendaController.initForm();
     if (widget.agenda != null) {
       agendaController.id = widget.agenda!.id!;
       agendaController.horario = widget.agenda!.horario!;
@@ -346,6 +346,7 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
     try {
       await agendaController.salvarAgendas();
       await agendaController.buscarAgendas();
+      agendaController.pessoa = null;
       Modular.to.pop(context);
     } catch (erro) {
       print('Erro salvar agenda: ' + erro.toString());

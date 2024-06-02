@@ -70,8 +70,8 @@ class _LoginPageState extends State<LoginPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    width: deviceSize.width * 0.20,
-                                    child: Image.asset('assets/app/icon.png'),
+                                    width: deviceSize.width * 0.35,
+                                    child: Image.asset('assets/app/icon-android.png'),
                                   ),
                                   SizedBox(height: deviceSize.height * 0.05),
                                   TextFormFieldComponent(

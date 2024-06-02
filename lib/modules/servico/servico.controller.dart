@@ -34,6 +34,19 @@ class ServicoController extends Store<List<Servico>> {
     }
   }
 
+  Future<List<Servico>> buscarServicosSemState() async {
+    try {
+      List<Servico> servicos = await repo.getServicos();
+      return servicos;
+    } on DioException catch (e, s) {
+      log('Erro ao buscar servidores', error: e, stackTrace: s);
+      rethrow;
+    } on Exception catch (e) {
+      log('Erro ao buscar servidores', error: e);
+      rethrow;
+    }
+  }
+
   Future<void> salvarServicos(BuildContext context) async {
     try {
       setLoading(true);
