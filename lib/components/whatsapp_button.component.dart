@@ -29,7 +29,7 @@ class WhatsAppButton extends StatelessWidget {
       AlertComponent.show(context,
           title: "Ops!",
           subTitle: "Não foi possivel localizar o WhatsApp: $phoneNumber",
-          style: AlertStyle.loading);
+          style: AlertStyle.warning);
     }
   }
 }

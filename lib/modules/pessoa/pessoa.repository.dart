@@ -18,7 +18,12 @@ class PessoaRepository {
         response.data.map((itemsJson) => Pessoa.fromJson(itemsJson)));
   }
 
-  Future<void> salvarPessoas(String id, String nome, String numero) async {
+  Future<Pessoa> getPessoa(String pessoaid) async {
+    var response = await _client.get("/api/pessoa/pessoa?pessoaId=$pessoaid");
+    return Pessoa.fromJson(response.data);
+  }
+
+  Future<String> salvarPessoas(String id, String nome, String numero) async {
     User user = GetIt.instance.get<User>();
     var response = await _client.post(
       "/api/pessoa/salvar-pessoa",
@@ -29,9 +34,10 @@ class PessoaRepository {
         'userId': user.userId,
       }),
     );
+    return response.data;
   }
 
   Future<void> removerPessoa(String id) async {
-    var response = await _client.post("/api/pessoa/remover-pessoa?pessoaId=$id");
+    await _client.post("/api/pessoa/remover-pessoa?pessoaId=$id");
   }
 }
