@@ -2,25 +2,28 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 abstract class AlertComponent {
-
   static void show(BuildContext context,
       {required String title,
-      String subTitle = "",
-      AlertStyle style = AlertStyle.confirm,
-      Function? onConfirm,
-      Function? onDismiss,
-      String textConfirm = "Continuar",
-      String? textDismiss}) {
+        String subTitle = "",
+        AlertStyle style = AlertStyle.confirm,
+        Function? onConfirm,
+        Function? onDismiss,
+        String textConfirm = "Continuar",
+        String? textDismiss}) {
+    final mediaQuery = MediaQuery.of(context);
+    final deviceSize = mediaQuery.size;
+    final textTheme = Theme.of(context).textTheme;
     showModalBottomSheet(
         context: context,
         builder: (context) {
           return Container(
-              height: MediaQuery.of(context).size.height / 3,
-              padding: const EdgeInsets.only(left: 10, top: 20, right: 10),
+              height: deviceSize.height / 3,
+              padding: EdgeInsets.symmetric(
+                horizontal: deviceSize.width * 0.05,
+                vertical: deviceSize.height * 0.03,
+              ),
               decoration: BoxDecoration(
-                  color: style == AlertStyle.error
-                      ? Colors.redAccent
-                      : Colors.green,
+                  color: _alertColor(style),
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30))),
@@ -28,31 +31,28 @@ abstract class AlertComponent {
                 children: [
                   Expanded(
                       child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(5.0, 20, 5, 10),
-                        child: Center(
-                          child: AutoSizeText("$title",
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Center(
-                          child: AutoSizeText("$subTitle",
-                              maxLines: 8,
-                              textAlign: TextAlign.center,
-                              style:
-                                  const TextStyle(fontSize: 15, color: Colors.white)),
-                        ),
-                      ),
-                    ],
-                  )),
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(5.0, 20, 5, 10),
+                            child: Center(
+                              child: AutoSizeText(
+                                  title,
+                                  maxLines: 2,
+                                  style: textTheme.displayLarge),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Center(
+                              child: AutoSizeText(
+                                  subTitle,
+                                  maxLines: 8,
+                                  style: textTheme.displayMedium),
+                            ),
+                          ),
+                        ],
+                      )),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
@@ -61,10 +61,8 @@ abstract class AlertComponent {
                       Visibility(
                         visible: textDismiss != null && textConfirm.isNotEmpty,
                         child: TextButton(
-                            child: Text('${textDismiss}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
+                            child: Text('$textDismiss',
+                                style: textTheme.displayLarge),
                             onPressed: () async {
                               if (onDismiss != null) {
                                 await onDismiss();
@@ -74,11 +72,8 @@ abstract class AlertComponent {
                             }),
                       ),
                       TextButton(
-                          child: Text(
-                              '${textConfirm != null ? textConfirm : 'Continuar'}',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
+                          child: Text(textConfirm ?? 'Continuar',
+                              style: textTheme.displayLarge),
                           onPressed: () async {
                             if (onConfirm != null) {
                               await onConfirm();
@@ -94,4 +89,20 @@ abstract class AlertComponent {
   }
 }
 
-enum AlertStyle { success, error, confirm, loading }
+Color _alertColor(AlertStyle style) {
+  switch (style) {
+    case AlertStyle.error:
+      return Colors.redAccent;
+    case AlertStyle.success:
+      return Colors.green;
+    case AlertStyle.confirm:
+      return Colors.blue;
+    case AlertStyle.warning:
+      return Colors.orange; // Exemplo de um terceiro estilo
+    default:
+      return Colors.grey; // Cor padrão
+  }
+}
+
+
+enum AlertStyle { success, error, confirm, warning }

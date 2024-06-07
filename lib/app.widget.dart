@@ -19,7 +19,7 @@ class AppWidget extends StatelessWidget {
           primary: const Color(0xFF448AFF),
         ),
         textTheme: TextTheme(
-          //campos entrada
+          //campos
           bodySmall: GoogleFonts.raleway(
               fontWeight: FontWeight.w500,
               color: Colors.black87,
@@ -32,16 +32,28 @@ class AppWidget extends StatelessWidget {
               fontWeight: FontWeight.w500,
               color: Colors.black87,
               fontSize: mediaQuery.textScaler.scale(14)),
-          //campos saida
+          //textos
           displaySmall: GoogleFonts.raleway(
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
-              fontSize: mediaQuery.textScaler.scale(10)),
+              color: Colors.white,
+              fontSize: mediaQuery.textScaler.scale(12)),
+          displayMedium: GoogleFonts.raleway(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontSize: mediaQuery.textScaler.scale(14)),
+          displayLarge: GoogleFonts.raleway(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontSize: mediaQuery.textScaler.scale(16)),
           //botoes
           labelSmall: GoogleFonts.raleway(
               fontWeight: FontWeight.bold,
               color: Colors.black87,
               fontSize: mediaQuery.textScaler.scale(10)),
+          labelMedium: GoogleFonts.raleway(
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+              fontSize: mediaQuery.textScaler.scale(12)),
           labelLarge: GoogleFonts.raleway(
               fontWeight: FontWeight.bold,
               color: Colors.black87,

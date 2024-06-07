@@ -6,23 +6,37 @@ class DatePickerComponent extends StatelessWidget {
   final bool isForm;
   final bool hasTime;
   final DateTime firstDate;
+  final DateTime initialDate;
 
   DatePickerComponent({
     required this.onDateChanged,
     required this.isForm,
     required this.hasTime,
     required this.firstDate,
+    required this.initialDate,
   });
 
   _showDatePicker(BuildContext context) {
     showDatePicker(
+      builder: (context, child) {
+        return Theme(
+            data: Theme.of(context).copyWith(
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.black, // button text color
+                ),
+              ),
+            ),
+            child: child!);
+      },
       helpText: 'Selecione a Data',
       cancelText: 'Cancelar',
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: initialDate,
       firstDate: firstDate,
       lastDate: DateTime.now().add(const Duration(days: 366)),
       keyboardType: TextInputType.datetime,
+      barrierColor: Colors.black,
     ).then((pickedDate) {
       if (pickedDate == null) {
         return;
@@ -34,10 +48,21 @@ class DatePickerComponent extends StatelessWidget {
           context: context,
           initialTime: TimeOfDay.now(),
           builder: (BuildContext context, Widget? child) {
-            return MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                  alwaysUse24HourFormat: true),
-              child: child ?? Container(),
+            return Theme(
+              data: Theme.of(context).copyWith(
+                textButtonTheme: TextButtonThemeData(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black,
+                  ),
+
+                ),
+              ),
+              child: MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                  alwaysUse24HourFormat: true,
+                ),
+                child: child ?? Container(),
+              ),
             );
           },
         ).then((pickedTime) {
@@ -74,7 +99,9 @@ class DatePickerComponent extends StatelessWidget {
                   child: CupertinoDatePicker(
                     backgroundColor: Colors.white,
                     use24hFormat: true,
-                    mode: hasTime ? CupertinoDatePickerMode.dateAndTime : CupertinoDatePickerMode.date,
+                    mode: hasTime
+                        ? CupertinoDatePickerMode.dateAndTime
+                        : CupertinoDatePickerMode.date,
                     initialDateTime: DateTime.now(),
                     minimumDate: DateTime.now(),
                     onDateTimeChanged: onDateChanged,
@@ -90,19 +117,10 @@ class DatePickerComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return Row(
-        children: <Widget>[
-          TextButton(
-            onPressed: () => _showDatePicker(context),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.calendar_month),
-                SizedBox(width: 8),
-              ],
-            ),
-          ),
-        ],
+      return IconButton(
+        color: Theme.of(context).colorScheme.primary,
+        icon: const Icon(Icons.calendar_month),
+        onPressed: () => _showDatePicker(context),
       );
     });
   }

@@ -10,6 +10,10 @@ class TextFormFieldComponent extends StatelessWidget {
   final bool obscureText;
   final bool validar;
   final bool readOnly;
+  final bool autofocus;
+  final FocusNode? focusNodeAtual;
+  final FocusNode? focusNodeProx;
+  final TextInputAction textInputAction;
 
   const TextFormFieldComponent({
     required this.label,
@@ -19,6 +23,10 @@ class TextFormFieldComponent extends StatelessWidget {
     this.obscureText = false,
     this.validar = true,
     this.readOnly = false,
+    this.autofocus = false,
+    this.focusNodeAtual,
+    this.focusNodeProx,
+    this.textInputAction = TextInputAction.next,
     super.key,
   });
 
@@ -34,10 +42,16 @@ class TextFormFieldComponent extends StatelessWidget {
           }
           return null;
         },
+        autofocus: autofocus,
         readOnly: readOnly,
         obscureText: obscureText,
         controller: controller,
         keyboardType: keyboardType,
+        textInputAction: textInputAction,
+        focusNode: focusNodeAtual,
+        onFieldSubmitted: (_) {
+          FocusScope.of(context).requestFocus(focusNodeProx);
+        },
         decoration: InputDecoratorComponent(
           suffixIcon: suffixIcon,
           label: label,

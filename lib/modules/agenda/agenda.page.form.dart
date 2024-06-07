@@ -5,10 +5,11 @@ import 'package:intl/intl.dart';
 import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/auto_complete.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
-import 'package:mybabernew/components/box_text_button.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/date_picker.component.dart';
+import 'package:mybabernew/components/elevated.button.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
+import 'package:mybabernew/components/text.form.field.component.dart';
 import 'package:mybabernew/components/time_picker.component.dart';
 import 'package:mybabernew/entity/agenda.dart';
 import 'package:mybabernew/entity/horarios.dart';
@@ -32,9 +33,9 @@ class AgendaFormPage extends StatefulWidget {
 }
 
 class _AgendaFormPageState extends State<AgendaFormPage> {
-  FocusNode _pessoaFocus = FocusNode();
-  FocusNode _servicoFocus = FocusNode();
-  FocusNode _dataFocus = FocusNode();
+  final FocusNode _pessoaFocus = FocusNode();
+  final FocusNode _servicoFocus = FocusNode();
+  final FocusNode _dataFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
   String _thermPessoa = '';
   String _thermServico = '';
@@ -42,9 +43,14 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
   bool _validateServico = false;
   bool _validateHorario = false;
   late Future _future;
+  final pessoaController = TextEditingController();
+  final servicoController = TextEditingController();
 
   @override
   void dispose() {
+    _pessoaFocus.dispose();
+    _servicoFocus.dispose();
+    _dataFocus.dispose();
     super.dispose();
   }
 
@@ -62,6 +68,8 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
       agendaController.horario = widget.agenda!.horario!;
       agendaController.servico = widget.agenda!.servico!;
       agendaController.pessoa = widget.agenda!.pessoa!;
+      pessoaController.text = widget.agenda!.pessoa!.toString();
+      servicoController.text = widget.agenda!.servico!.toString();
     } else {
       agendaController.data = DateTime.now();
       agendaController.horario = null;
@@ -69,6 +77,8 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
       agendaController.pessoa = null;
       agendaController.horarios = [];
       agendaController.id = '';
+      pessoaController.text = '';
+      servicoController.text = '';
     }
   }
 
@@ -106,7 +116,6 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                   children: [
                                     Expanded(
                                       child: AutoCompleteComponent(
-                                        initialValue: agendaController.pessoa?.toString(),
                                         optionsBuilder: (TextEditingValue textEditingValue) {
                                           _thermPessoa = textEditingValue.text;
                                           _validatePessoa = false;
@@ -120,22 +129,11 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                             return option.toString().toLowerCase().contains(textEditingValue.text.toLowerCase().trim());
                                           });
                                         },
-                                        fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
-                                          _pessoaFocus = focusNode;
-                                          return TextField(
-                                            controller: controller,
-                                            focusNode: focusNode,
-                                            style: textTheme.bodyMedium,
-                                            onEditingComplete: onEditingComplete,
-                                            decoration: InputDecoratorComponent(
-                                              label: 'Pessoa',
-                                              hintText: 'Selecione a pessoa...',
-                                              errorText: _validatePessoa ? "O campo deve ser informado" : null,
-                                              prefixIcon: const Icon(Icons.search),
-                                            ).decorator(),
-                                          );
-                                        },
+                                        label: 'Pessoa',
+                                        validate: _validatePessoa,
+                                        focusNode: _pessoaFocus,
                                         term: _thermPessoa,
+                                        textEditingController: pessoaController,
                                         onSelected: (Object pessoa) {
                                           agendaController.pessoa = (pessoa as Pessoa);
                                           agendaController.atualizarPagina();
@@ -147,14 +145,20 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                       color: Theme.of(context).colorScheme.primary,
                                       icon: const Icon(Icons.person_add_outlined),
                                       onPressed: () {
-                                        Modular.to.pushNamed(PessoaModule.ROUTE_PESSOAS_FORM, arguments: null).then((value) => agendaController.atualizarPessoas());
+                                        Modular.to.pushNamed(PessoaModule.ROUTE_PESSOAS_FORM, arguments: null).then((value) async {
+                                          if (value != null) {
+                                            await agendaController.atualizarPessoas();
+                                            await agendaController.atribuirPessoa(value.toString());
+                                            pessoaController.text = agendaController.pessoa.toString();
+                                            agendaController.atualizarPagina();
+                                          }
+                                        });
                                       },
                                     ),
                                   ],
                                 ),
                                 const SizedBox(height: 10),
                                 AutoCompleteComponent(
-                                  initialValue: agendaController.servico?.toString(),
                                   optionsBuilder: (TextEditingValue textEditingValue) {
                                     _thermServico = textEditingValue.text;
                                     _validateServico = false;
@@ -174,25 +178,14 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                               .trim());
                                     });
                                   },
-                                  fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
-                                    _servicoFocus = focusNode;
-                                    return TextField(
-                                      controller: controller,
-                                      focusNode: focusNode,
-                                      style: textTheme.bodyMedium,
-                                      onEditingComplete: onEditingComplete,
-                                      decoration: InputDecoratorComponent(
-                                        label: 'Serviço',
-                                        hintText: 'Selecione a serviço...',
-                                        errorText: _validateServico ? "O campo deve ser informado" : null,
-                                        prefixIcon: const Icon(Icons.search),
-                                      ).decorator(),
-                                    );
-                                  },
+                                  label: 'Serviço',
+                                  validate: _validateServico,
+                                  focusNode: _servicoFocus,
                                   term: _thermServico,
-                                  onSelected: (Object servico) {
+                                  textEditingController: servicoController,
+                                  onSelected: (Object servico) async {
                                     agendaController.servico = (servico as Servico);
-                                    agendaController.buscarHorarios().then((value) {
+                                    await agendaController.buscarHorarios().then((value) {
                                       agendaController.horario = null;
                                       agendaController.atualizarPagina();
                                       FocusScope.of(context).requestFocus(_dataFocus);
@@ -202,29 +195,25 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                 const SizedBox(height: 10),
                                 Row(
                                   children: [
-                                    SizedBox(
-                                      width: mediaQuery.size.width * 0.6,
-                                      child: TextFormField(
-                                        focusNode: _dataFocus,
-                                          readOnly: true,
-                                          controller: TextEditingController(
-                                              text: DateFormat('dd/MM/yyyy')
-                                                  .format(
-                                                      agendaController.data)),
-                                          keyboardType: TextInputType.datetime,
-                                          decoration: InputDecoratorComponent(
-                                            label: "Data",
-                                          ).decorator()),
+                                    Expanded(
+                                      child: TextFormFieldComponent(
+                                        label: 'Data',
+                                        focusNodeAtual: _dataFocus,
+                                        readOnly: true,
+                                        controller: TextEditingController(text: DateFormat('dd/MM/yyyy').format(agendaController.data)),
+                                        keyboardType: TextInputType.datetime,
+                                      ),
                                     ),
                                     DatePickerComponent(
+                                      initialDate: agendaController.data,
                                       firstDate: DateTime.now(),
                                       isForm: true,
                                       hasTime: false,
-                                      onDateChanged: (newDate) {
+                                      onDateChanged: (newDate) async {
                                         agendaController.data = newDate;
                                         agendaController.horario = null;
                                         _validateHorario = false;
-                                        agendaController.buscarHorarios().then((value) => agendaController.atualizarPagina());
+                                        await agendaController.buscarHorarios().then((value) => agendaController.atualizarPagina());
                                       },
                                     ),
                                   ],
@@ -315,7 +304,10 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-                                BoxTextButtonComponenet(
+                                ElevatedButtonComponent(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  isRow: true,
+                                  isBorderCircular: true,
                                   label: 'Gravar',
                                   icon: Icons.save,
                                   onPressed: () => _submit(context),
@@ -345,8 +337,6 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
     }
     try {
       await agendaController.salvarAgendas();
-      await agendaController.buscarAgendas();
-      agendaController.pessoa = null;
       Modular.to.pop(context);
     } catch (erro) {
       print('Erro salvar agenda: ' + erro.toString());

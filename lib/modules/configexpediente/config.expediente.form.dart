@@ -4,8 +4,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
-import 'package:mybabernew/components/box_text_button.component.dart';
-import 'package:mybabernew/components/drop_down.component.dart';
+import 'package:mybabernew/components/elevated.button.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
 import 'package:mybabernew/components/time_picker.component.dart';
 import 'package:mybabernew/entity/config_expediente.dart';
@@ -236,7 +235,10 @@ class _ConfigExpedienteFormPageState extends State<ConfigExpedienteFormPage> {
                               ],
                             ),
                             const SizedBox(height: 10),
-                            BoxTextButtonComponenet(
+                            ElevatedButtonComponent(
+                              color: Theme.of(context).colorScheme.primary,
+                              isRow: true,
+                              isBorderCircular: true,
                               label: 'Gravar',
                               icon: Icons.save,
                               onPressed: () => _submit(context),

@@ -6,7 +6,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
-import 'package:mybabernew/components/box_text_button.component.dart';
+import 'package:mybabernew/components/elevated.button.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.controller.dart';
@@ -120,7 +120,10 @@ class _PessoaFormPageState extends State<PessoaFormPage> {
                                   label: "Número",
                                 ).decorator()),
                             const SizedBox(height: 10),
-                            BoxTextButtonComponenet(
+                            ElevatedButtonComponent(
+                              color: Theme.of(context).colorScheme.primary,
+                              isRow: true,
+                              isBorderCircular: true,
                               label: 'Gravar',
                               icon: Icons.save,
                               onPressed: () => _submit(context),
@@ -140,9 +143,9 @@ class _PessoaFormPageState extends State<PessoaFormPage> {
       return;
     }
     try {
-      await pessoaController.salvarPessoas();
+      pessoaController.id = await pessoaController.salvarPessoas();
       await pessoaController.buscarPessoas();
-      Modular.to.pop(context);
+      Modular.to.pop(pessoaController.id);
     } catch (erro) {
       print('Erro salvar pessoa: ' + erro.toString());
       AlertComponent.show(context,

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mybabernew/components/alert.component.dart';
+import 'package:mybabernew/components/elevated.button.component.dart';
 
 class SlidableComponent extends StatelessWidget {
   final Widget child;
@@ -46,22 +47,11 @@ class SlidableComponent extends StatelessWidget {
     if (functionEditar != null) {
       children.add(
         Expanded(
-          child: ElevatedButton(
+          child: ElevatedButtonComponent(
             onPressed: () => functionEditar!(),
-            style: ElevatedButton.styleFrom(
-              textStyle: textTheme.labelSmall,
-              backgroundColor: Colors.black12,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Expanded(child: Icon(Icons.edit, color: Colors.black54)),
-                Expanded(child: Text('Editar', style: textTheme.labelSmall))
-              ],
-            ),
+            icon: Icons.edit,
+            label: 'Editar',
+            color: Colors.black12,
           ),
         ),
       );
@@ -69,22 +59,11 @@ class SlidableComponent extends StatelessWidget {
     if (futureRemover != null) {
       children.add(
         Expanded(
-          child: ElevatedButton(
+          child: ElevatedButtonComponent(
             onPressed: () async => await _remover(),
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
-              ),
-              textStyle: textTheme.labelSmall,
-              backgroundColor: Colors.redAccent,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Expanded(child: Icon(Icons.delete, color: Colors.black54)),
-                Expanded(child: Text('Remover', style: textTheme.labelSmall))
-              ],
-            ),
+            icon: Icons.delete,
+            label: 'Remover',
+            color: Colors.redAccent,
           ),
         ),
       );
@@ -104,11 +83,11 @@ class SlidableComponent extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text('Não'),
+              child: Text('Não', style: textTheme.bodyLarge),
             ),
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(true),
-              child: const Text('Sim'),
+              child: Text('Sim', style: textTheme.bodyLarge),
             ),
           ],
         ),

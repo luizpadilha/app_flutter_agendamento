@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:mybabernew/components/alert.component.dart';
-import 'package:mybabernew/components/box_text_button.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
-import 'package:mybabernew/components/input_decorator.dart';
+import 'package:mybabernew/components/elevated.button.component.dart';
 import 'package:mybabernew/components/text.form.field.component.dart';
 import 'package:mybabernew/entity/user.dart';
 import 'package:mybabernew/modules/home/home.module.dart';
@@ -58,6 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                   return triple.isLoading
                       ? const Center(child: Carregando(inverterCor: true))
                       : SingleChildScrollView(
+                          reverse: true,
                           child: Padding(
                             padding: EdgeInsets.only(
                               top: deviceSize.height * 0.20,
@@ -71,11 +71,13 @@ class _LoginPageState extends State<LoginPage> {
                                 children: [
                                   SizedBox(
                                     width: deviceSize.width * 0.35,
-                                    child: Image.asset('assets/app/icon-android.png'),
+                                    child: Image.asset(
+                                        'assets/app/icon-android.png'),
                                   ),
                                   SizedBox(height: deviceSize.height * 0.05),
                                   TextFormFieldComponent(
-                                    suffixIcon: const Icon(Icons.account_circle_outlined),
+                                    suffixIcon: const Icon(
+                                        Icons.account_circle_outlined),
                                     controller: controller.loginController,
                                     keyboardType: TextInputType.text,
                                     label: 'Login',
@@ -100,7 +102,10 @@ class _LoginPageState extends State<LoginPage> {
                                     label: 'Senha',
                                   ),
                                   SizedBox(height: deviceSize.height * 0.05),
-                                  BoxTextButtonComponenet(
+                                  ElevatedButtonComponent(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    isRow: true,
+                                    isBorderCircular: true,
                                     label: 'Acessar',
                                     icon: Icons.lock_open,
                                     onPressed: () => _submit(context),
@@ -126,15 +131,23 @@ class _LoginPageState extends State<LoginPage> {
       }
       User? user = await controller.buscarUser();
       if (user != null) {
-        AlertComponent.show(context,
-            title: "Olá ${user.username}",
-            subTitle: "Seja bem vindo", onConfirm: () {
-          Modular.to.pushReplacementNamed(HomeModule.ROUTE);
-        });
+        AlertComponent.show(
+          context,
+          style: AlertStyle.success,
+          title: "Olá ${user.username}",
+          subTitle: "Seja bem vindo",
+          onConfirm: () {
+            Modular.to.pushReplacementNamed(HomeModule.ROUTE);
+          },
+        );
       }
     } catch (erro) {
-      AlertComponent.show(context,
-          title: "Ops!", subTitle: erro.toString(), style: AlertStyle.error);
+      AlertComponent.show(
+        context,
+        title: "Ops!",
+        subTitle: erro.toString(),
+        style: AlertStyle.error,
+      );
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -9,15 +10,16 @@ import 'package:mybabernew/components/auto_complete.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/date_picker.component.dart';
-import 'package:mybabernew/components/dismissible.component.dart';
+import 'package:mybabernew/components/drop_down.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
-import 'package:mybabernew/components/input_decorator.dart';
+import 'package:mybabernew/components/floating.action.button.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
 import 'package:mybabernew/components/slidable.component.dart';
 import 'package:mybabernew/components/whatsapp_button.component.dart';
 import 'package:mybabernew/constants.dart';
 import 'package:mybabernew/entity/agenda.dart';
 import 'package:mybabernew/entity/pessoa.dart';
+import 'package:mybabernew/enums/tipo.filtro.agenda.dart';
 import 'package:mybabernew/modules/agenda/agenda.controller.dart';
 import 'package:mybabernew/modules/agenda/agenda.module.dart';
 
@@ -33,11 +35,21 @@ class AgendaPage extends StatefulWidget {
 class _AgendaPageState extends State<AgendaPage> {
   late Future _future;
   String _thermPessoa = '';
+  final FocusNode _pessoaFocus = FocusNode();
+  final pessoaController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _future = agendaController.init();
+    pessoaController.text = '';
+  }
+
+
+  @override
+  void dispose() {
+    _pessoaFocus.dispose();
+    super.dispose();
   }
 
   AgendaController get agendaController => widget.agendaController;
@@ -45,18 +57,18 @@ class _AgendaPageState extends State<AgendaPage> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final deviceSizeHeight = mediaQuery.size.height - mediaQuery.padding.top;
+    final deviceSize = mediaQuery.size;
     var textTheme = Theme.of(context).textTheme;
     return Scaffold(
         floatingActionButton: platformIsIos(context)
             ? null
-            : FloatingActionButton(
+            : FloatingActionButtonComponent(
           onPressed: () {
-            Modular.to.pushNamed(AgendaModule.ROUTE_AGENDA_FORM,
-                arguments: null);
+            Modular.to.pushNamed(AgendaModule.ROUTE_AGENDA_FORM, arguments: null).then((value) async {
+              await agendaController.init();
+              agendaController.atualizarPagina();
+            });
           },
-          shape: const CircleBorder(),
-          child: const Icon(Icons.add),
         ),
         drawer: const AppDrawerComponent(),
         bottomNavigationBar: const BottomBarComponent(),
@@ -67,11 +79,15 @@ class _AgendaPageState extends State<AgendaPage> {
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
-                Modular.to.pushNamed(AgendaModule.ROUTE_AGENDA_FORM, arguments: null);
+                Modular.to.pushNamed(AgendaModule.ROUTE_AGENDA_FORM, arguments: null).then((value) async {
+                  await agendaController.init();
+                  agendaController.atualizarPagina();
+                });
               },
             ),
           ],
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: FutureBuilder(
           future: _future,
           builder: (_, snapshot) {
@@ -92,70 +108,120 @@ class _AgendaPageState extends State<AgendaPage> {
                               ? const Center(child: Carregando(inverterCor: true))
                               : Column(
                                   children: [
-                                    const SizedBox(height: 10),
+                                    SizedBox(height: deviceSize.height * 0.02),
                                     Card(
                                       color: Colors.white,
                                       margin: const EdgeInsets.only(top: 5),
                                       child: Padding(
                                         padding: const EdgeInsets.all(10),
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Text('Data: ${DateFormat('dd/MM/yyyy').format(agendaController.dataInicial)}',
-                                              style: textTheme.displaySmall,
-                                            ),
-                                            const SizedBox(height: 2),
-                                            DatePickerComponent(
-                                              firstDate: DateTime(2024, 1, 1),
-                                              isForm: false,
-                                              hasTime: false,
-                                              onDateChanged: (newDate) {
-                                                agendaController.dataInicial = newDate;
-                                                _future = agendaController.buscarAgendas();
-                                              },
-                                            ),
-                                            const SizedBox(height: 2),
-                                            Expanded(
-                                              child: AutoCompleteComponent(
-                                                initialValue: agendaController.pessoa?.toString(),
-                                                optionsBuilder: (TextEditingValue textEditingValue) {
-                                                  _thermPessoa = textEditingValue.text;
-                                                  agendaController.atualizarPagina();
+                                        child: AnimatedContainer(
+                                          height: agendaController.tipoFiltroAgenda != null ? deviceSize.height * 0.20 : deviceSize.height * 0.10,
+                                          alignment: Alignment.center,
+                                          duration: const Duration(seconds: 1),
+                                          curve: Curves.fastOutSlowIn,
+                                          child: ListView(
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            children: [
+                                              Row(
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  Text('Data: ${DateFormat('dd/MM/yyyy').format(agendaController.dataInicial)}',
+                                                    style: textTheme.bodySmall,
+                                                  ),
+                                                  DatePickerComponent(
+                                                    initialDate: agendaController.dataInicial,
+                                                    firstDate: DateTime(2024, 1, 1),
+                                                    isForm: false,
+                                                    hasTime: false,
+                                                    onDateChanged: (newDate) async {
+                                                      agendaController.dataInicial = newDate;
+                                                      await agendaController.buscarAgendas();
+                                                      agendaController.atualizarPagina();
 
-                                                  if (textEditingValue.text == '') {
-                                                    return const Iterable<Pessoa>.empty();
-                                                  }
-
-                                                  return agendaController.pessoas.where((Pessoa option) {
-                                                    return option.toString().toLowerCase().contains(textEditingValue.text.toLowerCase().trim());
-                                                  });
-                                                },
-                                                fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
-                                                  return TextField(
-                                                    controller: controller,
-                                                    focusNode: focusNode,
-                                                    style: textTheme.bodyMedium,
-                                                    onEditingComplete: onEditingComplete,
-                                                    decoration: InputDecoratorComponent(
-                                                      label: 'Pessoa',
-                                                      hintText: 'Selecione a pessoa...',
-                                                      prefixIcon: const Icon(Icons.search),
-                                                    ).decorator(),
-                                                  );
-                                                },
-                                                term: _thermPessoa,
-                                                onSelected: (Object pessoa) {
-                                                  agendaController.pessoa = (pessoa as Pessoa);
-                                                  agendaController.buscarAgendasByPessoa();
-                                                  agendaController.atualizarPagina();
-                                                },
+                                                    },
+                                                  ),
+                                                  SizedBox(width: deviceSize.width * 0.02),
+                                                  Expanded(
+                                                    flex: 3,
+                                                    child: DropDownComponent(
+                                                      itemVazio: true,
+                                                      menuMaxHeight: deviceSize.height * 0.4,
+                                                      value: agendaController.tipoFiltroAgenda,
+                                                      items: TipoFiltroAgenda.values,
+                                                      label: 'Filtro',
+                                                      onChanged: (Object? tipo) async {
+                                                          if (tipo != null) {
+                                                            agendaController.tipoFiltroAgenda = tipo as TipoFiltroAgenda;
+                                                          } else {
+                                                            agendaController.tipoFiltroAgenda = null;
+                                                            //delay por causa do AnimatedContainer
+                                                            await Future.delayed(const Duration(seconds: 1), () async {
+                                                              agendaController.buscarAgendas();
+                                                            });
+                                                          }
+                                                          pessoaController.text = '';
+                                                          agendaController.pessoa = null;
+                                                          agendaController.atualizarPagina();
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ),
-                                          ],
+                                              Visibility(
+                                                maintainAnimation: true,
+                                                maintainState: true,
+                                                visible: TipoFiltroAgenda.PESSOA == agendaController.tipoFiltroAgenda,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(top: deviceSize.height * 0.02),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: AutoCompleteComponent(
+                                                          optionsBuilder: (TextEditingValue textEditingValue) {
+                                                            _thermPessoa = textEditingValue.text;
+                                                            agendaController.atualizarPagina();
+
+                                                            if (textEditingValue.text == '') {
+                                                              return const Iterable<Pessoa>.empty();
+                                                            }
+
+                                                            return agendaController.pessoas.where((Pessoa option) {
+                                                              return option.toString().toLowerCase().contains(textEditingValue.text.toLowerCase().trim());
+                                                            });
+                                                          },
+                                                          label: 'Pessoa',
+                                                          textEditingController: pessoaController,
+                                                          term: _thermPessoa,
+                                                          focusNode: _pessoaFocus,
+                                                          onSelected: (Object pessoa) async {
+                                                            agendaController.pessoa = (pessoa as Pessoa);
+                                                            await agendaController.buscarAgendasByPessoa();
+                                                            agendaController.atualizarPagina();
+                                                            _pessoaFocus.unfocus();
+                                                          },
+                                                        ),
+                                                      ),
+                                                      IconButton(
+                                                        color: Theme.of(context).colorScheme.primary,
+                                                        icon: const Icon(Icons.delete),
+                                                        onPressed: () async {
+                                                          agendaController.pessoa = null;
+                                                          pessoaController.text = '';
+                                                          await agendaController.buscarAgendas();
+                                                          agendaController.atualizarPagina();
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
+                                    SizedBox(height: deviceSize.height * 0.02),
                                     triple.state.isNotEmpty
                                     //usar Expanded quando estiver um component com scroll dentro de um Column
                                         ? Expanded(
@@ -179,7 +245,19 @@ class _AgendaPageState extends State<AgendaPage> {
                                                           child: Padding(
                                                             padding: const EdgeInsets.all(5),
                                                             child: FittedBox(
-                                                              child: Text(DateFormat('HH:mm').format(agend.horario!)),
+                                                              child: Column(
+                                                                children: [
+                                                                  if (agendaController.pessoa != null)
+                                                                    AutoSizeText(
+                                                                      DateFormat('d/MMM').format(agend.horario!).toString(),
+                                                                      style: textTheme.labelSmall,
+                                                                    ),
+                                                                  AutoSizeText(
+                                                                      DateFormat('HH:mm').format(agend.horario!).toString(),
+                                                                      style: textTheme.labelSmall
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
@@ -204,7 +282,7 @@ class _AgendaPageState extends State<AgendaPage> {
                                               ),
                                             ),
                                         )
-                                        : const EmptyList(),
+                                        : EmptyList(hasImage: agendaController.tipoFiltroAgenda == null),
                                   ],
                                 );
                         },

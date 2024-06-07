@@ -26,7 +26,7 @@ class LabelAndFieldComponent extends StatelessWidget {
         field,
         maxLines: 2,
         overflowReplacement: const Text("..."),
-          style: textTheme.displaySmall,
+          style: textTheme.bodySmall,
       ),
     );
 

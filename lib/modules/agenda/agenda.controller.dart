@@ -7,6 +7,7 @@ import 'package:mybabernew/entity/agenda.dart';
 import 'package:mybabernew/entity/horarios.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/entity/servico.dart';
+import 'package:mybabernew/enums/tipo.filtro.agenda.dart';
 import 'package:mybabernew/modules/agenda/agenda.repository.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.controller.dart';
 import 'package:mybabernew/modules/servico/servico.controller.dart';
@@ -25,19 +26,20 @@ class AgendaController extends Store<List<Agenda>> {
   List<Servico> servicos = [];
   List<Pessoa> pessoas = [];
   List<Horarios> horarios = [];
+  TipoFiltroAgenda? tipoFiltroAgenda;
 
   AgendaController() : super([]);
 
   Future<void> initForm() async {
-    pessoas = await pessoaController.buscarPessoasSemState();
+    await atualizarPessoas();
     servicos = await servicoController.buscarServicosSemState();
-    print('totalPEs: ${pessoaController.state.length}');
-    print('totalSErv: ${servicoController.state.length}');
   }
 
   Future<void> init() async {
-    pessoas = await pessoaController.buscarPessoasSemState();
-    print('totalPEs: ${pessoas.length}');
+    await atualizarPessoas();
+    pessoa = null;
+    tipoFiltroAgenda = null;
+    dataInicial = DateTime.now();
     await buscarAgendas();
   }
 
@@ -132,8 +134,12 @@ class AgendaController extends Store<List<Agenda>> {
     update(state, force: true);
   }
 
-  void atualizarPessoas() {
-    pessoas = pessoaController.state;
+  Future<void> atualizarPessoas() async {
+    pessoas = await pessoaController.buscarPessoasSemState();
+  }
+
+  Future<void> atribuirPessoa(String idPessoa) async {
+    pessoa = await pessoaController.buscarPessoa(idPessoa);
   }
 
   Future<void> buscarHorarios() async {

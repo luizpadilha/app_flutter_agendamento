@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:mybabernew/components/input_decorator.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
 class AutoCompleteComponent extends StatefulWidget {
   final Function(Object) onSelected;
   final AutocompleteOptionsBuilder<Object> optionsBuilder;
   final String? term;
-  final String? initialValue;
-  Widget Function(
-      BuildContext context,
-      TextEditingController textEditingController,
-      FocusNode focusNode,
-      VoidCallback onFieldSubmitted,
-      ) fieldViewBuilder;
+  final String label;
+  final bool validate;
+  FocusNode focusNode;
+  TextEditingController textEditingController;
+  final TextInputAction textInputAction;
 
   AutoCompleteComponent({
     required this.onSelected,
     required this.optionsBuilder,
     required this.term,
-    required this.initialValue,
-    required this.fieldViewBuilder,
+    required this.label,
+    required this.focusNode,
+    required this.textEditingController,
+    this.validate = false,
+    this.textInputAction = TextInputAction.next,
   });
 
   @override
@@ -35,14 +37,30 @@ class _AutoCompleteComponentState extends State<AutoCompleteComponent> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final deviceSize = mediaQuery.size;
+    var textTheme = Theme.of(context).textTheme;
     return LayoutBuilder(
       builder: (context, constraints) {
-        return Autocomplete(
-          initialValue: TextEditingValue(text: widget.initialValue ?? ''),
+        return RawAutocomplete(
+          focusNode: widget.focusNode,
+          textEditingController: widget.textEditingController,
           displayStringForOption: _displayStringForOption,
           optionsBuilder: widget.optionsBuilder,
           onSelected: widget.onSelected,
-          fieldViewBuilder: widget.fieldViewBuilder,
+          fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
+            return TextFormField(
+              textInputAction: widget.textInputAction,
+              controller: controller,
+              focusNode: focusNode,
+              style: textTheme.bodyMedium,
+              onEditingComplete: onEditingComplete,
+              decoration: InputDecoratorComponent(
+                label: widget.label,
+                errorText: widget.validate ? "O campo deve ser informado" : null,
+                hintText: 'Digite para pesquisar...',
+                prefixIcon: const Icon(Icons.search),
+              ).decorator(),
+            );
+          },
           optionsViewBuilder: (context, onSelected, options) {
             return Align(
               alignment: Alignment.topLeft,

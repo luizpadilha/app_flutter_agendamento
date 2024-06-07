@@ -44,11 +44,24 @@ class PessoaController extends Store<List<Pessoa>> {
     }
   }
 
+  Future<Pessoa> buscarPessoa(String idPessoa) async {
+    try {
+      Pessoa pessoa = await repo.getPessoa(idPessoa);
+      return pessoa;
+    } on DioException catch (e, s) {
+      log('Erro ao buscar pessoa', error: e, stackTrace: s);
+      rethrow;
+    } on Exception catch (e) {
+      log('Erro ao buscar pessoa', error: e);
+      rethrow;
+    }
+  }
 
-  Future<void> salvarPessoas() async {
+
+  Future<String> salvarPessoas() async {
     try {
       setLoading(true);
-      await repo.salvarPessoas(id, nomeController.text, numeroController.text);
+      return await repo.salvarPessoas(id, nomeController.text, numeroController.text);
     } on DioException catch (e, s) {
       log('Erro ao salvar pessoa', error: e, stackTrace: s);
       rethrow;
