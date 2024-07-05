@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mybabernew/constants.dart';
+import 'package:mybabernew/constants.dart';
+import 'package:mybabernew/constants.dart';
 
 class InputDecoratorComponent {
   final String label;
@@ -18,10 +21,10 @@ class InputDecoratorComponent {
       {required this.label,
       this.suffixIcon,
       this.textColor = Colors.black,
-      this.borderColor = Colors.blueAccent,
-      this.enabledBorder = Colors.blue,
+      this.borderColor = colorPrimary,
+      this.enabledBorder = colorPrimary,
       this.errorBorder = Colors.red,
-      this.focusedBorder = Colors.lightBlue,
+      this.focusedBorder = colorPrimary,
       this.fillColor = Colors.white,
       this.prefixIcon,
       this.errorText,
@@ -29,8 +32,8 @@ class InputDecoratorComponent {
 
   InputDecoration decorator() {
     return InputDecoration(
-      border: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue, width: 0.0)),
+      border: OutlineInputBorder(
+          borderSide: BorderSide(color: borderColor, width: 0.0)),
       labelText: label,
       errorBorder: OutlineInputBorder(
         borderSide: BorderSide(color: errorBorder, width: 0.0),

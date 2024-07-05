@@ -9,6 +9,7 @@ get baseUrl => 'https://api.agendamento.padilha.dev.br';
 bool platformIsIos(BuildContext context) {
   return Theme.of(context).platform == TargetPlatform.iOS;
 }
+const colorPrimary = Color(0xFF44FFF9);
 
 const String KEY_USERLOGIN = "userlogin";
 const String KEY_USERPASSWORD = "passwordlogin";

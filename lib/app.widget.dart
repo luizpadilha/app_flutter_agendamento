@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mybabernew/constants.dart';
 
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
@@ -11,7 +12,6 @@ class AppWidget extends StatelessWidget {
       fontFamily: 'Lato',
     );
     final mediaQuery = MediaQuery.of(context);
-    const colorPrimary = Color(0xFF44FFF9);
     return MaterialApp.router(
       scaffoldMessengerKey: scaffoldMessengerKey,
       title: 'Agende Fácil',

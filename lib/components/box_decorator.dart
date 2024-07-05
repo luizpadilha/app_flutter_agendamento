@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:mybabernew/constants.dart';
 
-class BoxDecorator {
+class BoxDecoratorComponent {
   Color fillColor;
+  bool sombra;
 
-  BoxDecorator({
+  BoxDecoratorComponent({
     this.fillColor = Colors.white,
+    this.sombra = false,
   });
 
   BoxDecoration boxDecorator() {
     return BoxDecoration(
       border: Border.all(
-        color: Colors.blue, // Cor da borda
+        color: colorPrimary, // Cor da borda
         width: 0.0, // Largura da borda
       ),
       borderRadius: BorderRadius.circular(10), // Borda circular
       color: fillColor, // Cor de fundo
-      boxShadow: [
+      boxShadow: !sombra ? null : [
         BoxShadow(
           color: Colors.grey.withOpacity(0.5), // Cor da sombra
           spreadRadius: 2,
