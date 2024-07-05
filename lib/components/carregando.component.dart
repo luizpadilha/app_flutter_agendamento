@@ -18,13 +18,14 @@ class Carregando extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
       children: [
         SizedBox(
             height: tamanho,
             width: tamanho,
             child: platformIsIos(context)
-                ? CupertinoActivityIndicator(color: (inverterCor ? Colors.blueAccent : Colors.white))
-                : CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(inverterCor ? Colors.blueAccent : Colors.white))
+                ? CupertinoActivityIndicator(color: (inverterCor ? Theme.of(context).colorScheme.primary : Colors.white))
+                : CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(inverterCor ? Theme.of(context).colorScheme.primary : Colors.white))
         ),
         if (mostrarTexto)
           const Padding(

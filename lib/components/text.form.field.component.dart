@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mybabernew/components/input_decorator.dart';
 
 class TextFormFieldComponent extends StatelessWidget {
@@ -14,6 +15,8 @@ class TextFormFieldComponent extends StatelessWidget {
   final FocusNode? focusNodeAtual;
   final FocusNode? focusNodeProx;
   final TextInputAction textInputAction;
+  final List<TextInputFormatter>? inputFormatters;
+  final void Function()? onFieldSubmittedFunction;
 
   const TextFormFieldComponent({
     required this.label,
@@ -26,6 +29,8 @@ class TextFormFieldComponent extends StatelessWidget {
     this.autofocus = false,
     this.focusNodeAtual,
     this.focusNodeProx,
+    this.inputFormatters,
+    this.onFieldSubmittedFunction,
     this.textInputAction = TextInputAction.next,
     super.key,
   });
@@ -42,6 +47,7 @@ class TextFormFieldComponent extends StatelessWidget {
           }
           return null;
         },
+        inputFormatters: inputFormatters,
         autofocus: autofocus,
         readOnly: readOnly,
         obscureText: obscureText,
@@ -50,11 +56,15 @@ class TextFormFieldComponent extends StatelessWidget {
         textInputAction: textInputAction,
         focusNode: focusNodeAtual,
         onFieldSubmitted: (_) {
-          FocusScope.of(context).requestFocus(focusNodeProx);
+          onFieldSubmittedFunction == null ? _onFieldSubmittedFunctionPadrao : onFieldSubmittedFunction!();
         },
         decoration: InputDecoratorComponent(
           suffixIcon: suffixIcon,
           label: label,
         ).decorator());
+  }
+
+  void Function() _onFieldSubmittedFunctionPadrao(BuildContext context) {
+    return () => FocusScope.of(context).requestFocus(focusNodeProx);
   }
 }

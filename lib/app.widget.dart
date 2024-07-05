@@ -11,12 +11,13 @@ class AppWidget extends StatelessWidget {
       fontFamily: 'Lato',
     );
     final mediaQuery = MediaQuery.of(context);
+    const colorPrimary = Color(0xFF44FFF9);
     return MaterialApp.router(
       scaffoldMessengerKey: scaffoldMessengerKey,
       title: 'Agende Fácil',
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
-          primary: const Color(0xFF448AFF),
+          primary: colorPrimary,
         ),
         textTheme: TextTheme(
           //campos
@@ -61,12 +62,12 @@ class AppWidget extends StatelessWidget {
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           type: BottomNavigationBarType.fixed, // Fixed
-          backgroundColor: Colors.blueAccent, // <-- This works for fixed
+          backgroundColor: colorPrimary, // <-- This works for fixed
           selectedItemColor: Colors.black87,
           unselectedItemColor: Colors.grey,
         ),
         appBarTheme: AppBarTheme(
-          color: Colors.blueAccent,
+          color: colorPrimary,
           foregroundColor: Colors.black,
           titleTextStyle: GoogleFonts.raleway(
             fontSize: mediaQuery.textScaler.scale(14),

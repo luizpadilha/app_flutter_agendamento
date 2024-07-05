@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:mybabernew/components/alert.component.dart';
-import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/elevated.button.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
+import 'package:mybabernew/components/scaffold.component.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.controller.dart';
 
@@ -62,10 +62,12 @@ class _PessoaFormPageState extends State<PessoaFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: const BottomBarComponent(),
-      extendBody: true,
-      appBar: AppBar(title: Text('Formulário de Pessoa')),
+    return ScaffoldComponent(
+      isActionHome: false,
+      isActionVoltar: true,
+      isDrawer: false,
+      labelAppBar: 'Pessoa Cadastro',
+      widgetAppBar: Container(),
       body: TripleBuilder(
           store: pessoaController,
           builder: (ctx, triple) {

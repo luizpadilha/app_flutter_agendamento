@@ -1,9 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/elevated.button.component.dart';
+import 'package:mybabernew/exceptions/my.exception.dart';
 
 class SlidableComponent extends StatelessWidget {
   final Widget child;
@@ -13,6 +13,7 @@ class SlidableComponent extends StatelessWidget {
   final void Function()? functionEditar;
   final BuildContext contextPai;
   final List<Widget>? actions;
+  final bool enabled;
 
   const SlidableComponent({
     required this.child,
@@ -22,24 +23,26 @@ class SlidableComponent extends StatelessWidget {
     this.functionEditar,
     required this.object,
     this.actions,
+    this.enabled = true,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Slidable(
+      enabled: enabled,
+      child: child,
       key: keySlid,
       startActionPane: ActionPane(
-        extentRatio: 0.5,
+        extentRatio: 0.7,
         motion: const DrawerMotion(),
-        children: _children(),
+        children: _children(context),
       ),
-      child: child,
     );
   }
 
-  List<Widget> _children() {
-    var textTheme = Theme.of(contextPai).textTheme;
+  List<Widget> _children(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme;
     List<Widget> children = [];
     if (actions != null && actions!.isNotEmpty) {
       children.addAll(actions!);
@@ -48,6 +51,8 @@ class SlidableComponent extends StatelessWidget {
       children.add(
         Expanded(
           child: ElevatedButtonComponent(
+            textStyle: textTheme.labelSmall,
+            isRow: false,
             onPressed: () => functionEditar!(),
             icon: Icons.edit,
             label: 'Editar',
@@ -60,7 +65,11 @@ class SlidableComponent extends StatelessWidget {
       children.add(
         Expanded(
           child: ElevatedButtonComponent(
-            onPressed: () async => await _remover(),
+            textStyle: textTheme.labelSmall,
+            isRow: false,
+            onPressed: () async {
+              await _remover();
+            },
             icon: Icons.delete,
             label: 'Remover',
             color: Colors.redAccent,
@@ -100,10 +109,10 @@ class SlidableComponent extends StatelessWidget {
             style: AlertStyle.success);
       }
     } catch (error) {
-      if (error is DioException) {
+      if (error is MyException) {
         AlertComponent.show(contextPai,
             title: "Ops!",
-            subTitle: error.response!.data,
+            subTitle: error.msg,
             style: AlertStyle.error);
       } else {
         AlertComponent.show(contextPai,

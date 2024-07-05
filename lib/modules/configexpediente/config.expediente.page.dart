@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
+import 'package:mybabernew/components/scaffold.component.dart';
 import 'package:mybabernew/components/slidable.component.dart';
 import 'package:mybabernew/entity/config_expediente.dart';
 import 'package:mybabernew/modules/configexpediente/config.expediente.controller.dart';
@@ -35,12 +35,12 @@ class _ConfigExpedientePageState extends State<ConfigExpedientePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        bottomNavigationBar: const BottomBarComponent(),
-        extendBody: false,
-        appBar: AppBar(
-          title: const Text('Configurar Expediente'),
-        ),
+    return ScaffoldComponent(
+        isActionHome: false,
+        isActionVoltar: true,
+        isDrawer: false,
+        labelAppBar: 'Expediente',
+        widgetAppBar: Container(),
         body: FutureBuilder(
           future: _future,
           builder: (_, snapshot) {

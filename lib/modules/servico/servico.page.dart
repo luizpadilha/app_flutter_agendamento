@@ -2,14 +2,12 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:mybabernew/components/app_drawer.component.dart';
-import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
-import 'package:mybabernew/components/floating.action.button.component.dart';
+import 'package:mybabernew/components/icon.button.add.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
+import 'package:mybabernew/components/scaffold.component.dart';
 import 'package:mybabernew/components/slidable.component.dart';
-import 'package:mybabernew/constants.dart';
 import 'package:mybabernew/entity/servico.dart';
 import 'package:mybabernew/modules/servico/servico.controller.dart';
 import 'package:mybabernew/modules/servico/servico.module.dart';
@@ -36,30 +34,18 @@ class _ServicoPageState extends State<ServicoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: platformIsIos(context)
-          ? null
-          : FloatingActionButtonComponent(
-        onPressed: () {
-          Modular.to.pushNamed(ServicoModule.ROUTE_SERVICOS_FORM, arguments: null);
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      drawer: const AppDrawerComponent(),
-      bottomNavigationBar: const BottomBarComponent(),
-      extendBody: true,
-      appBar: AppBar(
-        title: const Text('Gerenciar Serviços'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              Modular.to.pushNamed(ServicoModule.ROUTE_SERVICOS_FORM,
-                  arguments: null);
-            },
-          ),
-        ],
-      ),
+    return ScaffoldComponent(
+      isActionHome: true,
+      isActionVoltar: false,
+      isDrawer: false,
+      labelAppBar: 'Serviços',
+      widgetAppBar: Container(),
+      actions: [
+        IconButtonAddComponent(
+            onPressed: () => Modular.to.pushNamed(
+                ServicoModule.ROUTE_SERVICOS_FORM,
+                arguments: null)),
+      ],
       body: FutureBuilder(
           future: _future,
           builder: (_, snapshot) {

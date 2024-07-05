@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mybabernew/components/app_drawer.component.dart';
+import 'package:mybabernew/components/scaffold.component.dart';
 import 'package:mybabernew/components/text.form.field.component.dart';
 import 'package:mybabernew/entity/user.dart';
 
@@ -17,9 +18,12 @@ class _UsuarioPageState extends State<UsuarioPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Usuário')),
-      drawer: const AppDrawerComponent(),
+    return ScaffoldComponent(
+      isActionHome: true,
+      isActionVoltar: false,
+      isDrawer: false,
+      widgetAppBar:const Icon(Icons.person),
+      labelAppBar: 'Usuário',
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(

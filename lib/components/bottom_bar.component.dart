@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart' hide Badge;
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mybabernew/modules/agenda/agenda.module.dart';
-import 'package:mybabernew/modules/config/config.module.dart';
 import 'package:mybabernew/modules/graficos/graficos.module.dart';
-import 'package:mybabernew/modules/home/home.module.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.module.dart';
 import 'package:mybabernew/modules/servico/servico.module.dart';
+import 'package:mybabernew/pages/home.page.dart';
 
 class BottomBarComponent extends StatefulWidget {
   const BottomBarComponent({Key? key}) : super(key: key);
@@ -27,7 +26,7 @@ class _BottomBarComponentState extends State<BottomBarComponent> {
         });
         switch (index) {
           case 0:
-            Modular.to.pushReplacementNamed(HomeModule.ROUTE);
+            Modular.to.pushReplacementNamed(HomePage.ROUTE);
             break;
           case 1:
             Modular.to.pushReplacementNamed(ServicoModule.ROUTE);
