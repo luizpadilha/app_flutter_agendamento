@@ -6,25 +6,33 @@ import 'package:mybabernew/entity/user.dart';
 import 'package:mybabernew/modules/agenda/agenda.module.dart';
 import 'package:mybabernew/modules/config/config.module.dart';
 import 'package:mybabernew/modules/graficos/graficos.module.dart';
-import 'package:mybabernew/modules/home/home.module.dart';
 import 'package:mybabernew/modules/login/login.module.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.module.dart';
 import 'package:mybabernew/modules/servico/servico.module.dart';
+import 'package:mybabernew/pages/home.page.dart';
 
-class AppDrawerComponent extends StatelessWidget {
+class AppDrawerComponent extends StatefulWidget {
   const AppDrawerComponent({super.key});
 
   @override
+  State<AppDrawerComponent> createState() => _AppDrawerComponentState();
+}
+
+class _AppDrawerComponentState extends State<AppDrawerComponent> {
+  @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final deviceSize = mediaQuery.size;
     return Drawer(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            buildHeader(context),
-            buildItens(context),
-          ],
-        ),
+      width: deviceSize.width * 0.80,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          buildHeader(context),
+          Expanded(
+            child: buildItens(context),
+          ),
+        ],
       ),
     );
   }
@@ -47,9 +55,12 @@ class AppDrawerComponent extends StatelessWidget {
               children: [
                 const CircleAvatar(
                   radius: 52,
-                  backgroundImage: AssetImage('assets/images/user-defalut.jpg'),
+                  backgroundImage: AssetImage('assets/icons/usuario.png'),
                 ),
-                Text(user.username!, style: textTheme.bodyMedium,),
+                Text(
+                  user.username!,
+                  style: textTheme.bodyMedium,
+                ),
               ],
             ),
           ),
@@ -57,77 +68,122 @@ class AppDrawerComponent extends StatelessWidget {
       ),
     );
   }
-
   Widget buildItens(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
+    return ListView(
+      shrinkWrap: true,
+      physics: const AlwaysScrollableScrollPhysics(),
+      children: _childrens(),
+    );
+  }
+
+  List<Widget> _childrens() {
+    final mediaQuery = MediaQuery.of(context);
+    final deviceSize = mediaQuery.size;
+    List<Widget> retorno = itensDrawer.map((item) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          ListTile(
-            leading: const Icon(Icons.home),
-            title: const Text('Home'),
-            onTap: () {
-              Navigator.pop(context);
-              Modular.to.pushReplacementNamed(HomeModule.ROUTE);
-            },
+          SizedBox(
+            height: deviceSize.height * 0.07,
+            width: deviceSize.width * 0.70,
+            child: ListTile(
+              leading:  CircleAvatar(
+                radius: 20,
+                backgroundColor: const Color(0xFF4E5965),
+                child: Icon(
+                  item.icon,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              title: Text(item.nome),
+              onTap: () {
+                Navigator.pop(context);
+                Modular.to.pushReplacementNamed(item.rota);
+              },
+            ),
           ),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.edit_note_sharp),
-            title: const Text('Config'),
-            onTap: () {
-              Navigator.pop(context);
-              Modular.to.pushReplacementNamed(ConfigModule.ROUTE);
-            },
+        ],
+      );
+    }).toList();
+    retorno.add(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: deviceSize.height * 0.08,
+            width: deviceSize.width * 0.70,
+            child: ListTile(
+              leading:  const CircleAvatar(
+                radius: 20,
+                backgroundColor: Color(0xFF4E5965),
+                child: Icon(
+                  Icons.logout,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              title: const Text('Sair'),
+              onTap: () {
+                Modular.to.pushNamedAndRemoveUntil(
+                    LoginModule.ROUTE, (route) => route.isFirst,
+                    arguments: true);
+              },
+            ),
           ),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.add_business),
-            title: const Text('Serviço'),
-            onTap: () {
-              Navigator.pop(context);
-              Modular.to.pushReplacementNamed(ServicoModule.ROUTE);
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.people),
-            title: const Text('Pessoa'),
-            onTap: () {
-              Navigator.pop(context);
-              Modular.to.pushReplacementNamed(PessoaModule.ROUTE);
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.schedule),
-            title: const Text('Agenda'),
-            onTap: () {
-              Navigator.pop(context);
-              Modular.to.pushReplacementNamed(AgendaModule.ROUTE);
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.bar_chart),
-            title: const Text('Gráficos'),
-            onTap: () {
-              Navigator.pop(context);
-              Modular.to.pushReplacementNamed(GraficoModule.ROUTE);
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.exit_to_app),
-            title: const Text('Sair'),
-            onTap: () {
-              Modular.to.pushNamedAndRemoveUntil(
-                  LoginModule.ROUTE, (route) => route.isFirst,
-                  arguments: true);
-            },
-          ),
         ],
       ),
     );
+    return retorno;
   }
+
+  List<ItemDrawer> itensDrawer = [
+    ItemDrawer(
+      icon: Icons.home,
+      nome: 'Home',
+      rota: HomePage.ROUTE,
+    ),
+    ItemDrawer(
+      icon: Icons.schedule,
+      nome: 'Agenda',
+      rota: AgendaModule.ROUTE,
+    ),
+    ItemDrawer(
+      icon: Icons.people,
+      nome: 'Pessoas',
+      rota: PessoaModule.ROUTE,
+    ),
+    ItemDrawer(
+      icon: Icons.add_business,
+      nome: 'Serviços',
+      rota: ServicoModule.ROUTE,
+    ),
+    ItemDrawer(
+      icon: Icons.bar_chart,
+      nome: 'Gráficos',
+      rota: GraficoModule.ROUTE,
+    ),
+    ItemDrawer(
+      icon: Icons.settings,
+      nome: 'Configurações',
+      rota: ConfigModule.ROUTE,
+    ),
+  ];
+}
+
+class ItemDrawer {
+  IconData icon;
+  String nome;
+  String rota;
+
+  ItemDrawer({
+    required this.icon,
+    required this.nome,
+    required this.rota,
+  });
 }

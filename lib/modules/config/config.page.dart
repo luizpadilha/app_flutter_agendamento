@@ -4,6 +4,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:mybabernew/components/app_drawer.component.dart';
 import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
+import 'package:mybabernew/components/scaffold.component.dart';
 import 'package:mybabernew/components/text_button.component.dart';
 import 'package:mybabernew/modules/config/config.controller.dart';
 import 'package:mybabernew/modules/configexpediente/config.expediente.module.dart';
@@ -32,13 +33,12 @@ class _ConfigPageState extends State<ConfigPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        drawer: const AppDrawerComponent(),
-        bottomNavigationBar: const BottomBarComponent(),
-        extendBody: true,
-        appBar: AppBar(
-          title: const Text('Configurações'),
-        ),
+    return ScaffoldComponent(
+      isActionHome: true,
+      isActionVoltar: false,
+      isDrawer: false,
+      labelAppBar: 'Configurações',
+      widgetAppBar: Container(),
       body: FutureBuilder(
         future: _future,
         builder: (_, snapshot) {

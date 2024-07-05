@@ -4,10 +4,11 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/elevated.button.component.dart';
+import 'package:mybabernew/components/scaffold.component.dart';
 import 'package:mybabernew/components/text.form.field.component.dart';
 import 'package:mybabernew/entity/user.dart';
-import 'package:mybabernew/modules/home/home.module.dart';
 import 'package:mybabernew/modules/login/login.controller.dart';
+import 'package:mybabernew/pages/home.page.dart';
 
 class LoginPage extends StatefulWidget {
   final LoginController controller;
@@ -43,8 +44,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final deviceSize = mediaQuery.size;
-    return Scaffold(
-      extendBodyBehindAppBar: true,
+    return ScaffoldComponent(
+      isActionVoltar: false,
+      labelAppBar: 'Login',
+      widgetAppBar: Container(),
+      isDrawer: false,
       body: FutureBuilder(
         future: _future,
         builder: (_, snapshot) {
@@ -119,7 +123,6 @@ class _LoginPageState extends State<LoginPage> {
           }
         },
       ),
-      extendBody: true,
     );
   }
 
@@ -137,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
           title: "Olá ${user.username}",
           subTitle: "Seja bem vindo",
           onConfirm: () {
-            Modular.to.pushReplacementNamed(HomeModule.ROUTE);
+            Modular.to.pushReplacementNamed(HomePage.ROUTE);
           },
         );
       }

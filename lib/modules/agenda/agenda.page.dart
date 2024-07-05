@@ -5,18 +5,16 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:intl/intl.dart';
 import 'package:mybabernew/components/alert.component.dart';
-import 'package:mybabernew/components/app_drawer.component.dart';
 import 'package:mybabernew/components/auto_complete.component.dart';
-import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/date_picker.component.dart';
 import 'package:mybabernew/components/drop_down.component.dart';
 import 'package:mybabernew/components/empty_list.component.dart';
-import 'package:mybabernew/components/floating.action.button.component.dart';
+import 'package:mybabernew/components/icon.button.add.component.dart';
 import 'package:mybabernew/components/label_field.component.dart';
+import 'package:mybabernew/components/scaffold.component.dart';
 import 'package:mybabernew/components/slidable.component.dart';
 import 'package:mybabernew/components/whatsapp_button.component.dart';
-import 'package:mybabernew/constants.dart';
 import 'package:mybabernew/entity/agenda.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/enums/tipo.filtro.agenda.dart';
@@ -59,35 +57,18 @@ class _AgendaPageState extends State<AgendaPage> {
     final mediaQuery = MediaQuery.of(context);
     final deviceSize = mediaQuery.size;
     var textTheme = Theme.of(context).textTheme;
-    return Scaffold(
-        floatingActionButton: platformIsIos(context)
-            ? null
-            : FloatingActionButtonComponent(
-          onPressed: () {
-            Modular.to.pushNamed(AgendaModule.ROUTE_AGENDA_FORM, arguments: null).then((value) async {
-              await agendaController.init();
-              agendaController.atualizarPagina();
-            });
-          },
-        ),
-        drawer: const AppDrawerComponent(),
-        bottomNavigationBar: const BottomBarComponent(),
-        extendBody: true,
-        appBar: AppBar(
-          title: const Text('Gerenciar Agenda'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                Modular.to.pushNamed(AgendaModule.ROUTE_AGENDA_FORM, arguments: null).then((value) async {
-                  await agendaController.init();
-                  agendaController.atualizarPagina();
-                });
-              },
-            ),
-          ],
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    return ScaffoldComponent(
+        isActionHome: true,
+        isActionVoltar: false,
+        isDrawer: false,
+        labelAppBar: 'Agenda',
+        widgetAppBar: Container(),
+        actions: [
+          IconButtonAddComponent(
+              onPressed: () => Modular.to.pushNamed(
+                  AgendaModule.ROUTE_AGENDA_FORM,
+                  arguments: null)),
+        ],
         body: FutureBuilder(
           future: _future,
           builder: (_, snapshot) {
@@ -223,7 +204,6 @@ class _AgendaPageState extends State<AgendaPage> {
                                     ),
                                     SizedBox(height: deviceSize.height * 0.02),
                                     triple.state.isNotEmpty
-                                    //usar Expanded quando estiver um component com scroll dentro de um Column
                                         ? Expanded(
                                           child: RefreshIndicator(
                                               onRefresh: () => _buscarAgendas(context),
@@ -282,7 +262,7 @@ class _AgendaPageState extends State<AgendaPage> {
                                               ),
                                             ),
                                         )
-                                        : EmptyList(hasImage: agendaController.tipoFiltroAgenda == null),
+                                        : const Expanded(child: SingleChildScrollView(child: EmptyList())),
                                   ],
                                 );
                         },

@@ -42,13 +42,18 @@ abstract class AlertComponent {
                                   style: textTheme.displayLarge),
                             ),
                           ),
-                          Container(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Center(
-                              child: AutoSizeText(
-                                  subTitle,
-                                  maxLines: 8,
-                                  style: textTheme.displayMedium),
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Center(
+                                child: AutoSizeText(
+                                    subTitle,
+                                    maxLines: 5,
+                                    minFontSize: mediaQuery.textScaler.scale(10),
+                                    maxFontSize: mediaQuery.textScaler.scale(14),
+                                    overflow: TextOverflow.ellipsis,
+                                    style: textTheme.displayMedium),
+                              ),
                             ),
                           ),
                         ],
@@ -98,9 +103,9 @@ Color _alertColor(AlertStyle style) {
     case AlertStyle.confirm:
       return Colors.blue;
     case AlertStyle.warning:
-      return Colors.orange; // Exemplo de um terceiro estilo
+      return Colors.yellow;
     default:
-      return Colors.grey; // Cor padrão
+      return Colors.grey;
   }
 }
 

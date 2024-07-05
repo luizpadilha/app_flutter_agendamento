@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:mybabernew/components/alert.component.dart';
-import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/elevated.button.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
+import 'package:mybabernew/components/scaffold.component.dart';
 import 'package:mybabernew/components/time_picker.component.dart';
 import 'package:mybabernew/entity/servico.dart';
 import 'package:mybabernew/modules/servico/servico.controller.dart';
@@ -59,10 +59,12 @@ class _ServicoFormPageState extends State<ServicoFormPage> {
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
-    return Scaffold(
-      bottomNavigationBar: const BottomBarComponent(),
-      extendBody: true,
-      appBar: AppBar(title: Text('Formulário de Servico')),
+    return ScaffoldComponent(
+      isActionHome: false,
+      isActionVoltar: true,
+      isDrawer: false,
+      labelAppBar: 'Serviço Cadastro',
+      widgetAppBar: Container(),
       body: TripleBuilder(
           store: servicoController,
           builder: (ctx, triple) {

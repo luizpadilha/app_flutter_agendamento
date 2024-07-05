@@ -9,9 +9,11 @@ class AutoCompleteComponent extends StatefulWidget {
   final String? term;
   final String label;
   final bool validate;
+  final bool readOnly;
   FocusNode focusNode;
   TextEditingController textEditingController;
   final TextInputAction textInputAction;
+  final void Function()? onTapTextForm;
 
   AutoCompleteComponent({
     required this.onSelected,
@@ -21,7 +23,9 @@ class AutoCompleteComponent extends StatefulWidget {
     required this.focusNode,
     required this.textEditingController,
     this.validate = false,
+    this.readOnly = false,
     this.textInputAction = TextInputAction.next,
+    this.onTapTextForm,
   });
 
   @override
@@ -48,9 +52,13 @@ class _AutoCompleteComponentState extends State<AutoCompleteComponent> {
           onSelected: widget.onSelected,
           fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
             return TextFormField(
+              readOnly: widget.readOnly,
               textInputAction: widget.textInputAction,
               controller: controller,
               focusNode: focusNode,
+              onTap: () {
+                widget.onTapTextForm == null ? null : widget.onTapTextForm!();
+              },
               style: textTheme.bodyMedium,
               onEditingComplete: onEditingComplete,
               decoration: InputDecoratorComponent(
@@ -93,12 +101,12 @@ class _AutoCompleteComponentState extends State<AutoCompleteComponent> {
                           }
                           return Container(
                             color:
-                                highlight ? Theme.of(context).focusColor : null,
+                            highlight ? Theme.of(context).focusColor : null,
                             padding: const EdgeInsets.all(16.0),
                             child: SubstringHighlight(
                               text: option.toString(),
                               textStyleHighlight:
-                                  const TextStyle(color: Colors.purple),
+                              const TextStyle(color: Colors.purple),
                               term: widget.term,
                             ),
                           );

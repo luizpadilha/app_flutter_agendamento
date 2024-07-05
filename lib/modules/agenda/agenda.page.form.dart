@@ -4,11 +4,10 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:intl/intl.dart';
 import 'package:mybabernew/components/alert.component.dart';
 import 'package:mybabernew/components/auto_complete.component.dart';
-import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/date_picker.component.dart';
 import 'package:mybabernew/components/elevated.button.component.dart';
-import 'package:mybabernew/components/input_decorator.dart';
+import 'package:mybabernew/components/scaffold.component.dart';
 import 'package:mybabernew/components/text.form.field.component.dart';
 import 'package:mybabernew/components/time_picker.component.dart';
 import 'package:mybabernew/entity/agenda.dart';
@@ -88,10 +87,12 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
     var textTheme = Theme.of(context).textTheme;
-    return Scaffold(
-      bottomNavigationBar: const BottomBarComponent(),
-      extendBody: false,
-      appBar: AppBar(title: const Text('Formulário de Agenda')),
+    return ScaffoldComponent(
+      isActionHome: false,
+      isActionVoltar: true,
+      isDrawer: false,
+      labelAppBar: 'Agenda Cadastro',
+      widgetAppBar: Container(),
       body: FutureBuilder(
         future: _future,
         builder: (_, snapshot) {

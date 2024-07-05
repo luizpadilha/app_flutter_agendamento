@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:mybabernew/components/alert.component.dart';
-import 'package:mybabernew/components/bottom_bar.component.dart';
 import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/elevated.button.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
+import 'package:mybabernew/components/scaffold.component.dart';
 import 'package:mybabernew/components/time_picker.component.dart';
 import 'package:mybabernew/entity/config_expediente.dart';
 import 'package:mybabernew/enums/dia_semana.dart';
@@ -70,10 +70,12 @@ class _ConfigExpedienteFormPageState extends State<ConfigExpedienteFormPage> {
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
     final deviceSize = MediaQuery.of(context).size;
-    return Scaffold(
-      bottomNavigationBar: const BottomBarComponent(),
-      extendBody: true,
-      appBar: AppBar(title: const Text('Formulário de Expediente')),
+    return ScaffoldComponent(
+      isActionHome: false,
+      isActionVoltar: true,
+      isDrawer: false,
+      labelAppBar: 'Expediente Cadastro',
+      widgetAppBar: Container(),
       body: TripleBuilder(
           store: configExpedienteController,
           builder: (ctx, triple) {
