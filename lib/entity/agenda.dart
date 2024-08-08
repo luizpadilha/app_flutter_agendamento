@@ -4,32 +4,37 @@ import 'package:mybabernew/entity/servico.dart';
 
 class Agenda {
   String? id;
-  Pessoa? pessoa;
-  DateTime? horario;
-  Servico? servico;
+  Pessoa pessoa;
+  DateTime horario;
+  Servico servico;
 
-  Agenda({
+  Agenda._({
     this.id,
-    this.pessoa,
-    this.horario,
-    this.servico,
+    required this.pessoa,
+    required this.horario,
+    required this.servico,
   });
 
-  Agenda.fromJson(Map<String, dynamic> json)
-      : id = json['id'] ?? '', 
-        pessoa = Pessoa.fromJson(json['pessoa']),
-        horario = DateTime.parse(json['horario']),
-        servico = Servico.fromJson(json['servico']);
+  static Future<Agenda> fromJson(Map<String, dynamic> json) async {
+    return Agenda._(
+      id: json['id'] ?? '',
+      pessoa: Pessoa.fromJson(json['pessoa']),
+      horario: DateTime.parse(json['horario']),
+      servico: await Servico.fromJson(json['servico']),
+    );
+  }
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'pessoa':  pessoa?.toJson(),
-        'horario': horario,
-        'servico': servico?.toJson(),
-      };
+  Future<Map<String, dynamic>> toJson() async {
+    return {
+      'id': id,
+      'pessoa': pessoa.toJson(),
+      'horario': horario,
+      'servico': await servico.toJson(),
+    };
+  }
 
   @override
   String toString() {
-    return '${pessoa!.nome} - ${DateFormat('HH:mm').format(horario!)}';
+    return '${pessoa.nome} - ${DateFormat('HH:mm').format(horario)}';
   }
 }

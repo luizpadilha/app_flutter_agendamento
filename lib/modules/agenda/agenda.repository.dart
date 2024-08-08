@@ -18,8 +18,10 @@ class AgendaRepository {
     var response = await _client
         .get("/api/agenda/agendas?userId=${user.userId}&data=${data.toIso8601String()}");
     if (response.statusCode == 200 && response.data != null) {
-      return List<Agenda>.from(
-          response.data.map((itemsJson) => Agenda.fromJson(itemsJson)));
+      List<Future<Agenda>> agendaFutures = response.data.map<Future<Agenda>>((itemsJson) async {
+        return await Agenda.fromJson(itemsJson);
+      }).toList();
+      return Future.wait(agendaFutures);
     }
     return [];
   }
@@ -29,8 +31,10 @@ class AgendaRepository {
     var response = await _client
         .get("/api/agenda/agendas-pessoa?userId=${user.userId}&pessoaId=${pessoa.id}");
     if (response.statusCode == 200 && response.data != null) {
-      return List<Agenda>.from(
-          response.data.map((itemsJson) => Agenda.fromJson(itemsJson)));
+      List<Future<Agenda>> agendaFutures = response.data.map<Future<Agenda>>((itemsJson) async {
+        return await Agenda.fromJson(itemsJson);
+      }).toList();
+      return Future.wait(agendaFutures);
     }
     return [];
   }
@@ -54,7 +58,7 @@ class AgendaRepository {
       data: jsonEncode({
         'id': id,
         'horarioToIso8601': horario.toIso8601String(),
-        'servico': servico.toJson(),
+        'servico': await servico.toJson(),
         'pessoa': pessoa.toJson(),
         'userId': user.userId,
       }),

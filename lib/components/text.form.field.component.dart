@@ -12,6 +12,7 @@ class TextFormFieldComponent extends StatelessWidget {
   final bool validar;
   final bool readOnly;
   final bool autofocus;
+  final bool isTime;
   final FocusNode? focusNodeAtual;
   final FocusNode? focusNodeProx;
   final TextInputAction textInputAction;
@@ -27,6 +28,7 @@ class TextFormFieldComponent extends StatelessWidget {
     this.validar = true,
     this.readOnly = false,
     this.autofocus = false,
+    this.isTime = false,
     this.focusNodeAtual,
     this.focusNodeProx,
     this.inputFormatters,
@@ -43,6 +45,14 @@ class TextFormFieldComponent extends StatelessWidget {
             final valueString = _value ?? '';
             if (valueString.trim().isEmpty) {
               return 'O campo deve ser informado';
+            }
+            if (isTime) {
+              List<String> partes = valueString.split(':');
+              int hora = int.parse(partes[0]);
+              int minuto = int.parse(partes[1]);
+              if (hora == 0 && minuto == 0) {
+                return 'O campo deve ser informado';
+              }
             }
           }
           return null;

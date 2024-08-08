@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -12,13 +13,20 @@ class ServicoRepository {
 
   Future<List<Servico>> getServicos() async {
     User user = GetIt.instance.get<User>();
-    var response =
-        await _client.get("/api/servico/servicos?userId=${user.userId}");
-    return List<Servico>.from(
-        response.data.map((itemsJson) => Servico.fromJson(itemsJson)));
+    var response = await _client.get("/api/servico/servicos?userId=${user.userId}");
+
+    List<Future<Servico>> servicosFutures = response.data.map<Future<Servico>>((itemsJson) async {
+      return await Servico.fromJson(itemsJson);
+    }).toList();
+    return Future.wait(servicosFutures);
   }
 
-  Future<void> salvarServicos(String id, String descricao, double preco, String tempo) async {
+  Future<void> salvarServicos(String id, String descricao, double preco, String tempo, File? image) async {
+    String? imageBase64;
+    if (image != null) {
+      List<int> fileBytes = await image.readAsBytes();
+      imageBase64 = base64Encode(fileBytes);
+    }
     User user = GetIt.instance.get<User>();
     var response = await _client.post(
       "/api/servico/salvar-servico",
@@ -28,6 +36,7 @@ class ServicoRepository {
         'preco': preco,
         'userId': user.userId,
         'tempo': tempo,
+        'imageBase64': imageBase64,
       }),
     );
   }

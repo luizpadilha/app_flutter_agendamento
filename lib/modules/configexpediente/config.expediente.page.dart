@@ -30,8 +30,7 @@ class _ConfigExpedientePageState extends State<ConfigExpedientePage> {
     _future = configExpedienteController.buscarConfiguracoes(widget.configId);
   }
 
-  ConfigExpedienteController get configExpedienteController =>
-      widget.configExpedienteController;
+  ConfigExpedienteController get configExpedienteController => widget.configExpedienteController;
 
   @override
   Widget build(BuildContext context) {
@@ -73,26 +72,29 @@ class _ConfigExpedientePageState extends State<ConfigExpedientePage> {
                                                 keySlid: Key(config.id.toString()),
                                                 functionEditar: () => Modular.to.pushNamed('${ConfigExpedienteModule.ROUTE_CONFIG_EXPD_FORM}?idConfig=${widget.configId}', arguments: config),
                                                 object: config,
-                                                child: ListTile(
-                                                  leading: CircleAvatar(
-                                                    backgroundColor: Theme.of(context).colorScheme.primary,
-                                                    radius: 30,
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.all(5),
-                                                      child: FittedBox(
-                                                        child: Text(config.diaSemana!.descricao.substring(0, 3)),
+                                                child: GestureDetector(
+                                                  onTap: () => Modular.to.pushNamed('${ConfigExpedienteModule.ROUTE_CONFIG_EXPD_FORM_EXIBIR}?idConfig=${widget.configId}', arguments: config),
+                                                  child: ListTile(
+                                                    leading: CircleAvatar(
+                                                      backgroundColor: Theme.of(context).colorScheme.primary,
+                                                      radius: 30,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(5),
+                                                        child: FittedBox(
+                                                          child: Text(config.diaSemana!.descricao.substring(0, 3)),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  title: LabelAndFieldComponent(
-                                                    label: "Turno",
-                                                    field: "${config.inicioExpediente!.format(context)} à ${config.finalExpediente!.format(context)}",
-                                                    inline: true,
-                                                  ),
-                                                  subtitle: LabelAndFieldComponent(
-                                                    label: "Almoço",
-                                                    field: "${config.inicioAlmoco!.format(context)} à ${config.finalAlmoco!.format(context)}",
-                                                    inline: true,
+                                                    title: LabelAndFieldComponent(
+                                                      label: "Turno",
+                                                      field: "${config.inicioExpediente!.format(context)} à ${config.finalExpediente!.format(context)}",
+                                                      inline: true,
+                                                    ),
+                                                    subtitle: LabelAndFieldComponent(
+                                                      label: "Almoço",
+                                                      field: "${config.inicioAlmoco!.format(context)} à ${config.finalAlmoco!.format(context)}",
+                                                      inline: true,
+                                                    ),
                                                   ),
                                                 ),
                                               ),

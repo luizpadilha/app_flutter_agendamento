@@ -33,6 +33,7 @@ class AgendaController extends Store<List<Agenda>> {
   Future<void> initForm() async {
     await atualizarPessoas();
     servicos = await servicoController.buscarServicosSemState();
+    horarios = [];
   }
 
   Future<void> init() async {

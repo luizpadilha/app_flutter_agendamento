@@ -65,7 +65,7 @@ class _ServicoPageState extends State<ServicoPage> {
                             return triple.isLoading
                                 ? const Center(child: Carregando(inverterCor: true))
                                 : triple.state.isNotEmpty
-                                    ? RefreshIndicator(
+                                    ? RefreshIndicator (
                                         onRefresh: servicoController.buscarServicos,
                                         child: ListView(
                                           physics: const AlwaysScrollableScrollPhysics(),
@@ -80,16 +80,30 @@ class _ServicoPageState extends State<ServicoPage> {
                                                 keySlid: Key(serv.id.toString()),
                                                 object: serv,
                                                 futureRemover: () => _remover(serv.id!),
-                                                child: ListTile(
-                                                  title: LabelAndFieldComponent(
-                                                    label: "Descrição",
-                                                    field: "${serv.descricao}",
-                                                    inline: true,
-                                                  ),
-                                                  subtitle: LabelAndFieldComponent(
-                                                    label: "Preço",
-                                                    field: UtilBrasilFields.obterReal(serv.preco!),
-                                                    inline: true,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    Modular.to.pushNamed(ServicoModule.ROUTE_SERVICOS_FORM_EXIBE, arguments: serv);
+                                                  },
+                                                  child: ListTile(
+                                                    trailing: CircleAvatar(
+                                                      radius: 40,
+                                                      backgroundColor: Colors.grey[200],
+                                                      child: CircleAvatar(
+                                                        radius: 30,
+                                                        backgroundColor: Colors.grey[300],
+                                                        backgroundImage: serv.image != null ? FileImage(serv.image!) : null,
+                                                      ),
+                                                    ),
+                                                    title: LabelAndFieldComponent(
+                                                      label: "Descrição",
+                                                      field: "${serv.descricao}",
+                                                      inline: true,
+                                                    ),
+                                                    subtitle: LabelAndFieldComponent(
+                                                      label: "Preço",
+                                                      field: UtilBrasilFields.obterReal(serv.preco),
+                                                      inline: true,
+                                                    ),
                                                   ),
                                                 ),
                                               ),

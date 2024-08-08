@@ -20,6 +20,7 @@ import 'package:mybabernew/modules/pessoa/pessoa.module.dart';
 class AgendaFormPage extends StatefulWidget {
   final AgendaController agendaController;
   Agenda? agenda;
+  bool vizualizar;
 
   @override
   State<AgendaFormPage> createState() => _AgendaFormPageState();
@@ -27,6 +28,7 @@ class AgendaFormPage extends StatefulWidget {
   AgendaFormPage({
     this.agenda,
     required this.agendaController,
+    this.vizualizar = false,
     super.key,
   });
 }
@@ -117,6 +119,7 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                   children: [
                                     Expanded(
                                       child: AutoCompleteComponent(
+                                        readOnly: widget.vizualizar,
                                         optionsBuilder: (TextEditingValue textEditingValue) {
                                           _thermPessoa = textEditingValue.text;
                                           _validatePessoa = false;
@@ -142,24 +145,26 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                         },
                                       ),
                                     ),
-                                    IconButton(
-                                      color: Theme.of(context).colorScheme.primary,
-                                      icon: const Icon(Icons.person_add_outlined),
-                                      onPressed: () {
-                                        Modular.to.pushNamed(PessoaModule.ROUTE_PESSOAS_FORM, arguments: null).then((value) async {
-                                          if (value != null) {
-                                            await agendaController.atualizarPessoas();
-                                            await agendaController.atribuirPessoa(value.toString());
-                                            pessoaController.text = agendaController.pessoa.toString();
-                                            agendaController.atualizarPagina();
-                                          }
-                                        });
-                                      },
-                                    ),
+                                    if (!widget.vizualizar)
+                                      IconButton(
+                                        color: Theme.of(context).colorScheme.primary,
+                                        icon: const Icon(Icons.person_add_outlined),
+                                        onPressed: () {
+                                          Modular.to.pushNamed(PessoaModule.ROUTE_PESSOAS_FORM, arguments: null).then((value) async {
+                                            if (value != null) {
+                                              await agendaController.atualizarPessoas();
+                                              await agendaController.atribuirPessoa(value.toString());
+                                              pessoaController.text = agendaController.pessoa.toString();
+                                              agendaController.atualizarPagina();
+                                            }
+                                          });
+                                        },
+                                      ),
                                   ],
                                 ),
                                 const SizedBox(height: 10),
                                 AutoCompleteComponent(
+                                  readOnly: widget.vizualizar,
                                   optionsBuilder: (TextEditingValue textEditingValue) {
                                     _thermServico = textEditingValue.text;
                                     _validateServico = false;
@@ -205,18 +210,19 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                         keyboardType: TextInputType.datetime,
                                       ),
                                     ),
-                                    DatePickerComponent(
-                                      initialDate: agendaController.data,
-                                      firstDate: DateTime.now(),
-                                      isForm: true,
-                                      hasTime: false,
-                                      onDateChanged: (newDate) async {
-                                        agendaController.data = newDate;
-                                        agendaController.horario = null;
-                                        _validateHorario = false;
-                                        await agendaController.buscarHorarios().then((value) => agendaController.atualizarPagina());
-                                      },
-                                    ),
+                                    if (!widget.vizualizar)
+                                      DatePickerComponent(
+                                        initialDate: agendaController.data,
+                                        firstDate: DateTime.now(),
+                                        isForm: true,
+                                        hasTime: false,
+                                        onDateChanged: (newDate) async {
+                                          agendaController.data = newDate;
+                                          agendaController.horario = null;
+                                          _validateHorario = false;
+                                          await agendaController.buscarHorarios().then((value) => agendaController.atualizarPagina());
+                                        },
+                                      ),
                                   ],
                                 ),
                                 const SizedBox(height: 10),
@@ -239,19 +245,20 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                         ),
                                       ),
                                     ),
-                                    TimePickerComponent(
-                                      helpText: "Selecione o Horário",
-                                      onTimeChanged: (newTime) {
-                                        _validateHorario = false;
-                                        agendaController.atribuirHorario(Horarios(horario: '${newTime.hour}:${newTime.minute}'));
-                                        agendaController.atualizarPagina();
-                                      },
-                                    ),
+                                    if (!widget.vizualizar)
+                                      TimePickerComponent(
+                                        helpText: "Selecione o Horário",
+                                        onTimeChanged: (newTime) {
+                                          _validateHorario = false;
+                                          agendaController.atribuirHorario(Horarios(horario: '${newTime.hour}:${newTime.minute}'));
+                                          agendaController.atualizarPagina();
+                                        },
+                                      ),
                                   ],
                                 ),
                                 const SizedBox(height: 10),
                                 Visibility(
-                                  visible: agendaController.horarios.isNotEmpty,
+                                  visible: (agendaController.horarios.isNotEmpty && !widget.vizualizar),
                                   child: Column(
                                     children: [
                                       GridView.builder(
@@ -305,14 +312,15 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-                                ElevatedButtonComponent(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  isRow: true,
-                                  isBorderCircular: true,
-                                  label: 'Gravar',
-                                  icon: Icons.save,
-                                  onPressed: () => _submit(context),
-                                ),
+                                if (!widget.vizualizar)
+                                  ElevatedButtonComponent(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    isRow: true,
+                                    isBorderCircular: true,
+                                    label: 'Gravar',
+                                    icon: Icons.save,
+                                    onPressed: () => _submit(context),
+                                  ),
                                 const SizedBox(height: 10),
                               ],
                             ),
@@ -338,6 +346,7 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
     }
     try {
       await agendaController.salvarAgendas();
+      await agendaController.buscarAgendas();
       Modular.to.pop(context);
     } catch (erro) {
       print('Erro salvar agenda: ' + erro.toString());

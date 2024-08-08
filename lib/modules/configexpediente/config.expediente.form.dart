@@ -6,6 +6,7 @@ import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/elevated.button.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
 import 'package:mybabernew/components/scaffold.component.dart';
+import 'package:mybabernew/components/text.form.field.component.dart';
 import 'package:mybabernew/components/time_picker.component.dart';
 import 'package:mybabernew/entity/config_expediente.dart';
 import 'package:mybabernew/enums/dia_semana.dart';
@@ -18,11 +19,13 @@ class ConfigExpedienteFormPage extends StatefulWidget {
   ConfigExpediente? configExped;
   final String idConfig;
   final ConfigExpedienteController configExpedienteController;
+  final bool vizualizar;
 
   ConfigExpedienteFormPage({
     this.configExped,
     required this.idConfig,
     required this.configExpedienteController,
+    this.vizualizar = false,
     super.key,
   });
 }
@@ -94,13 +97,11 @@ class _ConfigExpedienteFormPageState extends State<ConfigExpedienteFormPage> {
                               children: [
                                 SizedBox(
                                   width: mediaQuery.size.width * 0.6,
-                                  child: TextFormField(
+                                  child: TextFormFieldComponent(
                                       readOnly: true,
-                                      initialValue: configExpedienteController.diaSemana!.descricao,
+                                      controller: TextEditingController(text: configExpedienteController.diaSemana!.descricao),
                                       keyboardType: TextInputType.text,
-                                      decoration: InputDecoratorComponent(
-                                        label: "Dia da Semana",
-                                      ).decorator()),
+                                      label: "Dia da Semana",),
                                 ),
                               ],
                             ),
@@ -109,32 +110,23 @@ class _ConfigExpedienteFormPageState extends State<ConfigExpedienteFormPage> {
                               children: [
                                 SizedBox(
                                   width: mediaQuery.size.width * 0.6,
-                                  child: TextFormField(
+                                  child: TextFormFieldComponent(
                                     readOnly: true,
                                     controller: TextEditingController(text: configExpedienteController.inicioExpediente!.format(context)),
                                     keyboardType: TextInputType.datetime,
-                                    decoration: InputDecoratorComponent(
-                                      label: "Inicio Expediente",
-                                    ).decorator(),
-                                    validator: (_value) {
-                                      final valueString = _value ?? '';
-                                      List<String> partes = valueString.split(':');
-                                      int hora = int.parse(partes[0]);
-                                      int minuto = int.parse(partes[1]);
-                                      if (hora == 0 && minuto == 0) {
-                                        return 'O campo deve ser informado';
-                                      }
-                                      return null;
-                                    },
+                                    label: "Inicio Expediente",
+                                    validar: true,
+                                    isTime: true,
                                   ),
                                 ),
-                                TimePickerComponent(
-                                  helpText: 'Selecione o Inicio Expediente',
-                                  onTimeChanged: (newTime) {
-                                    configExpedienteController.inicioExpediente = newTime;
-                                    configExpedienteController.atualizarPagina();
-                                  },
-                                ),
+                                if (!widget.vizualizar)
+                                  TimePickerComponent(
+                                    helpText: 'Selecione o Inicio Expediente',
+                                    onTimeChanged: (newTime) {
+                                      configExpedienteController.inicioExpediente = newTime;
+                                      configExpedienteController.atualizarPagina();
+                                    },
+                                  ),
                               ],
                             ),
                             const SizedBox(height: 10),
@@ -142,32 +134,23 @@ class _ConfigExpedienteFormPageState extends State<ConfigExpedienteFormPage> {
                               children: [
                                 SizedBox(
                                   width: mediaQuery.size.width * 0.6,
-                                  child: TextFormField(
+                                  child: TextFormFieldComponent(
                                     readOnly: true,
                                     controller: TextEditingController(text: configExpedienteController.inicioAlmoco!.format(context)),
                                     keyboardType: TextInputType.datetime,
-                                    decoration: InputDecoratorComponent(
-                                      label: "Inicio Almoço",
-                                    ).decorator(),
-                                    validator: (_value) {
-                                      final valueString = _value ?? '';
-                                      List<String> partes = valueString.split(':');
-                                      int hora = int.parse(partes[0]);
-                                      int minuto = int.parse(partes[1]);
-                                      if (hora == 0 && minuto == 0) {
-                                        return 'O campo deve ser informado';
-                                      }
-                                      return null;
-                                    },
+                                    label: "Inicio Almoço",
+                                    validar: true,
+                                    isTime: true,
                                   ),
                                 ),
-                                TimePickerComponent(
-                                  helpText: 'Selecione o Inicio Almoço',
-                                  onTimeChanged: (newTime) {
-                                    configExpedienteController.inicioAlmoco = newTime;
-                                    configExpedienteController.atualizarPagina();
-                                  },
-                                ),
+                                if (!widget.vizualizar)
+                                  TimePickerComponent(
+                                    helpText: 'Selecione o Inicio Almoço',
+                                    onTimeChanged: (newTime) {
+                                      configExpedienteController.inicioAlmoco = newTime;
+                                      configExpedienteController.atualizarPagina();
+                                    },
+                                  ),
                               ],
                             ),
                             const SizedBox(height: 10),
@@ -175,32 +158,23 @@ class _ConfigExpedienteFormPageState extends State<ConfigExpedienteFormPage> {
                               children: [
                                 SizedBox(
                                   width: mediaQuery.size.width * 0.6,
-                                  child: TextFormField(
+                                  child: TextFormFieldComponent(
                                     readOnly: true,
                                     controller: TextEditingController(text: configExpedienteController.finalAlmoco!.format(context)),
                                     keyboardType: TextInputType.datetime,
-                                    decoration: InputDecoratorComponent(
-                                      label: "Final Almoço",
-                                    ).decorator(),
-                                    validator: (_value) {
-                                      final valueString = _value ?? '';
-                                      List<String> partes = valueString.split(':');
-                                      int hora = int.parse(partes[0]);
-                                      int minuto = int.parse(partes[1]);
-                                      if (hora == 0 && minuto == 0) {
-                                        return 'O campo deve ser informado';
-                                      }
-                                      return null;
-                                    },
+                                    label: "Final Almoço",
+                                    validar: true,
+                                    isTime: true,
                                   ),
                                 ),
-                                TimePickerComponent(
-                                  helpText: 'Selecione o Final Almoço',
-                                  onTimeChanged: (newTime) {
-                                    configExpedienteController.finalAlmoco = newTime;
-                                    configExpedienteController.atualizarPagina();
-                                  },
-                                ),
+                                if (!widget.vizualizar)
+                                  TimePickerComponent(
+                                    helpText: 'Selecione o Final Almoço',
+                                    onTimeChanged: (newTime) {
+                                      configExpedienteController.finalAlmoco = newTime;
+                                      configExpedienteController.atualizarPagina();
+                                    },
+                                  ),
                               ],
                             ),
                             const SizedBox(height: 10),
@@ -208,43 +182,35 @@ class _ConfigExpedienteFormPageState extends State<ConfigExpedienteFormPage> {
                               children: [
                                 SizedBox(
                                   width: mediaQuery.size.width * 0.6,
-                                  child: TextFormField(
+                                  child: TextFormFieldComponent(
                                     readOnly: true,
                                     controller: TextEditingController(text: configExpedienteController.finalExpediente!.format(context)),
                                     keyboardType: TextInputType.datetime,
-                                    decoration: InputDecoratorComponent(
-                                      label: "Final Expediente",
-                                    ).decorator(),
-                                    validator: (_value) {
-                                      final valueString = _value ?? '';
-                                      List<String> partes = valueString.split(':');
-                                      int hora = int.parse(partes[0]);
-                                      int minuto = int.parse(partes[1]);
-                                      if (hora == 0 && minuto == 0) {
-                                        return 'O campo deve ser informado';
-                                      }
-                                      return null;
-                                    },
+                                    label: "Final Expediente",
+                                    validar: true,
+                                    isTime: true,
                                   ),
                                 ),
-                                TimePickerComponent(
-                                  helpText: 'Selecione o Final Expediente',
-                                  onTimeChanged: (newTime) {
-                                    configExpedienteController.finalExpediente = newTime;
-                                    configExpedienteController.atualizarPagina();
-                                  },
-                                ),
+                                if (!widget.vizualizar)
+                                  TimePickerComponent(
+                                    helpText: 'Selecione o Final Expediente',
+                                    onTimeChanged: (newTime) {
+                                      configExpedienteController.finalExpediente = newTime;
+                                      configExpedienteController.atualizarPagina();
+                                    },
+                                  ),
                               ],
                             ),
                             const SizedBox(height: 10),
-                            ElevatedButtonComponent(
-                              color: Theme.of(context).colorScheme.primary,
-                              isRow: true,
-                              isBorderCircular: true,
-                              label: 'Gravar',
-                              icon: Icons.save,
-                              onPressed: () => _submit(context),
-                            ),
+                            if (!widget.vizualizar)
+                              ElevatedButtonComponent(
+                                color: Theme.of(context).colorScheme.primary,
+                                isRow: true,
+                                isBorderCircular: true,
+                                label: 'Gravar',
+                                icon: Icons.save,
+                                onPressed: () => _submit(context),
+                              ),
                           ],
                         ),
                       ),
