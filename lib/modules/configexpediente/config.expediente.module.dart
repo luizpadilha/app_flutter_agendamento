@@ -8,6 +8,7 @@ import 'package:mybabernew/modules/configexpediente/config.expediente.repository
 class ConfigExpedienteModule extends Module {
   static final String ROUTE = "/config-exped";
   static final String ROUTE_CONFIG_EXPD_FORM = "/config-exped/config-exped-form";
+  static final String ROUTE_CONFIG_EXPD_FORM_EXIBIR = "/config-exped/config-exped-form/exibir";
 
   @override
   void binds(i) {
@@ -17,14 +18,23 @@ class ConfigExpedienteModule extends Module {
 
   @override
   void routes(r) {
-    r.child('/', child: (context) => ConfigExpedientePage(
+    r.child('/',
+        child: (context) => ConfigExpedientePage(
               configExpedienteController: Modular.get(),
               configId: r.args.queryParams['idConfig'] as String,
             ));
-    r.child('/config-exped-form', child: (context) => ConfigExpedienteFormPage(
+    r.child('/config-exped-form',
+        child: (context) => ConfigExpedienteFormPage(
               configExped: r.args.data,
               idConfig: r.args.queryParams['idConfig'] as String,
               configExpedienteController: Modular.get(),
+            ));
+    r.child('/config-exped-form/exibir',
+        child: (context) => ConfigExpedienteFormPage(
+              configExped: r.args.data,
+              idConfig: r.args.queryParams['idConfig'] as String,
+              configExpedienteController: Modular.get(),
+              vizualizar: true,
             ));
   }
 

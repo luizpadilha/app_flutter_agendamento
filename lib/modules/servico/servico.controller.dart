@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:dio/dio.dart';
@@ -15,6 +16,7 @@ class ServicoController extends Store<List<Servico>> {
   final precoController = TextEditingController();
   String id = '';
   TimeOfDay tempo = const TimeOfDay(minute: 0, hour: 0);
+  File? imageFile;
 
   ServicoController() : super([]);
 
@@ -51,7 +53,7 @@ class ServicoController extends Store<List<Servico>> {
     try {
       setLoading(true);
       await repo.salvarServicos(id, descricaoController.text,
-          UtilBrasilFields.converterMoedaParaDouble(precoController.text), tempo.format(context));
+          UtilBrasilFields.converterMoedaParaDouble(precoController.text), tempo.format(context), imageFile);
     } on DioException catch (e, s) {
       log('Erro ao salvar serviço', error: e, stackTrace: s);
       rethrow;

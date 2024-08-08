@@ -8,6 +8,7 @@ import 'package:mybabernew/components/carregando.component.dart';
 import 'package:mybabernew/components/elevated.button.component.dart';
 import 'package:mybabernew/components/input_decorator.dart';
 import 'package:mybabernew/components/scaffold.component.dart';
+import 'package:mybabernew/components/text.form.field.component.dart';
 import 'package:mybabernew/entity/pessoa.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.controller.dart';
 
@@ -17,10 +18,12 @@ class PessoaFormPage extends StatefulWidget {
 
   Pessoa? pessoa;
   final PessoaController pessoaController;
+  bool vizualizar;
 
   PessoaFormPage({
     this.pessoa,
     required this.pessoaController,
+    this.vizualizar = false,
     super.key,
   });
 }
@@ -82,54 +85,39 @@ class _PessoaFormPageState extends State<PessoaFormPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             const SizedBox(height: 10),
-                            TextFormField(
-                                validator: (_value) {
-                                  final valueString = _value ?? '';
-                                  if (valueString.trim().isEmpty) {
-                                    return 'O campo deve ser informado';
-                                  }
-                                  return null;
-                                },
-                                onFieldSubmitted: (_) {
-                                  FocusScope.of(context)
-                                      .requestFocus(_numeroFocus);
-                                },
-                                focusNode: _nomeFocus,
-                                controller: pessoaController.nomeController,
-                                keyboardType: TextInputType.text,
-                                decoration: InputDecoratorComponent(
-                                  label: "Nome",
-                                ).decorator()),
+                            TextFormFieldComponent(
+                              readOnly: widget.vizualizar,
+                              validar: true,
+                              focusNodeAtual: _nomeFocus,
+                              focusNodeProx: _numeroFocus,
+                              controller: pessoaController.nomeController,
+                              keyboardType: TextInputType.text,
+                              label: "Nome",
+                            ),
                             const SizedBox(height: 10),
-                            TextFormField(
-                                validator: (_value) {
-                                  final valueString = _value ?? '';
-                                  if (valueString.trim().isEmpty) {
-                                    return 'O campo deve ser informado';
-                                  }
-                                  return null;
-                                },
-                                focusNode: _numeroFocus,
+                            TextFormFieldComponent(
+                                readOnly: widget.vizualizar,
+                                validar: true,
+                                focusNodeAtual: _numeroFocus,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                   TelefoneInputFormatter(),
                                 ],
                                 controller: pessoaController.numeroController,
                                 keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                        decimal: true),
-                                decoration: InputDecoratorComponent(
-                                  label: "Número",
-                                ).decorator()),
-                            const SizedBox(height: 10),
-                            ElevatedButtonComponent(
-                              color: Theme.of(context).colorScheme.primary,
-                              isRow: true,
-                              isBorderCircular: true,
-                              label: 'Gravar',
-                              icon: Icons.save,
-                              onPressed: () => _submit(context),
+                                const TextInputType.numberWithOptions(decimal: true),
+                                label: "Número",
                             ),
+                            const SizedBox(height: 10),
+                            if (!widget.vizualizar)
+                              ElevatedButtonComponent(
+                                color: Theme.of(context).colorScheme.primary,
+                                isRow: true,
+                                isBorderCircular: true,
+                                label: 'Gravar',
+                                icon: Icons.save,
+                                onPressed: () => _submit(context),
+                              ),
                           ],
                         ),
                       ),

@@ -218,42 +218,47 @@ class _AgendaPageState extends State<AgendaPage> {
                                                       keySlid: Key(agend.id.toString()),
                                                       object: agend,
                                                       futureRemover: () => _remover(agend.id!),
-                                                      child: ListTile(
-                                                        leading: CircleAvatar(
-                                                          backgroundColor: Theme.of(context).colorScheme.primary,
-                                                          radius: 30,
-                                                          child: Padding(
-                                                            padding: const EdgeInsets.all(5),
-                                                            child: FittedBox(
-                                                              child: Column(
-                                                                children: [
-                                                                  if (agendaController.pessoa != null)
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          Modular.to.pushNamed(AgendaModule.ROUTE_AGENDA_FORM_EXIBIR, arguments: agend);
+                                                        },
+                                                        child: ListTile(
+                                                          leading: CircleAvatar(
+                                                            backgroundColor: Theme.of(context).colorScheme.primary,
+                                                            radius: 30,
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(5),
+                                                              child: FittedBox(
+                                                                child: Column(
+                                                                  children: [
+                                                                    if (agendaController.pessoa != null)
+                                                                      AutoSizeText(
+                                                                        DateFormat('d/MMM').format(agend.horario!).toString(),
+                                                                        style: textTheme.labelSmall,
+                                                                      ),
                                                                     AutoSizeText(
-                                                                      DateFormat('d/MMM').format(agend.horario!).toString(),
-                                                                      style: textTheme.labelSmall,
+                                                                        DateFormat('HH:mm').format(agend.horario!).toString(),
+                                                                        style: textTheme.labelSmall
                                                                     ),
-                                                                  AutoSizeText(
-                                                                      DateFormat('HH:mm').format(agend.horario!).toString(),
-                                                                      style: textTheme.labelSmall
-                                                                  ),
-                                                                ],
+                                                                  ],
+                                                                ),
                                                               ),
                                                             ),
                                                           ),
-                                                        ),
-                                                        title: LabelAndFieldComponent(
-                                                          label: "Pessoa",
-                                                          field: "${agend.pessoa!.nome}",
-                                                          inline: true,
-                                                        ),
-                                                        subtitle: LabelAndFieldComponent(
-                                                          label: "Serviço",
-                                                          field: "${agend.servico!.descricao}",
-                                                          inline: true,
-                                                        ),
-                                                        trailing: WhatsAppButton(phoneNumber: UtilBrasilFields.obterTelefone(agend.pessoa!.numero!, mascara: false),
-                                                          mensagem: 'Olá ${agend.pessoa!.nome}, aviso de compromisso.\n'
-                                                              '🕑 ${DateFormat('dd/MM').format(agend.horario!)} às ${DateFormat('HH:mm').format(agend.horario!)}h.\n',
+                                                          title: LabelAndFieldComponent(
+                                                            label: "Pessoa",
+                                                            field: "${agend.pessoa!.nome}",
+                                                            inline: true,
+                                                          ),
+                                                          subtitle: LabelAndFieldComponent(
+                                                            label: "Serviço",
+                                                            field: "${agend.servico!.descricao}",
+                                                            inline: true,
+                                                          ),
+                                                          trailing: WhatsAppButton(phoneNumber: UtilBrasilFields.obterTelefone(agend.pessoa!.numero!, mascara: false),
+                                                            mensagem: 'Olá ${agend.pessoa!.nome}, aviso de compromisso.\n'
+                                                                '🕑 ${DateFormat('dd/MM').format(agend.horario!)} às ${DateFormat('HH:mm').format(agend.horario!)}h.\n',
+                                                          ),
                                                         ),
                                                       ),
                                                     ),

@@ -47,5 +47,9 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSPhotoLibraryUsageDescription</key>
+        <string>Este aplicativo precisa acessar a sua biblioteca de fotos para permitir que selecione imagens ao preencher formulários.</string>
+		<key>NSCameraUsageDescription</key>
+        <string>Este aplicativo precisa acessar a sua câmera para capturar fotos diretamente ao preencher formulários.</string>
 	</dict>
 </plist>

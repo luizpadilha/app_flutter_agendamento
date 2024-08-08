@@ -7,6 +7,7 @@ import 'package:mybabernew/modules/pessoa/pessoa.page.form.dart';
 class PessoaModule extends Module {
   static final String ROUTE = "/pessoa";
   static final String ROUTE_PESSOAS_FORM = "/pessoa/pessoa-form";
+  static final String ROUTE_PESSOAS_FORM_EXIBE = "/pessoa/pessoa-form/exibe";
 
   @override
   void routes(r) {
@@ -17,6 +18,12 @@ class PessoaModule extends Module {
               pessoa: r.args.data,
               pessoaController: Modular.get(),
             ));
+    r.child('/pessoa-form/exibe',
+        child: (context) => PessoaFormPage(
+          pessoa: r.args.data,
+          pessoaController: Modular.get(),
+          vizualizar: true,
+        ));
   }
 
   @override

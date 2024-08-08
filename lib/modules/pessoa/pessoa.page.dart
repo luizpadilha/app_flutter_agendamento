@@ -76,24 +76,25 @@ class _PessoaPageState extends State<PessoaPage> {
                                               child: SlidableComponent(
                                                 contextPai: context,
                                                 keySlid: Key(pess.id.toString()),
-                                                functionEditar: () => Modular.to
-                                                    .pushNamed(
-                                                        PessoaModule
-                                                            .ROUTE_PESSOAS_FORM,
-                                                        arguments: pess),
+                                                functionEditar: () => Modular.to.pushNamed(PessoaModule.ROUTE_PESSOAS_FORM, arguments: pess),
                                                 object: pess,
                                                 futureRemover: () =>
                                                     _remover(pess.id!),
-                                                child: ListTile(
-                                                  title: LabelAndFieldComponent(
-                                                    label: "Nome",
-                                                    field: "${pess.nome}",
-                                                    inline: true,
-                                                  ),
-                                                  subtitle: LabelAndFieldComponent(
-                                                    label: "Número",
-                                                    field: pess.numero!,
-                                                    inline: true,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    Modular.to.pushNamed(PessoaModule.ROUTE_PESSOAS_FORM_EXIBE, arguments: pess);
+                                                  },
+                                                  child: ListTile(
+                                                    title: LabelAndFieldComponent(
+                                                      label: "Nome",
+                                                      field: "${pess.nome}",
+                                                      inline: true,
+                                                    ),
+                                                    subtitle: LabelAndFieldComponent(
+                                                      label: "Número",
+                                                      field: pess.numero!,
+                                                      inline: true,
+                                                    ),
                                                   ),
                                                 ),
                                               ),

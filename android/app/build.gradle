@@ -30,7 +30,7 @@ def keystoreProperties = new Properties()
 
 android {
     namespace "com.padilha.mybabernew"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion localProperties.getProperty('flutter.compileSdkVersion').toInterger()
     ndkVersion flutter.ndkVersion
 
     compileOptions {
