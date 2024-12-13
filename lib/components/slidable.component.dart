@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mybabernew/components/alert.component.dart';
+import 'package:mybabernew/components/dialog.confirmar.component.dart';
 import 'package:mybabernew/components/elevated.button.component.dart';
 import 'package:mybabernew/exceptions/my.exception.dart';
 
@@ -81,25 +82,10 @@ class SlidableComponent extends StatelessWidget {
   }
 
   Future<void> _remover() async {
-    var textTheme = Theme.of(contextPai).textTheme;
     try {
-      bool? remover = await showDialog<bool>(
-        context: contextPai,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Tem Certeza?'),
-          titleTextStyle: textTheme.bodyLarge,
-          content: const Text('Quer remover o item?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(false),
-              child: Text('Não', style: textTheme.bodyLarge),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(true),
-              child: Text('Sim', style: textTheme.bodyLarge),
-            ),
-          ],
-        ),
+      bool? remover = await ShowDialogConfirmarComponent.showDialogConfirmar(
+        contextPai,
+        content: const Text('Quer remover o item?'),
       );
       if (remover ?? false) {
         await futureRemover!();
@@ -111,9 +97,7 @@ class SlidableComponent extends StatelessWidget {
     } catch (error) {
       if (error is MyException) {
         AlertComponent.show(contextPai,
-            title: "Ops!",
-            subTitle: error.msg,
-            style: AlertStyle.error);
+            title: "Ops!", subTitle: error.msg, style: AlertStyle.error);
       } else {
         AlertComponent.show(contextPai,
             title: "Ops!",

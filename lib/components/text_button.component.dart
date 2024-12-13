@@ -1,46 +1,50 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class TextButtonComponent extends StatelessWidget {
   String label;
-  IconData icon;
+  IconData? icon;
   Function() onPressed;
+  bool withBorda;
+  Color? colorFonte;
+  Color? colorBorda;
 
   TextButtonComponent({
     super.key,
     required this.label,
-    required this.icon,
+    this.icon,
     required this.onPressed,
+    this.withBorda = true,
+    this.colorFonte,
+    this.colorBorda,
   });
 
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
-    return Container(
-      height: 60,
-      alignment: Alignment.centerLeft,
-      child: SizedBox.expand(
-        child: TextButton(
-          onPressed: () {
-            onPressed();
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(label,
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.left,
-              ),
-              SizedBox(
-                child: Icon(
-                  icon,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              )
-            ],
-          ),
+    return TextButton(
+      style: TextButton.styleFrom(
+        side: withBorda
+            ? BorderSide(color: (colorBorda ?? Colors.white), width: 1.5)
+            : null, // Define a borda
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8), // Deixa a borda arredondada
         ),
+        padding: const EdgeInsets.symmetric(
+            vertical: 12, horizontal: 20), // Ajusta o padding interno
+      ),
+      onPressed: () {
+        onPressed();
+      },
+      child: Text(
+        label,
+        style: colorFonte == null
+            ? Theme.of(context).textTheme.displayMedium
+            : Theme.of(context)
+            .textTheme
+            .displayMedium!
+            .copyWith(color: colorFonte),
+        textAlign: TextAlign.left,
       ),
     );
   }
