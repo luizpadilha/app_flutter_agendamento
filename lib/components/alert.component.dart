@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:mybabernew/components/text_button.component.dart';
 
 abstract class AlertComponent {
   static void show(BuildContext context,
@@ -36,18 +37,15 @@ abstract class AlertComponent {
                           Container(
                             padding: const EdgeInsets.fromLTRB(5.0, 20, 5, 10),
                             child: Center(
-                              child: AutoSizeText(
-                                  title,
-                                  maxLines: 2,
-                                  style: textTheme.displayLarge),
+                              child: AutoSizeText(title,
+                                  maxLines: 2, style: textTheme.displayLarge),
                             ),
                           ),
                           Expanded(
                             child: Container(
                               padding: const EdgeInsets.all(5.0),
                               child: Center(
-                                child: AutoSizeText(
-                                    subTitle,
+                                child: AutoSizeText(subTitle,
                                     maxLines: 5,
                                     minFontSize: mediaQuery.textScaler.scale(10),
                                     maxFontSize: mediaQuery.textScaler.scale(14),
@@ -76,16 +74,17 @@ abstract class AlertComponent {
                               }
                             }),
                       ),
-                      TextButton(
-                          child: Text(textConfirm ?? 'Continuar',
-                              style: textTheme.displayLarge),
-                          onPressed: () async {
-                            if (onConfirm != null) {
-                              await onConfirm();
-                            } else {
-                              Navigator.pop(context);
-                            }
-                          })
+                      TextButtonComponent(
+                        icon: Icons.check,
+                        label: textConfirm ?? 'Continuar',
+                        onPressed: () async {
+                          if (onConfirm != null) {
+                            await onConfirm();
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        },
+                      )
                     ],
                   )
                 ],
@@ -108,6 +107,5 @@ Color _alertColor(AlertStyle style) {
       return Colors.grey;
   }
 }
-
 
 enum AlertStyle { success, error, confirm, warning }
