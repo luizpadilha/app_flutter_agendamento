@@ -49,7 +49,7 @@ class _DropDownComponentState extends State<DropDownComponent> {
             decoration: InputDecoratorComponent(
               errorText: widget.validate ? "O campo deve ser informado" : null,
               label: widget.label,
-            ).decorator(),
+            ).decorator(context),
           );
         },
       ),

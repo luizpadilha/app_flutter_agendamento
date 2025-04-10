@@ -74,8 +74,7 @@ class _ServicoFormPageState extends State<ServicoFormPage> {
       isActionHome: false,
       isActionVoltar: true,
       isDrawer: false,
-      labelAppBar: 'Serviço Cadastro',
-      widgetAppBar: Container(),
+      titleAppBar: 'Serviço Cadastro',
       body: TripleBuilder(
           store: servicoController,
           builder: (ctx, triple) {

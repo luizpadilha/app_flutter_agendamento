@@ -39,8 +39,7 @@ class GraficoPageState extends State<GraficoPage> {
       isActionHome: true,
       isActionVoltar: false,
       isDrawer: false,
-      labelAppBar: 'Gráficos',
-      widgetAppBar: Container(),
+      titleAppBar: 'Gráficos',
       body: FutureBuilder(
         future: _future,
         builder: (_, snapshot) {

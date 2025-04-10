@@ -38,8 +38,7 @@ class _ServicoPageState extends State<ServicoPage> {
       isActionHome: true,
       isActionVoltar: false,
       isDrawer: false,
-      labelAppBar: 'Serviços',
-      widgetAppBar: Container(),
+      titleAppBar: 'Serviços',
       actions: [
         IconButtonAddComponent(
             onPressed: () => Modular.to.pushNamed(

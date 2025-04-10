@@ -1,5 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mybabernew/core/modulesGlobal/dio.module.dart';
+import 'package:mybabernew/core/dio/dio.module.global.dart';
 import 'package:mybabernew/modules/config/config.controller.dart';
 import 'package:mybabernew/modules/config/config.repository.dart';
 
@@ -20,6 +20,6 @@ class ConfigModule extends Module {
 
   @override
   List<Module> get imports => [
-    DioModule()
+    DioModuleGlobal()
   ];
 }

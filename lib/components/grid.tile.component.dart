@@ -3,57 +3,48 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GridTileComponent extends StatelessWidget {
-  
   final IconData icon;
   final String nome;
   final void Function() onTap;
-  
-  const GridTileComponent({
-    required this.icon,
-    required this.nome,
-    required this.onTap,
-    super.key
-  });
+
+  const GridTileComponent(
+      {required this.icon, required this.nome, required this.onTap, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
     final deviceSize = MediaQuery.of(context).size;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: GridTile(
-        child: GestureDetector(
-          onTap: () => onTap(),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.primary,
-                  const Color(0xFF00C5BE)
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(icon, size: deviceSize.width * 0.12),
-                  SizedBox(height: deviceSize.height * 0.02),
-                  AutoSizeText(
-                    nome,
-                    style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        fontSize: mediaQuery.textScaler.scale(16)),
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    return GridTile(
+      child: GestureDetector(
+        onTap: () => onTap(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: CircleAvatar(
+                backgroundColor: colorScheme.primary,
+                radius: 60,
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: FittedBox(
+                    child: Icon(
+                      icon,
+                      size: deviceSize.width * 0.18,
+                      color: colorScheme.secondary,
+                    ),
                   ),
-                ],
+                ),
               ),
             ),
-          ),
+            SizedBox(height: deviceSize.height * 0.01),
+            AutoSizeText(
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              nome,
+              style: textTheme.titleSmall!.copyWith(color: Theme.of(context).colorScheme.primary),
+            ),
+          ],
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mybabernew/core/modulesGlobal/dio.module.dart';
+import 'package:mybabernew/core/dio/dio.module.global.dart';
 import 'package:mybabernew/modules/graficos/graficos.controller.dart';
+import 'package:mybabernew/modules/graficos/graficos.module.global.dart';
 import 'package:mybabernew/modules/graficos/graficos.repository.dart';
 
 import 'graficos.page.dart';
@@ -20,5 +21,5 @@ class GraficoModule extends Module {
   }
 
   @override
-  List<Module> get imports => [DioModule()];
+  List<Module> get imports => [DioModuleGlobal(), GraficoModuleGlobal()];
 }

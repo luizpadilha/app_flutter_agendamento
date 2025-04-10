@@ -78,7 +78,7 @@ class _AutoCompleteComponentState extends State<AutoCompleteComponent> {
                       : null,
                   hintText: 'Digite para pesquisar...',
                   prefixIcon: const Icon(Icons.search),
-                ).decorator(),
+                ).decorator(context),
               );
             },
             optionsViewBuilder: (context, onSelected, options) {

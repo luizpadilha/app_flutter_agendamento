@@ -8,9 +8,8 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mybabernew/constants.dart';
 import 'package:mybabernew/entity/user.dart';
-import 'package:mybabernew/exceptions/http_exception.dart';
+import 'package:mybabernew/modules/home/home.module.dart';
 import 'package:mybabernew/modules/login/login.repository.dart';
-import 'package:mybabernew/pages/home.page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends Store<User> {
@@ -22,25 +21,16 @@ class LoginController extends Store<User> {
 
   LoginController() : super(User());
 
-  Future<User?> buscarUser() async {
+  Future<void> buscarUser() async {
     try {
       setLoading(true);
-      User? user =
-          await repo.getUser(loginController.text, passwordController.text);
-      if (user != null) {
-        atualizarUser(user);
-        return user;
-      }
-    } on DioException catch (e, s) {
-      log('Erro ao buscar usuario', error: e, stackTrace: s);
-      rethrow;
-    } on HttpException catch (e) {
-      log('Erro ao buscar agenda', error: e);
+      await atualizarUserApi(loginController.text, passwordController.text, null);
+      Modular.to.pushReplacementNamed(HomeModule.ROUTE);
+    } catch (erro) {
       rethrow;
     } finally {
       setLoading(false);
     }
-    return null;
   }
 
   void unregisterUser() {
@@ -49,46 +39,19 @@ class LoginController extends Store<User> {
     }
   }
 
-  Future<void> atualizarToken(String login, String password) async {
-    log("---atualizando token expirado---");
-    User? user = await repo.getUser(login, password);
-    if (user != null) {
-      if (GetIt.instance.isRegistered<User>()) {
-        User userActual = GetIt.instance.get<User>();
-        userActual.token = user.token;
-        userActual.tokenExpiresIn = user.tokenExpiresIn;
-        unregisterUser();
-        GetIt.instance.registerSingleton(userActual);
-      }
-      prefs = await SharedPreferences.getInstance();
-      prefs.setString(KEY_TOKEN, user.token!);
-      prefs.setString(
-          KEY_EXPIRYTOKENDATE, user.tokenExpiresIn!.toIso8601String());
-    }
-  }
-
-  Future<void> atualizarUser(User? user) async {
+  Future<void> atualizarSessaoUser(User user) async {
     try {
-      setLoading(true);
-      if (user != null) {
-        unregisterUser();
-        GetIt.instance.registerSingleton(user);
-        prefs = await SharedPreferences.getInstance();
-        prefsEncrypted = EncryptedSharedPreferences();
-        prefs.setString(KEY_USERLOGIN, loginController.text);
-        prefsEncrypted.setString(KEY_USERPASSWORD, passwordController.text);
-        prefs.setString(KEY_USERID, user.userId!);
-        prefs.setString(KEY_EXPIRYDATE, user.userExpiresIn!.toIso8601String());
-        prefs.setString(
-            KEY_EXPIRYTOKENDATE, user.tokenExpiresIn!.toIso8601String());
-        prefs.setString(KEY_TOKEN, user.token!);
-        update(user);
-      }
+      unregisterUser();
+      GetIt.instance.registerSingleton(user);
+      prefs = await SharedPreferences.getInstance();
+      prefsEncrypted = EncryptedSharedPreferences();
+      prefs.setString(KEY_USERLOGIN, loginController.text);
+      prefsEncrypted.setString(KEY_USERPASSWORD, passwordController.text);
+      prefs.setString(KEY_EXPIRYDATE, user.userExpiresIn!.toIso8601String());
+      update(user);
     } on DioException catch (e, s) {
-      log('Erro ao buscar notificações', error: e, stackTrace: s);
+      log('Erro ao atualizar sessao user', error: e, stackTrace: s);
       rethrow;
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -107,14 +70,9 @@ class LoginController extends Store<User> {
     prefs.remove(KEY_USERLOGIN);
     prefsEncrypted.remove(KEY_USERPASSWORD);
     prefs.remove(KEY_USERID);
-    prefs.remove(KEY_TOKEN);
     prefs.remove(KEY_EXPIRYDATE);
-    prefs.remove(KEY_EXPIRYTOKENDATE);
     loginController.text = "";
     passwordController.text = "";
-    if (GetIt.instance.isRegistered<User>()) {
-      GetIt.instance.unregister<User>();
-    }
   }
 
   Future<void> carregarDadosSessao() async {
@@ -125,22 +83,17 @@ class LoginController extends Store<User> {
     passwordController.clear();
     String? login = prefs.getString(KEY_USERLOGIN);
     String? password = await prefsEncrypted.getString(KEY_USERPASSWORD);
-    String? userId = prefs.getString(KEY_USERID);
-    String? token = prefs.getString(KEY_TOKEN);
     String? expiresInToIso = prefs.getString(KEY_EXPIRYDATE);
-    String? expiresTokenInToIso = prefs.getString(KEY_EXPIRYTOKENDATE);
 
     if (login != null && login.isNotEmpty) {
       loginController.text = login;
     }
-    if (password.isNotEmpty) {
+    if (password != null && password.isNotEmpty) {
       passwordController.text = password;
     }
 
     if (loginController.text.isNotEmpty &&
         passwordController.text.isNotEmpty &&
-        token != null &&
-        token.isNotEmpty &&
         expiresInToIso != null &&
         expiresInToIso.isNotEmpty) {
       log("---Vai verificar expires do user---");
@@ -149,33 +102,36 @@ class LoginController extends Store<User> {
         await zerarUsuario(false);
         return;
       }
-
-      log("---Vai verificar expires do token---");
-      DateTime? tokenExpiresIn;
-      if (expiresTokenInToIso != null && expiresTokenInToIso.isNotEmpty) {
-        tokenExpiresIn = DateTime.parse(expiresTokenInToIso);
-        if (tokenExpiresIn.isBefore(DateTime.now())) {
-          await atualizarToken(login!, password!);
-          token = prefs.getString(KEY_TOKEN);
-          expiresTokenInToIso = prefs.getString(KEY_EXPIRYTOKENDATE);
-          if (expiresTokenInToIso == null || expiresTokenInToIso.isEmpty) {
-            return;
-          }
-          tokenExpiresIn = DateTime.parse(expiresTokenInToIso);
-        }
-      }
-      User user = User(
-        username: login,
-        token: token,
-        userId: userId,
-        userExpiresIn: userExpiresIn,
-        tokenExpiresIn: tokenExpiresIn,
-      );
-      if (GetIt.instance.isRegistered<User>()) {
-        GetIt.instance.unregister<User>();
-      }
-      GetIt.instance.registerSingleton(user);
-      Modular.to.pushReplacementNamed(HomePage.ROUTE);
+      await atualizarUserApi(loginController.text, passwordController.text, userExpiresIn);
+      Modular.to.pushReplacementNamed(HomeModule.ROUTE);
     }
+  }
+
+  Future<void> atualizarUserApi(String username, String password, DateTime? userExpiresIn) async {
+    log("---gerar token---");
+    try {
+      Map<String, dynamic> dados = await repo.gerarTokenAndRetornaUser(username, password, baseUrl, isRegisteredUser: isRegisteredUser());
+      User user = User(username: username);
+      user.token = dados['token'];
+      user.userId = dados['userId'];
+      int expires = int.parse(dados['expiresIn'].toString());
+      user.tokenExpiresIn = DateTime.now().add(
+        Duration(
+          seconds: expires,
+        ),
+      );
+      user.userExpiresIn = userExpiresIn ?? (DateTime.now().add(
+        const Duration(
+          days: 6,
+        ),
+      ));
+      atualizarSessaoUser(user);
+    } catch (erro) {
+      rethrow;
+    }
+  }
+
+  bool isRegisteredUser() {
+    return GetIt.instance.isRegistered<User>();
   }
 }

@@ -37,8 +37,7 @@ class _PessoaPageState extends State<PessoaPage> {
         isActionHome: true,
         isActionVoltar: false,
         isDrawer: false,
-        labelAppBar: 'Pessoas',
-        widgetAppBar: Container(),
+        titleAppBar: 'Clientes',
         actions: [
           IconButtonAddComponent(
               onPressed: () => Modular.to.pushNamed(

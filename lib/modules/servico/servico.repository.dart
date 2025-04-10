@@ -15,9 +15,10 @@ class ServicoRepository {
     User user = GetIt.instance.get<User>();
     var response = await _client.get("/api/servico/servicos?userId=${user.userId}");
 
-    List<Future<Servico>> servicosFutures = response.data.map<Future<Servico>>((itemsJson) async {
-      return await Servico.fromJson(itemsJson);
-    }).toList();
+    List<Future<Servico>> servicosFutures = response.data
+        .map<Future<Servico>>((itemsJson) => Servico.fromJson(itemsJson))
+        .toList();
+
     return Future.wait(servicosFutures);
   }
 

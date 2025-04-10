@@ -12,7 +12,7 @@ class User {
     token = json['token'];
     userExpiresIn = DateTime.now().add(
       const Duration(
-        hours: 20,
+        days: 6,
       ),
     );
     tokenExpiresIn = DateTime.now().add(

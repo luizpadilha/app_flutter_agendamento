@@ -1,6 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mybabernew/core/modulesGlobal/dio.module.dart';
-import 'package:mybabernew/core/modulesGlobal/general.module.dart';
+import 'package:mybabernew/core/dio/dio.module.global.dart';
+import 'package:mybabernew/modules/servico/servico.module.global.dart';
 import 'package:mybabernew/modules/servico/servico.page.dart';
 import 'package:mybabernew/modules/servico/servico.page.form.dart';
 
@@ -27,5 +27,5 @@ class ServicoModule extends Module {
   }
 
   @override
-  List<Module> get imports => [DioModule(), GeneralModule()];
+  List<Module> get imports => [DioModuleGlobal(), ServicoModuleGlobal()];
 }

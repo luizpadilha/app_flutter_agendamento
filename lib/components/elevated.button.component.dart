@@ -3,21 +3,25 @@ import 'package:flutter/material.dart';
 
 class ElevatedButtonComponent extends StatelessWidget {
   final VoidCallback onPressed;
-  final IconData icon;
+  final IconData? icon;
+  final double iconSize;
   final String label;
   final Color color;
+  final Color? colorLabel;
   final bool isRow;
   final bool isBorderCircular;
   final TextStyle? textStyle;
 
   const ElevatedButtonComponent({
-    required this.icon,
+    this.icon,
     required this.label,
     required this.onPressed,
     required this.color,
     this.isRow = false,
     this.isBorderCircular = false,
     this.textStyle,
+    this.colorLabel,
+    this.iconSize = 0.05,
     super.key,
   });
 
@@ -39,25 +43,37 @@ class ElevatedButtonComponent extends StatelessWidget {
       ),
       child: isRow
           ? Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children:[
-          Expanded(child: Text(label, style: textStyle ?? textTheme.labelLarge)),
-          Center(child: Icon(icon, color: Colors.black54)),
-        ],
-      )
+              mainAxisAlignment: icon == null ? MainAxisAlignment.center : MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: AutoSizeText(
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    label,
+                    style: (textStyle ?? textTheme.labelLarge)!.copyWith(color: colorLabel ?? Colors.white),
+                  ),
+                ),
+                if (icon != null)
+                  Icon(icon, color: Colors.white, size: deviceSize.width * iconSize),
+              ],
+            )
           : Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Flexible(
-            fit: FlexFit.loose,
-            child: AutoSizeText(
-              label,
-              style: textStyle ?? textTheme.labelLarge,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: AutoSizeText(
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    label,
+                    style: (textStyle ?? textTheme.labelLarge)!.copyWith(color: colorLabel ?? Colors.white),
+                  ),
+                ),
+                if (icon != null)
+                  Icon(icon, color: Colors.white, size: deviceSize.width * iconSize),
+              ],
             ),
-          ),
-          Expanded(child: Center(child: Icon(icon, color: Colors.black54))),
-        ],
-      ),
     );
   }
 }

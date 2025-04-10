@@ -1,5 +1,5 @@
 enum TipoFiltroAgenda {
-  PESSOA('Pessoa');
+  PESSOA('Cliente');
 
   final String descricao;
 

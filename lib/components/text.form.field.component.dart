@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mybabernew/components/input_decorator.dart';
+import 'package:mybabernew/constants.dart';
 
 class TextFormFieldComponent extends StatelessWidget {
   final String label;
@@ -18,6 +19,7 @@ class TextFormFieldComponent extends StatelessWidget {
   final TextInputAction textInputAction;
   final List<TextInputFormatter>? inputFormatters;
   final void Function()? onFieldSubmittedFunction;
+  final Color borderColor;
 
   const TextFormFieldComponent({
     required this.label,
@@ -34,6 +36,7 @@ class TextFormFieldComponent extends StatelessWidget {
     this.inputFormatters,
     this.onFieldSubmittedFunction,
     this.textInputAction = TextInputAction.next,
+    this.borderColor = colorPrimary,
     super.key,
   });
 
@@ -69,9 +72,12 @@ class TextFormFieldComponent extends StatelessWidget {
           onFieldSubmittedFunction == null ? _onFieldSubmittedFunctionPadrao : onFieldSubmittedFunction!();
         },
         decoration: InputDecoratorComponent(
+          borderColor: borderColor,
+          enabledBorder: borderColor,
+          focusedBorder: borderColor,
           suffixIcon: suffixIcon,
           label: label,
-        ).decorator());
+        ).decorator(context));
   }
 
   void Function() _onFieldSubmittedFunctionPadrao(BuildContext context) {

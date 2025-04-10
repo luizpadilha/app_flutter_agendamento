@@ -5,35 +5,34 @@ import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mybabernew/entity/user.dart';
 import 'package:mybabernew/exceptions/http_exception.dart';
+import 'package:mybabernew/exceptions/my.exception.dart';
 
 class LoginRepository {
 
   final Dio _client = Modular.get();
 
 
-  Future<User?> getUser(String login, String pass) async {
+  Future<Map<String, dynamic>> gerarTokenAndRetornaUser(String login, String pass, String pathApi, {bool isRegisteredUser = true}) async {
     try {
+      String path = isRegisteredUser ? '' : pathApi;
       var response = await _client.post(
-        "/api/auth/login",
+        "$path/api/auth/login",
         data: jsonEncode({
           'login': login,
           'password': pass,
         }),
       );
-      if (response.data != null && response.data['erro'] == null) {
-        var user = User.fromJson(response.data);
-        return user;
+      if (response.statusCode == 200 && response.data != null && response.data['erro'] == null) {
+        return response.data;
       }
-
       if (response.data['erro'] != null) {
         var erro = response.data['erro'] as String;
-        var codigo = response.data['codigo'] as int;
-        throw HttpException(msg: erro, statusCode: codigo);
+        throw MyException(msg: erro);
       }
-      return null;
-    } on DioException catch (e) {
-      log("Error ${e} ");
+    } catch (erro) {
+      log("Error ${erro} ");
       rethrow;
     }
+    throw MyException(msg: 'Erro inesperado para gerar token');
   }
 }

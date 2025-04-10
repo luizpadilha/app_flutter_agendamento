@@ -38,8 +38,7 @@ class _ConfigExpedientePageState extends State<ConfigExpedientePage> {
         isActionHome: false,
         isActionVoltar: true,
         isDrawer: false,
-        labelAppBar: 'Expediente',
-        widgetAppBar: Container(),
+        titleAppBar: 'Expediente',
         body: FutureBuilder(
           future: _future,
           builder: (_, snapshot) {

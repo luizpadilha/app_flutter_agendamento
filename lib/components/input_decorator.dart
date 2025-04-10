@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mybabernew/constants.dart';
 
 class InputDecoratorComponent {
   final String label;
@@ -13,25 +13,29 @@ class InputDecoratorComponent {
   Color errorBorder;
   final String? errorText;
   final String? hintText;
+  final int proporcaoLabel;
 
   InputDecoratorComponent(
       {required this.label,
       this.suffixIcon,
       this.textColor = Colors.black,
-      this.borderColor = Colors.blueAccent,
-      this.enabledBorder = Colors.blue,
+      this.borderColor = colorPrimary,
+      this.enabledBorder = colorPrimary,
       this.errorBorder = Colors.red,
-      this.focusedBorder = Colors.lightBlue,
+      this.focusedBorder = colorPrimary,
       this.fillColor = Colors.white,
       this.prefixIcon,
       this.errorText,
+      this.proporcaoLabel = 2,
       this.hintText});
 
-  InputDecoration decorator() {
+  InputDecoration decorator(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme;
     return InputDecoration(
-      border: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue, width: 0.0)),
+      border: OutlineInputBorder(
+          borderSide: BorderSide(color: borderColor, width: 0.0)),
       labelText: label,
+      labelStyle: getTextStyle(context, proporcaoLabel),
       errorBorder: OutlineInputBorder(
         borderSide: BorderSide(color: errorBorder, width: 0.0),
       ),
@@ -57,5 +61,19 @@ class InputDecoratorComponent {
       errorText: errorText,
       prefixIcon: prefixIcon,
     );
+  }
+
+   TextStyle? getTextStyle(BuildContext context, int sizeCode) {
+     var textTheme = Theme.of(context).textTheme;
+    switch (sizeCode) {
+      case 1:
+        return textTheme.bodySmall;
+      case 2:
+        return textTheme.bodyMedium;
+      case 3:
+        return textTheme.bodyLarge;
+      default:
+        return textTheme.bodyMedium;
+    }
   }
 }
