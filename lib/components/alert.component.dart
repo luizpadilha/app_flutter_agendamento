@@ -1,24 +1,25 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:mybabernew/components/text_button.component.dart';
+import 'package:mybabernew/components/elevated.button.component.dart';
 
 abstract class AlertComponent {
   static void show(BuildContext context,
       {required String title,
-        String subTitle = "",
-        AlertStyle style = AlertStyle.confirm,
-        Function? onConfirm,
-        Function? onDismiss,
-        String textConfirm = "Continuar",
-        String? textDismiss}) {
+      String subTitle = "",
+      AlertStyle style = AlertStyle.confirm,
+      Function? onConfirm,
+      Function? onDismiss,
+      String textConfirm = "Continuar",
+      String? textDismiss}) {
     final mediaQuery = MediaQuery.of(context);
     final deviceSize = mediaQuery.size;
     final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
     showModalBottomSheet(
         context: context,
         builder: (context) {
           return Container(
-              height: deviceSize.height / 3,
+              height: deviceSize.height * 0.35,
               padding: EdgeInsets.symmetric(
                 horizontal: deviceSize.width * 0.05,
                 vertical: deviceSize.height * 0.03,
@@ -32,34 +33,32 @@ abstract class AlertComponent {
                 children: [
                   Expanded(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(5.0, 20, 5, 10),
-                            child: Center(
-                              child: AutoSizeText(title,
-                                  maxLines: 2, style: textTheme.displayLarge),
-                            ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(5.0, 20, 5, 10),
+                        child: Center(
+                          child: AutoSizeText(title,
+                              maxLines: 2, style: textTheme.displayLarge),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Center(
+                            child: AutoSizeText(subTitle,
+                                maxLines: 5,
+                                overflow: TextOverflow.ellipsis,
+                                style: textTheme.displayMedium),
                           ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Center(
-                                child: AutoSizeText(subTitle,
-                                    maxLines: 5,
-                                    minFontSize: mediaQuery.textScaler.scale(10),
-                                    maxFontSize: mediaQuery.textScaler.scale(14),
-                                    overflow: TextOverflow.ellipsis,
-                                    style: textTheme.displayMedium),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
+                        ),
+                      ),
+                    ],
+                  )),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Visibility(
                         visible: textDismiss != null && textConfirm.isNotEmpty,
@@ -74,17 +73,27 @@ abstract class AlertComponent {
                               }
                             }),
                       ),
-                      TextButtonComponent(
-                        icon: Icons.check,
-                        label: textConfirm ?? 'Continuar',
-                        onPressed: () async {
-                          if (onConfirm != null) {
-                            await onConfirm();
-                          } else {
-                            Navigator.pop(context);
-                          }
-                        },
-                      )
+                      SizedBox(
+                        height: deviceSize.height * 0.10,
+                        width: deviceSize.width * 0.40,
+                        child: Padding(
+                          padding: EdgeInsets.all(deviceSize.width * 0.02),
+                          child: ElevatedButtonComponent(
+                            textStyle: textTheme.labelMedium,
+                            isRow: true,
+                            isBorderCircular: true,
+                            label: textConfirm ?? 'Continuar',
+                            onPressed: () async {
+                              if (onConfirm != null) {
+                                await onConfirm();
+                              } else {
+                                Navigator.pop(context);
+                              }
+                            },
+                            color: colorScheme.tertiary,
+                          ),
+                        ),
+                      ),
                     ],
                   )
                 ],
@@ -96,15 +105,15 @@ abstract class AlertComponent {
 Color _alertColor(AlertStyle style) {
   switch (style) {
     case AlertStyle.error:
-      return Colors.redAccent;
+      return Colors.red.shade500;
     case AlertStyle.success:
-      return Colors.green;
+      return Colors.green.shade500;
     case AlertStyle.confirm:
-      return Colors.blue;
+      return Colors.blue.shade500;
     case AlertStyle.warning:
-      return Colors.yellow;
+      return Colors.yellow.shade500;
     default:
-      return Colors.grey;
+      return Colors.grey.shade500;
   }
 }
 

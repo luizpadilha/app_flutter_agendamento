@@ -77,8 +77,7 @@ class _ConfigExpedienteFormPageState extends State<ConfigExpedienteFormPage> {
       isActionHome: false,
       isActionVoltar: true,
       isDrawer: false,
-      labelAppBar: 'Expediente Cadastro',
-      widgetAppBar: Container(),
+      titleAppBar: 'Expediente Cadastro',
       body: TripleBuilder(
           store: configExpedienteController,
           builder: (ctx, triple) {

@@ -22,8 +22,7 @@ class _UsuarioPageState extends State<UsuarioPage> {
       isActionHome: true,
       isActionVoltar: false,
       isDrawer: false,
-      widgetAppBar:const Icon(Icons.person),
-      labelAppBar: 'Usuário',
+      titleAppBar: 'Usuário',
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(

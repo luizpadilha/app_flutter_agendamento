@@ -2,31 +2,33 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mybabernew/components/app_drawer.component.dart';
-import 'package:mybabernew/components/bottom_bar.component.dart';
-import 'package:mybabernew/pages/home.page.dart';
+import 'package:mybabernew/components/icon.button.component.dart';
+import 'package:mybabernew/modules/home/home.module.dart';
 
 class ScaffoldComponent extends StatelessWidget {
-  final String labelAppBar;
-  final Widget widgetAppBar;
+  final String titleAppBar;
+  final Widget? widgetTitleAppBar;
+  final bool isHome;
   final bool isDrawer;
-  final bool isBottomBar;
   final bool extendBody;
   final bool isActionHome;
   final bool isActionVoltar;
+  final bool isAppBar;
   final Widget body;
-  final List<Widget>? actions;
+  List<Widget>? actions;
   final void Function()? onPressedFloatingActionButton;
   final void Function()? onTapGestureDetector;
 
   ScaffoldComponent({
-    required this.labelAppBar,
-    required this.widgetAppBar,
+    required this.titleAppBar,
+    this.widgetTitleAppBar,
     required this.body,
+    this.isHome = false,
     this.isDrawer = false,
+    this.isAppBar = true,
     this.isActionHome = false,
     this.extendBody = false,
     this.isActionVoltar = false,
-    this.isBottomBar = false,
     this.actions,
     this.onPressedFloatingActionButton,
     this.onTapGestureDetector,
@@ -41,6 +43,8 @@ class ScaffoldComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
     var deviceSize = mediaQuery.size;
+    final textTheme = Theme.of(context).textTheme;
+    var colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () {
         if (onTapGestureDetector == null) {
@@ -50,67 +54,96 @@ class ScaffoldComponent extends StatelessWidget {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: deviceSize.height * 0.07,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: deviceSize.height * 0.035,
-                child: widgetAppBar,
-              ),
-              SizedBox(width: deviceSize.width * 0.01),
-              Flexible(
-                child: AutoSizeText(
-                  labelAppBar,
-                  minFontSize: mediaQuery.textScaler.scale(12),
-                  maxFontSize: mediaQuery.textScaler.scale(16),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ),
-            ],
+        appBar: !isAppBar ? null : AppBar(
+          toolbarHeight: deviceSize.height * 0.08,
+          title: widgetTitleAppBar ?? Align(
+            alignment: Alignment.centerLeft,
+            child: AutoSizeText(
+              style: textTheme.titleMedium,
+              titleAppBar,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
           ),
-          actions: actions,
-          leading: isActionHome
-              ? _actionHome(deviceSize)
-              : isActionVoltar
-                  ? _actionVoltar(deviceSize)
-                  : isDrawer
-                      ? _actionDrawer(deviceSize)
-                      : null,
+          actions: _actions(deviceSize),
+          leading: _leading(deviceSize),
         ),
         drawer: isDrawer ? const AppDrawerComponent() : null,
-        bottomNavigationBar: isBottomBar ? const BottomBarComponent() : null,
         extendBody: extendBody,
-        body: body,
+        body: Stack(
+          children: [
+            if (isHome)
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      colorScheme.primary, // Tom mais claro
+                      const Color(0xFF85D7CB),
+                      const Color(0xFFC2F0F2),
+                      const Color(0xFFEAFBFC),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+            body,
+          ],
+        ),
+        backgroundColor: !isHome ? const Color(0xFFEAF6F6) : null,
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }
 
+  List<Widget> _actions(var deviceSize) {
+    List<Widget> actions = [];
+    if (this.actions != null) {
+      actions.addAll(this.actions!);
+    }
+    return actions;
+  }
+
+  Widget? _leading(var deviceSize) {
+    if (isActionHome) {
+      return _actionHome(deviceSize);
+    }
+    if (isActionVoltar) {
+      return _actionVoltar(deviceSize);
+    }
+    if (isDrawer) {
+      return _actionDrawer(deviceSize);
+    }
+    return null;
+  }
+
+
+
   Widget _actionHome(var deviceSize) {
-    return IconButton(
-      icon: const Icon(Icons.home),
+    return IconButtonComponent(
+      iconColor: Colors.white,
+      icon: Icons.home,
       onPressed: () {
-        Modular.to.pushReplacementNamed(HomePage.ROUTE, arguments: null);
+        Modular.to.pushReplacementNamed(HomeModule.ROUTE, arguments: null);
       },
     );
   }
 
-  Widget? _actionVoltar(var deviceSize) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back_sharp),
+  Widget _actionVoltar(Size deviceSize) {
+    return IconButtonComponent(
+      iconColor: Colors.white,
+      icon: Icons.arrow_back,
       onPressed: () {
         Modular.to.pop();
       },
     );
   }
 
-  Widget? _actionDrawer(var deviceSize) {
+  Widget _actionDrawer(var deviceSize) {
     return Builder(builder: (context) {
-      return IconButton(
-        icon: const Icon(Icons.list),
+      return IconButtonComponent(
+        iconColor: Colors.white,
+        icon: Icons.menu,
         onPressed: () {
           Scaffold.of(context).openDrawer();
         },

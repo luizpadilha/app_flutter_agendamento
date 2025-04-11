@@ -69,8 +69,7 @@ class _PessoaFormPageState extends State<PessoaFormPage> {
       isActionHome: false,
       isActionVoltar: true,
       isDrawer: false,
-      labelAppBar: 'Pessoa Cadastro',
-      widgetAppBar: Container(),
+      titleAppBar: 'Cliente Cadastro',
       body: TripleBuilder(
           store: pessoaController,
           builder: (ctx, triple) {
@@ -137,10 +136,10 @@ class _PessoaFormPageState extends State<PessoaFormPage> {
       await pessoaController.buscarPessoas();
       Modular.to.pop(pessoaController.id);
     } catch (erro) {
-      print('Erro salvar pessoa: ' + erro.toString());
+      print('Erro salvar cliente: ' + erro.toString());
       AlertComponent.show(context,
           title: "Ops!",
-          subTitle: "Erro ao salvar pessoa",
+          subTitle: "Erro ao salvar cliente",
           style: AlertStyle.error);
     }
   }

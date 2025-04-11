@@ -15,6 +15,7 @@ class SlidableComponent extends StatelessWidget {
   final BuildContext contextPai;
   final List<Widget>? actions;
   final bool enabled;
+  final double extentRatio;
 
   const SlidableComponent({
     required this.child,
@@ -24,20 +25,23 @@ class SlidableComponent extends StatelessWidget {
     this.functionEditar,
     required this.object,
     this.actions,
+    this.extentRatio = 0.5,
     this.enabled = true,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-      enabled: enabled,
-      child: child,
-      key: keySlid,
-      startActionPane: ActionPane(
-        extentRatio: 0.7,
-        motion: const DrawerMotion(),
-        children: _children(context),
+    return SizedBox(
+      child: Slidable(
+        enabled: enabled,
+        child: child,
+        key: keySlid,
+        startActionPane: ActionPane(
+          extentRatio: extentRatio,
+          motion: const DrawerMotion(),
+          children: _children(context),
+        ),
       ),
     );
   }
@@ -52,12 +56,14 @@ class SlidableComponent extends StatelessWidget {
       children.add(
         Expanded(
           child: ElevatedButtonComponent(
-            textStyle: textTheme.labelSmall,
+            iconSize: 0.07,
+            isBorderCircular: true,
+            textStyle: textTheme.labelMedium,
             isRow: false,
             onPressed: () => functionEditar!(),
             icon: Icons.edit,
             label: 'Editar',
-            color: Colors.black12,
+            color: Colors.grey.shade500,
           ),
         ),
       );
@@ -66,7 +72,9 @@ class SlidableComponent extends StatelessWidget {
       children.add(
         Expanded(
           child: ElevatedButtonComponent(
-            textStyle: textTheme.labelSmall,
+            iconSize: 0.07,
+            isBorderCircular: true,
+            textStyle: textTheme.labelMedium,
             isRow: false,
             onPressed: () async {
               await _remover();

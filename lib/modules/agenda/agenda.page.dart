@@ -61,8 +61,7 @@ class _AgendaPageState extends State<AgendaPage> {
         isActionHome: true,
         isActionVoltar: false,
         isDrawer: false,
-        labelAppBar: 'Agenda',
-        widgetAppBar: Container(),
+        titleAppBar: 'Agenda',
         actions: [
           IconButtonAddComponent(
               onPressed: () => Modular.to.pushNamed(
@@ -171,7 +170,7 @@ class _AgendaPageState extends State<AgendaPage> {
                                                               return option.toString().toLowerCase().contains(textEditingValue.text.toLowerCase().trim());
                                                             });
                                                           },
-                                                          label: 'Pessoa',
+                                                          label: 'Cliente',
                                                           textEditingController: pessoaController,
                                                           term: _thermPessoa,
                                                           focusNode: _pessoaFocus,

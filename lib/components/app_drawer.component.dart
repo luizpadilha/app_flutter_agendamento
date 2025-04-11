@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -6,10 +7,10 @@ import 'package:mybabernew/entity/user.dart';
 import 'package:mybabernew/modules/agenda/agenda.module.dart';
 import 'package:mybabernew/modules/config/config.module.dart';
 import 'package:mybabernew/modules/graficos/graficos.module.dart';
+import 'package:mybabernew/modules/home/home.module.dart';
 import 'package:mybabernew/modules/login/login.module.dart';
 import 'package:mybabernew/modules/pessoa/pessoa.module.dart';
 import 'package:mybabernew/modules/servico/servico.module.dart';
-import 'package:mybabernew/pages/home.page.dart';
 
 class AppDrawerComponent extends StatefulWidget {
   const AppDrawerComponent({super.key});
@@ -57,9 +58,11 @@ class _AppDrawerComponentState extends State<AppDrawerComponent> {
                   radius: 52,
                   backgroundImage: AssetImage('assets/icons/usuario.png'),
                 ),
-                Text(
+                AutoSizeText(
                   user.username!,
-                  style: textTheme.bodyMedium,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: textTheme.displayMedium,
                 ),
               ],
             ),
@@ -146,7 +149,7 @@ class _AppDrawerComponentState extends State<AppDrawerComponent> {
     ItemDrawer(
       icon: Icons.home,
       nome: 'Home',
-      rota: HomePage.ROUTE,
+      rota: HomeModule.ROUTE,
     ),
     ItemDrawer(
       icon: Icons.schedule,
@@ -155,7 +158,7 @@ class _AppDrawerComponentState extends State<AppDrawerComponent> {
     ),
     ItemDrawer(
       icon: Icons.people,
-      nome: 'Pessoas',
+      nome: 'Clientes',
       rota: PessoaModule.ROUTE,
     ),
     ItemDrawer(

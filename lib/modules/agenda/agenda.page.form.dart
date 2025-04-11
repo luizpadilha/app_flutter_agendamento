@@ -93,8 +93,7 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
       isActionHome: false,
       isActionVoltar: true,
       isDrawer: false,
-      labelAppBar: 'Agenda Cadastro',
-      widgetAppBar: Container(),
+      titleAppBar: 'Agenda Cadastro',
       body: FutureBuilder(
         future: _future,
         builder: (_, snapshot) {
@@ -133,7 +132,7 @@ class _AgendaFormPageState extends State<AgendaFormPage> {
                                             return option.toString().toLowerCase().contains(textEditingValue.text.toLowerCase().trim());
                                           });
                                         },
-                                        label: 'Pessoa',
+                                        label: 'Cliente',
                                         validate: _validatePessoa,
                                         focusNode: _pessoaFocus,
                                         term: _thermPessoa,

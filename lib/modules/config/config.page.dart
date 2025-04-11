@@ -37,8 +37,7 @@ class _ConfigPageState extends State<ConfigPage> {
       isActionHome: true,
       isActionVoltar: false,
       isDrawer: false,
-      labelAppBar: 'Configurações',
-      widgetAppBar: Container(),
+      titleAppBar: 'Configurações',
       body: FutureBuilder(
         future: _future,
         builder: (_, snapshot) {

@@ -26,10 +26,10 @@ class ServicoController extends Store<List<Servico>> {
       List<Servico> servicos = await repo.getServicos();
       update(servicos);
     } on DioException catch (e, s) {
-      log('Erro ao buscar servidores', error: e, stackTrace: s);
+      log('Erro ao buscar servicos', error: e, stackTrace: s);
       rethrow;
-    } on Exception catch (e) {
-      log('Erro ao buscar servidores', error: e);
+    } catch (e) {
+      log('Erro ao buscar servicos', error: e);
       rethrow;
     } finally {
       setLoading(false);
@@ -41,10 +41,10 @@ class ServicoController extends Store<List<Servico>> {
       List<Servico> servicos = await repo.getServicos();
       return servicos;
     } on DioException catch (e, s) {
-      log('Erro ao buscar servidores', error: e, stackTrace: s);
+      log('Erro ao buscar servicos', error: e, stackTrace: s);
       rethrow;
     } on Exception catch (e) {
-      log('Erro ao buscar servidores', error: e);
+      log('Erro ao buscar servicos', error: e);
       rethrow;
     }
   }

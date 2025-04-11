@@ -6,14 +6,14 @@ class DatePickerComponent extends StatelessWidget {
   final bool isForm;
   final bool hasTime;
   final DateTime firstDate;
-  final DateTime initialDate;
+  final DateTime? initialDate;
 
   DatePickerComponent({
     required this.onDateChanged,
     required this.isForm,
     required this.hasTime,
     required this.firstDate,
-    required this.initialDate,
+    this.initialDate,
   });
 
   _showDatePicker(BuildContext context) {

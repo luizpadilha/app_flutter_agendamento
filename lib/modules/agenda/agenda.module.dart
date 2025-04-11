@@ -1,10 +1,11 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mybabernew/core/modulesGlobal/dio.module.dart';
-import 'package:mybabernew/core/modulesGlobal/general.module.dart';
+import 'package:mybabernew/core/dio/dio.module.global.dart';
 import 'package:mybabernew/modules/agenda/agenda.controller.dart';
 import 'package:mybabernew/modules/agenda/agenda.page.dart';
 import 'package:mybabernew/modules/agenda/agenda.page.form.dart';
 import 'package:mybabernew/modules/agenda/agenda.repository.dart';
+import 'package:mybabernew/modules/pessoa/pessoa.module.global.dart';
+import 'package:mybabernew/modules/servico/servico.module.global.dart';
 
 class AgendaModule extends Module {
   static final String ROUTE = "/agenda";
@@ -32,5 +33,5 @@ class AgendaModule extends Module {
   }
 
   @override
-  List<Module> get imports => [GeneralModule(), DioModule()];
+  List<Module> get imports => [DioModuleGlobal(), ServicoModuleGlobal(), PessoaModuleGlobal()];
 }

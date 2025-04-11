@@ -1,23 +1,24 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mybabernew/modules/login/login.module.dart';
 
-class Splash extends StatefulWidget {
-  const Splash({super.key});
+class SplashPage extends StatefulWidget {
+  const SplashPage({super.key});
 
   @override
-  State<Splash> createState() => _SplashState();
+  State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashState extends State<Splash> {
+class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 5), () {
+    Timer(const Duration(seconds: 3), () {
       Modular.to.navigate(LoginModule.ROUTE);
     });
   }
@@ -26,28 +27,34 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
     var heightDisp = mediaQuery.size.height - mediaQuery.padding.top;
+    var textTheme = Theme.of(context).textTheme;
     return Material(
       child: Container(
-        color: const Color(0xFFFFFFFF),
+        color: Theme.of(context).colorScheme.primary,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             SizedBox(
-              height: heightDisp * 0.25,
+              height: heightDisp * 0.15,
             ),
             SizedBox(
-              height: heightDisp * 0.50,
+              height: heightDisp * 0.60,
               child: Column(
                 children: [
-                  Image.asset(
-                    'assets/app/splash.png',
-                    height: heightDisp * 0.40,
+                  SizedBox(
+                    width: mediaQuery.size.width * 0.60,
+                    height: heightDisp * 0.30,
+                    child: Image.asset(
+                      fit: BoxFit.fitWidth,
+                      'assets/app/splash.png',
+                    ),
                   ),
-                  Text('Agende Fácil',
-                      style: GoogleFonts.roboto(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                          fontSize: mediaQuery.textScaler.scale(18))),
+                  AutoSizeText('AgendaPro',
+                    textAlign: TextAlign.center,
+                    style: textTheme.titleLarge!.copyWith(
+                      fontSize: mediaQuery.textScaler.scale(24),
+                    ),
+                  ),
                 ],
               ),
             ).animate(
@@ -74,7 +81,7 @@ class _SplashState extends State<Splash> {
                 children: [
                   Text('Padilha Software© 2024', style: GoogleFonts.raleway(
                       fontWeight: FontWeight.w500,
-                      color: Colors.black87,
+                      color: Colors.white,
                       fontSize: mediaQuery.textScaler.scale(14))),
                 ],
               ),

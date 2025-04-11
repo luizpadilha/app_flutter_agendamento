@@ -21,10 +21,10 @@ class PessoaController extends Store<List<Pessoa>> {
       List<Pessoa> pessoas = await repo.getPessoas();
       update(pessoas);
     } on DioException catch (e, s) {
-      log('Erro ao buscar pessoas', error: e, stackTrace: s);
+      log('Erro ao buscar clientes', error: e, stackTrace: s);
       rethrow;
     } on Exception catch (e) {
-      log('Erro ao buscar pessoas', error: e);
+      log('Erro ao buscar clientes', error: e);
       rethrow;
     } finally {
       setLoading(false);
@@ -36,10 +36,10 @@ class PessoaController extends Store<List<Pessoa>> {
       List<Pessoa> pessoas = await repo.getPessoas();
       return pessoas;
     } on DioException catch (e, s) {
-      log('Erro ao buscar pessoas', error: e, stackTrace: s);
+      log('Erro ao buscar clientes', error: e, stackTrace: s);
       rethrow;
     } on Exception catch (e) {
-      log('Erro ao buscar pessoas', error: e);
+      log('Erro ao buscar clientes', error: e);
       rethrow;
     }
   }
@@ -49,10 +49,10 @@ class PessoaController extends Store<List<Pessoa>> {
       Pessoa pessoa = await repo.getPessoa(idPessoa);
       return pessoa;
     } on DioException catch (e, s) {
-      log('Erro ao buscar pessoa', error: e, stackTrace: s);
+      log('Erro ao buscar cliente', error: e, stackTrace: s);
       rethrow;
     } on Exception catch (e) {
-      log('Erro ao buscar pessoa', error: e);
+      log('Erro ao buscar cliente', error: e);
       rethrow;
     }
   }
@@ -63,7 +63,7 @@ class PessoaController extends Store<List<Pessoa>> {
       setLoading(true);
       return await repo.salvarPessoas(id, nomeController.text, numeroController.text);
     } on DioException catch (e, s) {
-      log('Erro ao salvar pessoa', error: e, stackTrace: s);
+      log('Erro ao salvar cliente', error: e, stackTrace: s);
       rethrow;
     } finally {
       setLoading(false);
@@ -76,7 +76,7 @@ class PessoaController extends Store<List<Pessoa>> {
       await repo.removerPessoa(idPessoa);
       await buscarPessoas();
     } on DioException catch (e, s) {
-      log('Erro ao remover pessoa', error: e, stackTrace: s);
+      log('Erro ao remover cliente', error: e, stackTrace: s);
       rethrow;
     } finally {
       setLoading(false);

@@ -1,5 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mybabernew/core/modulesGlobal/dio.module.dart';
+import 'package:mybabernew/core/dio/dio.module.global.dart';
 import 'package:mybabernew/modules/configexpediente/config.expediente.controller.dart';
 import 'package:mybabernew/modules/configexpediente/config.expediente.form.dart';
 import 'package:mybabernew/modules/configexpediente/config.expediente.page.dart';
@@ -39,5 +39,5 @@ class ConfigExpedienteModule extends Module {
   }
 
   @override
-  List<Module> get imports => [DioModule()];
+  List<Module> get imports => [DioModuleGlobal()];
 }

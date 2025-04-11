@@ -16,7 +16,7 @@ class RowTopicoComponent extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('• ', style: textTheme.labelLarge),
+        Text('• ', style: textTheme.bodyMedium),
         Expanded(
           child: Text(
             label,

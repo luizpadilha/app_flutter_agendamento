@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TextButtonComponent extends StatelessWidget {
   String label;
@@ -28,10 +29,10 @@ class TextButtonComponent extends StatelessWidget {
             ? BorderSide(color: (colorBorda ?? Colors.white), width: 1.5)
             : null, // Define a borda
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8), // Deixa a borda arredondada
+          borderRadius: BorderRadius.circular(8),
         ),
         padding: const EdgeInsets.symmetric(
-            vertical: 12, horizontal: 20), // Ajusta o padding interno
+            vertical: 12, horizontal: 20),
       ),
       onPressed: () {
         onPressed();
@@ -41,9 +42,9 @@ class TextButtonComponent extends StatelessWidget {
         style: colorFonte == null
             ? Theme.of(context).textTheme.displayMedium
             : Theme.of(context)
-            .textTheme
-            .displayMedium!
-            .copyWith(color: colorFonte),
+                .textTheme
+                .displayMedium!
+                .copyWith(color: colorFonte),
         textAlign: TextAlign.left,
       ),
     );

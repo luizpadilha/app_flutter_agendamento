@@ -21,7 +21,6 @@ class Servico {
 
   static Future<Servico> fromJson(Map<String, dynamic> json) async {
     File? image = await converterBase64ToFile(json['imageBase64']);
-    print(json['id'] + ': ' + image.toString());
     return Servico._(
       id: json['id'] ?? '',
       descricao: json['descricao'] ?? '',
